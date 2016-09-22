@@ -391,14 +391,14 @@ public class L2VillageMasterInstance extends L2NpcInstance
 					
 					if (paramOne == 0)
 					{
-						if (!checkVillageMaster(player.getBaseClass()))
+						if (Config.CHECK_VILLAGE_MASTER && !checkVillageMaster(player.getBaseClass()))
 							return;
 					}
 					else
 					{
 						try
 						{
-							if (!checkVillageMaster(player.getSubClasses().get(paramOne).getClassDefinition()))
+							if (Config.CHECK_VILLAGE_MASTER && !checkVillageMaster(player.getSubClasses().get(paramOne).getClassDefinition()))
 								return;
 						}
 						catch (NullPointerException e)
@@ -515,7 +515,7 @@ public class L2VillageMasterInstance extends L2NpcInstance
 				ClassId classId = availSub.next();
 				
 				// check for the village master
-				if (!checkVillageMaster(classId))
+				if (Config.CHECK_VILLAGE_MASTER && !checkVillageMaster(classId))
 				{
 					availSub.remove();
 					continue;
@@ -543,7 +543,7 @@ public class L2VillageMasterInstance extends L2NpcInstance
 	 */
 	private final boolean isValidNewSubClass(L2PcInstance player, int classId)
 	{
-		if (!checkVillageMaster(classId))
+		if (Config.CHECK_VILLAGE_MASTER && !checkVillageMaster(classId))
 			return false;
 		
 		final ClassId cid = ClassId.VALUES[classId];
