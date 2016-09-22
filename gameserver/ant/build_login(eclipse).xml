@@ -1,7 +1,7 @@
 <project default="build">
 	<target name="build">
 	<ant antfile="build_template(eclipse).xml">
-		        <property name="work_dir" location="D:/l2j_realese/gameserver/libs"/>	
+		        <property name="work_dir" location="D:/acis350/login/libs"/>	
 	    		<property name="output" location="../bin"/>	
 	    		<property name="output_lib" location="../build"/>		
 	    		<property name="lib_name" value="l2jserver"/>	    	

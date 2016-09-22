@@ -15,7 +15,7 @@
         		<property name="lib_name" value="l2jserver"/>
         		<reference refid="libs"/>
         	</ant>
-		<copy todir="D:/l2j_realese/login/libs">
+		<copy todir="D:/acis350/login/libs">
 			<fileset dir="../build">
 				<include name="l2jserver.jar"/>
 			</fileset>
