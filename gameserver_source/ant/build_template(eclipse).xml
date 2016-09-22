@@ -1,0 +1,20 @@
+<project name="build template" default="def">
+	<target name="def">
+		<echo>Build: ${lib_name}</echo>
+	    <tstamp>
+		<format property="Datetime" pattern="dd/MM/yyyy HH:mm:ss" locale="ru,RU"/>
+		</tstamp>
+		<jar destfile="${output_lib}/${lib_name}.jar">
+			<fileset dir="${output}"/>
+			<manifest>				
+				<attribute name="Built-At" value="${Datetime}" />
+			</manifest>
+		</jar>
+		<copy todir="${work_dir}">
+					<fileset dir="${output_lib}">
+						<include name="${lib_name}.jar"/>
+					</fileset>
+				</copy>
+		<echo>Time: ${Datetime}</echo>
+	</target>	
+</project>

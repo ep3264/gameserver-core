@@ -1,0 +1,25 @@
+<project name="build template" default="def">
+	<target name="def">
+		<echo>Build: ${lib_name}</echo>
+		<antcall target="clear"/>
+		<javac srcdir="${source}" classpathref="libs" destdir="${output}/classes" encoding="UTF-8" compiler="javac1.8" debug="true" debuglevel="lines,vars,source" includeantruntime="false" source="1.8" target="1.8"/>
+		
+		<tstamp>
+			<format property="Datetime" pattern="dd/MM/yyyy HH:mm:ss" locale="ru,RU"/>
+		</tstamp>
+
+		<jar destfile="${output}/${lib_name}.jar">
+			<fileset dir="${output}/classes"/>
+			<manifest>				
+				<attribute name="Built-At" value="${Datetime}" />
+			</manifest>
+		</jar>
+		
+		<echo>Time: ${Datetime}</echo>
+	</target>
+
+	<target name="clear">
+		<delete dir="${output}/classes" quiet="true"/>
+		<mkdir dir="${output}/classes" />
+	</target>
+</project>

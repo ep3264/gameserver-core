@@ -1,0 +1,26 @@
+<project default="build">
+    <target name="build">
+    	<path id="libs">
+    		<fileset dir="../lib">
+    			<include name="*.jar"/>
+    		</fileset>    		
+    		<fileset dir="../build">
+    			<include name="*.jar"/>
+    		</fileset>
+    	</path>
+    	
+    	<ant antfile="build_template.xml">
+    		<property name="source" location="../java"/>
+    		<property name="output" location="../build"/>
+    		<property name="lib_name" value="l2jserver"/>
+    		<reference refid="libs"/>
+    	</ant>
+    	
+		<copy todir="D:/l2j_realese/gameserver/libs">
+			<fileset dir="../build">
+				<include name="l2jserver.jar"/>
+			</fileset>
+		</copy>
+    </target>
+	
+</project>
