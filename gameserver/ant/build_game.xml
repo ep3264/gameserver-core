@@ -16,7 +16,7 @@
     		<reference refid="libs"/>
     	</ant>
     	
-		<copy todir="D:/acis350/gameserver/libs">
+		<copy todir="D:/l2j_realese/gameserver/libs">
 			<fileset dir="../build">
 				<include name="l2jserver.jar"/>
 			</fileset>
