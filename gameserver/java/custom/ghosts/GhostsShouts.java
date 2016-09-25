@@ -1476,21 +1476,21 @@ public class GhostsShouts implements Runnable
 	// Miliseconds
 	private static final int[] SHOUTTIME =
 	{		
-		34451,
+		134451,
 		65522,
 		69010,
 		61331,
 		68595,
-		8841,
+		98841,
 		91243,
 		95534,
-		9744,
-		51544,
+		19744,
+		151544,
 		91544,
 		120555,
-		9999,
+		19999,
 		14000,
-		21000
+		121000
 		
 	};
 	

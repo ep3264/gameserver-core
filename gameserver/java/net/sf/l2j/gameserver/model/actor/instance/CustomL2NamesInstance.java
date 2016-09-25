@@ -86,7 +86,7 @@ public class CustomL2NamesInstance extends L2NpcInstance
 			{
 			}
 			setName(player, name);
-			showChatWindow(player, 1);
+			showChatWindow(player, 0);
 		}
 	}
 	

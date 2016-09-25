@@ -49,9 +49,7 @@ import net.sf.l2j.gameserver.network.serverpackets.L2GameServerPacket;
 import net.sf.l2j.gameserver.network.serverpackets.ServerClose;
 import net.sf.l2j.gameserver.util.FloodProtectors;
 
-import custom.L2System;
 import protection.ProtectionProperties;
-import protection.Punisher;
 import protection.crypt.Blowfish;
 
 /**

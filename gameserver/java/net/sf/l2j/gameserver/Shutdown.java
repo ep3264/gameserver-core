@@ -45,6 +45,7 @@ import net.sf.l2j.gameserver.taskmanager.ItemsOnGroundTaskManager;
 import net.sf.l2j.gameserver.taskmanager.MovementTaskManager;
 import net.sf.l2j.gameserver.util.Broadcast;
 
+import protection.ProtectionProperties;
 import protection.hwid.HWIDManager;
 
 /**
@@ -145,8 +146,10 @@ public class Shutdown extends Thread
 			{
 			}
 			//Save new HWIDs
+			if(ProtectionProperties.HWID){
 			HWIDManager.getInstance().saveHwidsToDB();
 			_log.info("New HWIDs have been saved.");
+			}
 			// Seven Signs data is now saved along with Festival data.
 			if (!SevenSigns.getInstance().isSealValidationPeriod())
 				SevenSignsFestival.getInstance().saveFestivalData(false);

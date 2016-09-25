@@ -64,7 +64,7 @@ public class RC5
 	    ot=	0 << 24 | (0 & 0xFF) << 16 | (0 & 0xFF) << 8 | (op & 0xFF);
 		RC5_ENCRYPT(iv, iv);
 		ot ^= iv[0];		
-	    raw[offset]= (byte)  ot;				
+	    raw[offset]= (byte)ot;				
 	}
 	void RC5_SETUP() /* secret input key K[0...b-1]      */
 	{
