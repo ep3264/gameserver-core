@@ -496,6 +496,7 @@ public class Olympiad
 		}
 		else if(Config.ALT_OLY_DURATION_TYPES.equalsIgnoreCase("week")){
 			currentTime.add(Calendar.WEEK_OF_YEAR, Config.ALT_OLY_DURATION);
+			currentTime.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
 		}
 		currentTime.set(Calendar.AM_PM, Calendar.AM);
 		currentTime.set(Calendar.HOUR, 12);

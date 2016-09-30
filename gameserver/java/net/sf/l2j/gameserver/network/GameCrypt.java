@@ -14,7 +14,7 @@
  */
 package net.sf.l2j.gameserver.network;
 
-import protection.crypt.RC5;
+
 
 /**
  * @author KenM
@@ -25,7 +25,7 @@ public class GameCrypt
 	private final byte[] _outKey = new byte[16];
 	private boolean _isEnabled;
 	private final static int MAX_SIZE_K=12;
-	private int[] _iv= { 12312, 231849, 43934, 33, 122, 9, 458, 1249, 9584, 54666, 999, 666 };
+	private byte[] _iv= { 123, -5, -12, -67, 122, 9, 98, 74, -32, -41, 13, -7 };
     private int index =0;
 	
 	public void setKey(byte[] key)
@@ -58,12 +58,14 @@ public class GameCrypt
 		_inKey[9] = (byte) (old >> 0x08 & 0xff);
 		_inKey[10] = (byte) (old >> 0x10 & 0xff);
 		_inKey[11] = (byte) (old >> 0x18 & 0xff);
+		
 		if (protection.ProtectionProperties.RC5){
 			if(index == MAX_SIZE_K-1)
 			{
 				index =0;
 			}
-			RC5.getInstance().ndecrypt(raw, size, offset,_iv[index],_iv[index+1]);
+			 raw[offset]^=_iv[index];
+			//RC5.getInstance().ndecrypt(raw, size, offset,_iv[index],_iv[index+1]);
 			index++;
 		}
 	}

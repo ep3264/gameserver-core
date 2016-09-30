@@ -21,7 +21,6 @@ import java.util.StringTokenizer;
 
 import net.sf.l2j.Config;
 import net.sf.l2j.commons.lang.StringUtil;
-import net.sf.l2j.gameserver.cache.HtmCache;
 import net.sf.l2j.gameserver.datatables.BufferTable;
 import net.sf.l2j.gameserver.datatables.SkillTable;
 import net.sf.l2j.gameserver.model.L2Effect;
@@ -59,7 +58,7 @@ public class CustomL2BufferInstance extends L2NpcInstance
 			filename = "data/html/mods/custom_buffer/" + npcId + ".htm";
 		else
 			filename = "data/html/mods/custom_buffer/" + npcId + "-" + val + ".htm";
-			
+		
 		return filename;
 	}
 	
@@ -117,7 +116,16 @@ public class CustomL2BufferInstance extends L2NpcInstance
 			else if (cost == 0 || player.reduceAdena("NPC CustomBuffer", cost, this, true))
 			{
 				for (int skillId : BufferTable.getInstance().getScheme(player.getObjectId(), schemeName))
-					SkillTable.getInstance().getInfo(skillId, SkillTable.getInstance().getMaxLevel(skillId)).getEffects(this, target);
+				{
+					if (skillId == 4553 || skillId == 4554)
+					{
+						SkillTable.getInstance().getInfo(skillId, 4).getEffects(this, target);
+					}
+					else
+					{
+						SkillTable.getInstance().getInfo(skillId, SkillTable.getInstance().getMaxLevel(skillId)).getEffects(this, target);
+					}
+				}
 			}
 			showGiveBuffsWindow(player, targetType);
 		}
@@ -175,6 +183,16 @@ public class CustomL2BufferInstance extends L2NpcInstance
 			}
 			showManageSchemeWindow(player);
 		}
+		else if (currentCommand.startsWith("Flu"))
+		{
+			SkillTable.getInstance().getInfo(4553, 4).getEffects(this, player);
+			showChatWindow(player, 9);
+		}
+		else if (currentCommand.startsWith("Malaria"))
+		{
+			SkillTable.getInstance().getInfo(4554, 4).getEffects(this, player);
+			showChatWindow(player, 9);
+		}
 	}
 	
 	/**
@@ -215,7 +233,7 @@ public class CustomL2BufferInstance extends L2NpcInstance
 			sb.append("<table>");
 			for (Map.Entry<String, ArrayList<Integer>> scheme : schemes.entrySet())
 				StringUtil.append(sb, "<tr><td width=140>", scheme.getKey(), " (", scheme.getValue().size(), " skill(s))</td><td width=60><button value=\"Удалить\" action=\"bypass -h npc_%objectId%_deletescheme ", scheme.getKey(), "\" width=55 height=15 back=\"sek.cbui94\" fore=\"sek.cbui92\"></td></tr>");
-				
+			
 			sb.append("</table>");
 		}
 		
@@ -264,11 +282,11 @@ public class CustomL2BufferInstance extends L2NpcInstance
 	{
 		if (Config.BUFFER_STATIC_BUFF_COST >= 0)
 			return (list.size() * Config.BUFFER_STATIC_BUFF_COST);
-			
+		
 		int fee = 0;
 		for (int sk : list)
 			fee += Config.BUFFER_BUFFLIST.get(sk).getValue();
-			
+		
 		return fee;
 	}
 }

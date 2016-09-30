@@ -82,7 +82,7 @@ public class Roulette
     		{//bloody
     			player.addItem("RouletteReward[mode:" + mode + "]", BLODDY, 1, player, true);
     		}
-    		else if(val<=731){//silver
+    		else if(val==731){//col
     			player.addItem("RouletteReward[mode:" + mode + "]", COL, 1, player, true);
     		}
     		else if(val <=1000)//loose
@@ -135,7 +135,7 @@ public class Roulette
     		{
     			player.addItem("RouletteReward[mode:" + mode + "]", BLODDY, 1, player, true);
     		}
-    		else if(val<=654){//silver
+    		else if(val<=654){//col
     			player.addItem("RouletteReward[mode:" + mode + "]", COL, 1, player, true);
     		}
     		else if(val<=657){//Jester Hat
@@ -162,7 +162,7 @@ public class Roulette
 			if(val==777)
 			{
 				_log.info(player.getClient().toString()+"earned AQ");
-				Broadcast.toAllOnlinePlayers(new CreatureSay(0, Say2.CRITICAL_ANNOUNCE, "", player.getName()+ "Выиграл AQ"));
+				Broadcast.toAllOnlinePlayers(new CreatureSay(0, Say2.CRITICAL_ANNOUNCE, "", player.getName()+ " Выиграл AQ"));
 				player.addItem("RouletteReward[mode:" + mode + "]", 6660, 1, player, true);
 			
 			}
@@ -198,7 +198,7 @@ public class Roulette
     		{
     			player.addItem("RouletteReward[mode:" + mode + "]", BLODDY, 4, player, true);
     		}
-    		else if(val<=855){//silver
+    		else if(val<=855){//col
     			player.addItem("RouletteReward[mode:" + mode + "]", COL, 1, player, true);
     		}
     		else if(val<=862){//Jester Hat

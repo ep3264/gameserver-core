@@ -127,7 +127,7 @@ public class NpcTemplate extends CharTemplate
 		_type = set.getString("type");
 		_name = set.getString("name");
 		_title = set.getString("title", "");
-		_cantBeChampionMonster = _title.equalsIgnoreCase("Quest Monster") || isType("L2Chest");
+		_cantBeChampionMonster = _title.equalsIgnoreCase("Quest Monster") || isType("L2Chest") || (_npcId>=22215 && _npcId<=22217); //Fix Redist 22215 Tyr
 		_level = set.getByte("level", (byte) 1);
 		_exp = set.getInteger("exp", 0);
 		_sp = set.getInteger("sp", 0);
