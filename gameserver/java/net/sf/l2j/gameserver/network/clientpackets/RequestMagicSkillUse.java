@@ -19,7 +19,10 @@ import net.sf.l2j.gameserver.ai.CtrlEvent;
 import net.sf.l2j.gameserver.ai.CtrlIntention;
 import net.sf.l2j.gameserver.ai.NextAction;
 import net.sf.l2j.gameserver.datatables.SkillTable;
+import net.sf.l2j.gameserver.model.L2Object;
 import net.sf.l2j.gameserver.model.L2Skill;
+import net.sf.l2j.gameserver.model.L2Skill.SkillTargetType;
+import net.sf.l2j.gameserver.model.actor.L2Character;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.network.serverpackets.ActionFailed;
 import net.sf.l2j.gameserver.templates.skills.L2SkillType;
@@ -38,7 +41,7 @@ public final class RequestMagicSkillUse extends L2GameClientPacket
 		result = prime * result + (_shiftPressed ? 1231 : 1237);
 		return result;
 	}
-
+	
 	@Override
 	public boolean equals(Object obj)
 	{
@@ -57,7 +60,7 @@ public final class RequestMagicSkillUse extends L2GameClientPacket
 			return false;
 		return true;
 	}
-
+	
 	private int _magicId;
 	protected boolean _ctrlPressed;
 	protected boolean _shiftPressed;
@@ -77,8 +80,8 @@ public final class RequestMagicSkillUse extends L2GameClientPacket
 		final L2PcInstance activeChar = getClient().getActiveChar();
 		if (activeChar == null)
 			return;
-		if (!getClient().checkOnline())			
-		{					
+		if (!getClient().checkOnline())
+		{
 			return;
 		}
 		// Get the level of the used skill
@@ -102,6 +105,14 @@ public final class RequestMagicSkillUse extends L2GameClientPacket
 			if (!EventManager.getInstance().getCurrentEvent().canUseSkill(activeChar, skill))
 			{
 				return;
+			} // Нельзя использовать таргет магию на зареганых в эвенте например хил
+			L2Object target = activeChar.getTarget();
+			if (target instanceof L2Character && skill.getTargetType()!=SkillTargetType.TARGET_SELF)
+			{
+				if (!EventManager.getInstance().getCurrentEvent().canUseMagic(activeChar, (L2Character) target))
+				{
+					return;
+				}
 			}
 		}
 		// If Alternate rule Karma punishment is set to true, forbid skill Return to player with Karma

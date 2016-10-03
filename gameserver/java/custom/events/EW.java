@@ -23,7 +23,6 @@ import net.sf.l2j.gameserver.datatables.MapRegionTable;
 import net.sf.l2j.gameserver.datatables.NpcTable;
 import net.sf.l2j.gameserver.datatables.SpawnTable;
 
-
 import net.sf.l2j.gameserver.model.L2Effect;
 import net.sf.l2j.gameserver.model.L2Skill;
 import net.sf.l2j.gameserver.model.L2Spawn;
@@ -43,28 +42,28 @@ import custom.events.CustomUtil;
 import custom.events.EventBase;
 import custom.events.EventManager;
 
-
 public class EW extends EventBase
 {
 	private enum EventState
 	{
 		IDLE,
 		ACTIVE
-	}	
+	}
+	
 	private EventState _eventState = EventState.IDLE;
 	
-	
-	private final int ID =2;	
-	private final String NAME ="EW";
-	private final int NPC_ID=40005;
+	private final int ID = 2;
+	private final String NAME = "EW";
+	private final int NPC_ID = 40005;
 	private int _townId;
-	private int _minPlayersRequiredForNpc =5;
-	private int _maxPlayersAllowed =75;
-	private L2Spawn spawn=null;
+	private int _minPlayersRequiredForNpc = 5;
+	private int _maxPlayersAllowed = 75;
+	private L2Spawn spawn = null;
+	
 	public EW()
 	{
 		super();
-	}	
+	}
 	
 	@Override
 	public void setConfig(Map<String, String> config)
@@ -83,17 +82,17 @@ public class EW extends EventBase
 		}
 		else
 		{
-			_townId = 1;//Dark Elven Village
-		}		
-		_minPlayersRequiredForNpc=getInt("minPlayersRequiredForNpc");
-		_maxPlayersAllowed =getInt("maxPlayersAllowed");
+			_townId = 1;// Dark Elven Village
+		}
+		_minPlayersRequiredForNpc = getInt("minPlayersRequiredForNpc");
+		_maxPlayersAllowed = getInt("maxPlayersAllowed");
 	}
+	
 	@Override
 	public boolean isRegistering()
 	{
 		return true;
 	}
-	
 	
 	@Override
 	public void start()
@@ -110,8 +109,8 @@ public class EW extends EventBase
 	@Override
 	public void end(boolean inform)
 	{
-		_eventState = EventState.IDLE;		
-		if(spawn!=null)
+		_eventState = EventState.IDLE;
+		if (spawn != null)
 		{
 			deleteSpawnNpc(false);
 		}
@@ -127,8 +126,8 @@ public class EW extends EventBase
 			case IDLE:
 				announce("Хочешь заточиться участвуй в эвенте Enchant War!");
 				announce("Event Enchant War начался.");
-				announce("Команды: "+EVENT_COMMANDS);
-				announce("Город: "+MapRegionTable.getInstance().getClosestTownName(_townId));
+				announce("Команды: " + EVENT_COMMANDS);
+				announce("Город: " + MapRegionTable.getInstance().getClosestTownName(_townId));
 				_eventState = EventState.ACTIVE;
 				schedule(getInt("runningTime"));
 				break;
@@ -171,7 +170,7 @@ public class EW extends EventBase
 		if (_locations.containsKey(player))
 		{
 			location = _locations.get(player);
-			//_locations.remove(player);
+			// _locations.remove(player);
 		}
 		player.setEventTitle(null);
 		player.setEventTitleColor(null);
@@ -206,17 +205,18 @@ public class EW extends EventBase
 		else
 		{
 			targetInstance = (L2PcInstance) target;
-		}		
-		if (!((L2PcInstance)player).isInEvent() || !targetInstance.isInEvent())
+		}
+		if (!((L2PcInstance) player).isInEvent() || !targetInstance.isInEvent())
 		{
 			return false;
 		}
-		if (MapRegionTable.getClosestTown(player.getX(),player.getY()) == MapRegionTable.getTown(_townId))
+		if (MapRegionTable.getClosestTown(player.getX(), player.getY()) == MapRegionTable.getTown(_townId))
 		{
 			return true;
 		}
 		return false;
 	}
+	
 	@Override
 	public void validatePostion(L2PcInstance player)
 	{
@@ -228,10 +228,11 @@ public class EW extends EventBase
 		{
 			return;
 		}
-		if (MapRegionTable.getClosestTown(player.getX(),player.getY()) == MapRegionTable.getTown(_townId))
+		if (MapRegionTable.getClosestTown(player.getX(), player.getY()) == MapRegionTable.getTown(_townId))
 		{
-			if(!player.isInsideZone(ZoneId.PEACE)){
-				playerLeftTown(player);		
+			if (!player.isInsideZone(ZoneId.PEACE))
+			{
+				playerLeftTown(player);
 			}
 		}
 		else
@@ -239,14 +240,15 @@ public class EW extends EventBase
 			playerLeftTown(player);
 		}
 	}
+	
 	private void playerLeftTown(L2PcInstance player)
 	{
 		debug(player.getName() + " has left the event town.");
-		teleportPlayerToEvent(player);	
+		teleportPlayerToEvent(player);
 	}
 	
 	@Override
-	public void onKill(L2Character killer, L2Character killed)	
+	public void onKill(L2Character killer, L2Character killed)
 	{
 		if (!isRunning())
 		{
@@ -256,8 +258,8 @@ public class EW extends EventBase
 		{
 			return;
 		}
-		L2PcInstance killerPc=null;
-		L2PcInstance killedPc=null;
+		L2PcInstance killerPc = null;
+		L2PcInstance killedPc = null;
 		if (killer instanceof L2PcInstance)
 		{
 			killerPc = (L2PcInstance) killer;
@@ -274,7 +276,7 @@ public class EW extends EventBase
 		{
 			killedPc = ((L2Summon) killed).getOwner();
 		}
-		if(killerPc==null || killedPc==null)
+		if (killerPc == null || killedPc == null)
 		{
 			return;
 		}
@@ -286,8 +288,7 @@ public class EW extends EventBase
 		{
 			return;
 		}
-		if (MapRegionTable.getClosestTown(killerPc.getX(),killerPc.getY()) != MapRegionTable.getTown(_townId)
-			|| MapRegionTable.getClosestTown(killedPc.getX(),killedPc.getY()) != MapRegionTable.getTown(_townId))
+		if (MapRegionTable.getClosestTown(killerPc.getX(), killerPc.getY()) != MapRegionTable.getTown(_townId) || MapRegionTable.getClosestTown(killedPc.getX(), killedPc.getY()) != MapRegionTable.getTown(_townId))
 		{
 			return;
 		}
@@ -307,11 +308,11 @@ public class EW extends EventBase
 		if (getBoolean("decreaseScoreOnDeath"))
 		{
 			setScore(killedPc, _scores.get(killedPc) - 1);
-		}	
+		}
 		if (getString("rewardPerKill") != null)
 		{
 			rewardPlayer(killerPc, "rewardPerKill");
-		}			
+		}
 	}
 	
 	@Override
@@ -348,11 +349,19 @@ public class EW extends EventBase
 			_effects.put(player, player.getAllEffects());
 		}
 		_effects.put(player, player.getAllEffects());
-		//_eventTeleporters.put(player, new EventTeleporter(player, getInt("teleportTime"), true));
+		// _eventTeleporters.put(player, new EventTeleporter(player, getInt("teleportTime"), true));
 		teleportPlayerToEvent(player);
 		if (_players.size() >= _minPlayersRequiredForNpc && spawn == null)
 		{
-			Location loc = MapRegionTable.getTown(_townId).getSpawnLoc();
+			Location loc = null;
+			if (_townId == 13)
+			{
+				loc = new Location(147576, -55992, -2776); // static spawn in Goddard
+			}
+			else
+			{
+				loc = MapRegionTable.getTown(_townId).getSpawnLoc();
+			}
 			if (!spawnNpc(NPC_ID, 10, false, new int[]
 			{
 				loc.getX(),
@@ -365,19 +374,21 @@ public class EW extends EventBase
 		}
 		return true;
 	}
+	
 	@Override
 	public boolean canRequestToNpc(L2Character player, L2Character npc)
 	{
 		
-			NpcTemplate npcTemplate =(NpcTemplate)  npc.getTemplate();			
-			if (!((L2PcInstance)player).isInEvent() && npcTemplate.getNpcId() == NPC_ID)
-			{
-				player.sendMessage("Вы не участник Enchant War.");
-				return false;
-			}
+		NpcTemplate npcTemplate = (NpcTemplate) npc.getTemplate();
+		if (!((L2PcInstance) player).isInEvent() && npcTemplate.getNpcId() == NPC_ID)
+		{
+			player.sendMessage("Вы не участник Enchant War.");
+			return false;
+		}
 		
 		return true;
 	}
+	
 	@Override
 	protected void teleportPlayerToEvent(L2PcInstance player)
 	{
@@ -388,8 +399,8 @@ public class EW extends EventBase
 	@Override
 	public void showInfo(L2PcInstance player)
 	{
-		Map<String, String> variables = new HashMap<>();		
-		variables.put("%name%", getString("name"));		
+		Map<String, String> variables = new HashMap<>();
+		variables.put("%name%", getString("name"));
 		variables.put("%state%", eventStateToString(_eventState));
 		int seconds = _eventScheduler.getDelay();
 		int mins = seconds / 60;
@@ -397,10 +408,10 @@ public class EW extends EventBase
 		variables.put("%mins%", String.valueOf(mins));
 		variables.put("%secs%", (secs < 10 ? "0" + secs : String.valueOf(secs)));
 		variables.put("%players%", String.valueOf(_players.size()));
-		variables.put("%minPlayers%", getString("minPlayersRequiredForNpc") );//"~.~"
+		variables.put("%minPlayers%", getString("minPlayersRequiredForNpc"));// "~.~"
 		variables.put("%maxPlayers%", getString("maxPlayersAllowed"));
-		variables.put("%description%", (getString("description") != null) ? MapRegionTable.getInstance().getClosestTownName(_townId)+" "+getString("description").replace("[br1]", "<br1>").replace("[br]", "<br>") : "n/a");
-		String userCommands = "";	
+		variables.put("%description%", (getString("description") != null) ? MapRegionTable.getInstance().getClosestTownName(_townId) + " " + getString("description").replace("[br1]", "<br1>").replace("[br]", "<br>") : "n/a");
+		String userCommands = "";
 		if (containsPlayer(player))
 		{
 			userCommands = "<button value=\"Leave\" action=\"bypass -h event_leave\" width=65 height=19 back=\"L2UI_ch3.smallbutton2_over\" fore=\"L2UI_ch3.smallbutton2\">";
@@ -439,17 +450,12 @@ public class EW extends EventBase
 		{
 			return false;
 		}
-		/*if (isRunning())
+		/*
+		 * if (isRunning()) { //_eventTeleporters.put(player.new EventTeleporter(player,getInt("teleportTime"),false)); if (_eventTeleporters.containsKey(player)) { _eventTeleporters.get(player).cancel(); } }
+		 */
+		if (_players.size() < _minPlayersRequiredForNpc)
 		{
-			//_eventTeleporters.put(player.new EventTeleporter(player,getInt("teleportTime"),false));
-			if (_eventTeleporters.containsKey(player))
-			{
-				_eventTeleporters.get(player).cancel();
-			} 		
-		}*/	
-		if(_players.size()<_minPlayersRequiredForNpc)
-		{
-			if(spawn!=null)
+			if (spawn != null)
 			{
 				deleteSpawnNpc(false);
 			}
@@ -481,15 +487,17 @@ public class EW extends EventBase
 				break;
 		}
 	}
-	private boolean spawnNpc(int npcId, int respawnTime, boolean permanent,int [] coordinat)
+	
+	private boolean spawnNpc(int npcId, int respawnTime, boolean permanent, int[] coordinat)
 	{
-		NpcTemplate template=NpcTable.getInstance().getTemplate(npcId);
-		if(template==null){
+		NpcTemplate template = NpcTable.getInstance().getTemplate(npcId);
+		if (template == null)
+		{
 			return false;
 		}
 		try
 		{
-			spawn = new L2Spawn(template);			
+			spawn = new L2Spawn(template);
 			spawn.setLoc(coordinat[0], coordinat[1], coordinat[2], -1);
 			spawn.setRespawnDelay(respawnTime);
 			SpawnTable.getInstance().addNewSpawn(spawn, permanent);
@@ -510,18 +518,20 @@ public class EW extends EventBase
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}	
+		}
 		return true;
 	}
+	
 	private void deleteSpawnNpc(boolean updateDb)
 	{
-		L2Npc l2Npc =  spawn.getNpc();
-		l2Npc.deleteMe();		
+		L2Npc l2Npc = spawn.getNpc();
+		l2Npc.deleteMe();
 		SpawnTable.getInstance().deleteSpawn(spawn, updateDb);
-		spawn =null;
+		spawn = null;
 	}
-
-	/* (non-Javadoc)
+	
+	/*
+	 * (non-Javadoc)
 	 * @see net.sf.l2j.gameserver.events.events.EventBase#getName()
 	 */
 	@Override
@@ -530,8 +540,9 @@ public class EW extends EventBase
 		// TODO Auto-generated method stub
 		return NAME;
 	}
-
-	/* (non-Javadoc)
+	
+	/*
+	 * (non-Javadoc)
 	 * @see net.sf.l2j.gameserver.events.events.EventBase#getEventId()
 	 */
 	@Override
@@ -540,12 +551,41 @@ public class EW extends EventBase
 		// TODO Auto-generated method stub
 		return ID;
 	}
-
-	/*
-	public static void main(String[] args)
+	@Override
+	public boolean canUseMagic(L2Character player,L2Character target)
 	{
-		new EW();
+		if (!isRunning())
+		{
+			return true;
+		}
+		if (!(player instanceof L2PcInstance))
+		{
+			return true;
+		}
+		L2PcInstance targetInstance;
+		if (!(target instanceof L2PcInstance))
+		{
+			if (target instanceof L2SummonInstance)
+			{
+				targetInstance = ((L2SummonInstance) target).getOwner();
+			}
+			else
+			{
+				return true;
+			}
+		}
+		else
+		{
+			targetInstance = (L2PcInstance) target;
+		}
+		if (!((L2PcInstance) player).isInEvent() && targetInstance.isInEvent())
+		{
+			player.sendMessage("В данный момент нельзя взаимодействовать с персонажем!");
+			return false;
+		}
+		return true;
 	}
-	*/
-	
+	/*
+	 * public static void main(String[] args) { new EW(); }
+	 */	
 }

@@ -496,6 +496,10 @@ public abstract class EventBase
 	{
 		return true;
 	}
+	public boolean canUseMagic(L2Character player,L2Character target)
+	{
+		return true;
+	}
 	public void validatePostion(L2PcInstance player)
 	{		
 	}

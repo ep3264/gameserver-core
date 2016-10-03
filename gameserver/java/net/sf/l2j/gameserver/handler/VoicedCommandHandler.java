@@ -16,9 +16,8 @@ package net.sf.l2j.gameserver.handler;
 
 import java.util.HashMap;
 import java.util.Map;
+import net.sf.l2j.gameserver.handler.voicecommandhandlers.*;
 
-import net.sf.l2j.gameserver.handler.voicecommandhandlers.Event;
-import net.sf.l2j.gameserver.handler.voicecommandhandlers.Exp;
 
 public class VoicedCommandHandler 
 {
@@ -27,8 +26,8 @@ public class VoicedCommandHandler
 	protected VoicedCommandHandler()
 	{
 		registerHandler(new Event());
-		registerHandler(new Exp());
-	
+		registerHandler(new Exp());	
+		registerHandler(new Acp());		
 	}
 	
 	

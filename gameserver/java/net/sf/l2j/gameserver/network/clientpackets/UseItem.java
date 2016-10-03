@@ -36,7 +36,6 @@ import net.sf.l2j.gameserver.scripting.Quest;
 import net.sf.l2j.gameserver.scripting.QuestState;
 import net.sf.l2j.gameserver.templates.skills.L2SkillType;
 
-import custom.L2System;
 import custom.events.EventManager;
 
 public final class UseItem extends L2GameClientPacket

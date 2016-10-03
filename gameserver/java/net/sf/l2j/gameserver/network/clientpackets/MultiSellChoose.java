@@ -108,6 +108,13 @@ public class MultiSellChoose extends L2GameClientPacket
 				int weight = 0;
 				for (Ingredient e : entry.getProducts())
 				{
+					//Fix REDIST Проверка не привышен ли лимит максимального количества результирующих айтемов
+				    long total_count= Long.valueOf(e.getItemCount()) * Long.valueOf(_amount);
+					if( total_count > Integer.MAX_VALUE)
+					{
+						player.sendMessage("Привышено количество результирующих айтемов!");
+						return;
+					}
 					if (e.getItemId() < 0)
 						continue;
 					

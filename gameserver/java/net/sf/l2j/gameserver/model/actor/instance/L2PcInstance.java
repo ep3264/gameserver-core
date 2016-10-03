@@ -247,8 +247,10 @@ import net.sf.l2j.gameserver.templates.skills.L2SkillType;
 import net.sf.l2j.gameserver.util.Broadcast;
 import net.sf.l2j.gameserver.util.Util;
 
+import custom.AcpTask;
 import custom.colors.ColorsManager;
 import custom.events.EventManager;
+
 
 /**
  * This class represents a player in the world.<br>
@@ -3277,7 +3279,7 @@ public final class L2PcInstance extends L2Playable
 	 */
 	@Override
 	public void broadcastStatusUpdate()
-	{
+	{		
 		// Send StatusUpdate with current HP, MP and CP to this L2PcInstance
 		StatusUpdate su = new StatusUpdate(this);
 		su.addAttribute(StatusUpdate.CUR_HP, (int) getCurrentHp());
@@ -10780,5 +10782,33 @@ public final class L2PcInstance extends L2Playable
 		getDisabledSkills().clear();
 		sendPacket(new SkillCoolTime(this));
 	}
+	//
+	private boolean _acp =false;
+	private ScheduledFuture<?> _acpScheduledFuture = null;
+	public boolean acp()
+	{
+		return  _acp;
+	}
+	public void setAcp(boolean value)
+	{
+		_acp = value;
+	}
 	
+	public void useAcp()
+	{
+		// ACP ADD REDIST 
+		if (acp())
+		{
+			if (_acpScheduledFuture == null)
+			{
+				AcpTask acpTask = new AcpTask(this);
+				_acpScheduledFuture = ThreadPool.scheduleAtFixedRate(acpTask, 100, 750);
+			}
+		}
+		else if (_acpScheduledFuture != null)
+		{
+			_acpScheduledFuture.cancel(false);
+			_acpScheduledFuture = null;			
+		}		
+	}
 }
