@@ -536,6 +536,14 @@ public final class Config
 	public static String NEW_CHARACTER_TITLE;
 	//subclass
 	public static boolean CHECK_VILLAGE_MASTER;
+	//custom NPC
+	public static int COLOR_CHANGE_ITEM;
+	public static int COLOR_CHANGE_PRICE;
+	public static int  NAME_CHANGE_ITEM;
+	public static int  NAME_CHANGE_PRICE;
+	public static boolean CLASS_MASTER_BECOME_NOBLE;
+	public static int  CLASS_MASTER_BECOME_NOBLE_ITEM;
+	public static int  CLASS_MASTER_BECOME_NOBLE_PRICE;
 	// --------------------------------------------------
 	// Server
 	// --------------------------------------------------
@@ -1488,6 +1496,15 @@ public final class Config
 		ALLOW_NEW_CHARACTER_TITLE = Boolean.parseBoolean(custom.getProperty("AllowNewCharacterTitle", "false"));
 		NEW_CHARACTER_TITLE = custom.getProperty("NewCharacterTitle", "Newbie");
 		CHECK_VILLAGE_MASTER=Boolean.parseBoolean(custom.getProperty("CHECK_VILLAGE_MASTER", "false"));
+        // custom NPC
+		COLOR_CHANGE_ITEM = Integer.parseInt(custom.getProperty("COLOR_CHANGE_ITEM", "9213"));
+		COLOR_CHANGE_PRICE= Integer.parseInt(custom.getProperty("COLOR_CHANGE_PRICE", "5"));
+		NAME_CHANGE_ITEM = Integer.parseInt(custom.getProperty("NAME_CHANGE_ITEM", "9213"));
+		NAME_CHANGE_PRICE= Integer.parseInt(custom.getProperty("NAME_CHANGE_PRICE", "5"));
+		CLASS_MASTER_BECOME_NOBLE = Boolean.parseBoolean(custom.getProperty("CLASS_MASTER_BECOME_NOBLE", "false"));
+		CLASS_MASTER_BECOME_NOBLE_ITEM=Integer.parseInt(custom.getProperty("CLASS_MASTER_BECOME_NOBLE_ITEM", "9213"));
+		CLASS_MASTER_BECOME_NOBLE_PRICE=Integer.parseInt(custom.getProperty("CLASS_MASTER_BECOME_NOBLE_PRICE", "5"));
+		
 	}
 	
 	public static final void loadGameServer()

@@ -1327,7 +1327,7 @@ public abstract class L2Character extends L2Object
 		MagicUseTask mut = new MagicUseTask(targets, skill, hitTime, coolTime, simultaneously);
 		
 		// launch the magic in hitTime milliseconds
-		if (hitTime > 410)
+		if (hitTime > 210)
 		{
 			// Send SetupGauge with the color of the gauge and the casting time
 			if (this instanceof L2PcInstance && !effectWhileCasting)

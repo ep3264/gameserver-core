@@ -51,12 +51,12 @@ public final class RequestDuelStart extends L2GameClientPacket
 		}
 		if (EventManager.getInstance().getCurrentEvent() != null)
 		{
-			if (activeChar.isInEvent())
+			if (activeChar.getEvent()!=null)
 			{
 				activeChar.sendMessage("You can not duel at this time.");
 				return;
 			}
-			if (targetChar.isInEvent())
+			if (targetChar.getEvent()!=null)
 			{
 				activeChar.sendMessage("Your target can not duel at this time.");
 				return;

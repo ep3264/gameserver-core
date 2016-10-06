@@ -34,7 +34,7 @@ import net.sf.l2j.gameserver.network.serverpackets.ExShowScreenMessage;
 import net.sf.l2j.gameserver.util.Broadcast;
 
 
-public abstract class EventBase
+public abstract class Event
 {
 	protected static final int[] FAIL_SAFE_LOCATION = new int[]
 	{
@@ -50,7 +50,7 @@ public abstract class EventBase
 		private ScheduledFuture<?> _task = null;
 		private int _delay;
 		
-		public synchronized void schedule(int delay)
+		public  void schedule(int delay)
 		{
 			_delay = delay;
 			if (_task != null)
@@ -66,7 +66,7 @@ public abstract class EventBase
 		}
 		
 		@Override
-		public synchronized void run()
+		public void run()
 		{
 			if (_delay < 1000)
 			{
@@ -79,7 +79,7 @@ public abstract class EventBase
 			_delay = _delay - 1000;
 		}
 		
-		public synchronized void cancel()
+		public  void cancel()
 		{
 			if (_task != null)
 			{
@@ -102,14 +102,14 @@ public abstract class EventBase
 		}
 		
 		@Override
-		public synchronized void run()
+		public  void run()
 		{
 			_task = null;
 			teleportPlayerToEvent(_player);
 			_resurrectors.remove(this);
 		}
 		
-		public synchronized void cancel()
+		public  void cancel()
 		{
 			if (_task != null)
 			{
@@ -130,7 +130,7 @@ public abstract class EventBase
 	protected HashSet<Integer> _blockedItems = new HashSet<>();
 	protected List<L2FenceInstance> _fences = new LinkedList<>();
 	protected ArrayList<int[]> _spawnLocations = new ArrayList<>();
-	public EventBase()
+	public Event()
 	{		
 		EventManager.getInstance().addEvent(this);
 	}
@@ -161,7 +161,7 @@ public abstract class EventBase
 	{
 		for(L2PcInstance player:_players)
 		{
-			player.setInEvent(false);
+			player.setEvent(null);
 		}
 		_eventScheduler.cancel();
 		for (EventResurrector resurrector : _resurrectors)
@@ -241,11 +241,12 @@ public abstract class EventBase
 			if(!p.isOnline())
 			{
 				_players.remove(p);
+				p.setEvent(null);
 			}
 		}
 		_players.add(player);		
 		_scores.put(player, 0);	
-		player.setInEvent(true);
+		player.setEvent(this);
 		return true;
 	}
 	
@@ -253,7 +254,7 @@ public abstract class EventBase
 	{
 		debug(player.getName() + " has left the event.");
 		_players.remove(player);
-		player.setInEvent(false);
+		player.setEvent(null);
 		//_scores.remove(player);
 		if (isRunning())
 		{
@@ -271,13 +272,9 @@ public abstract class EventBase
 		return true;
 	}
 	
-	public boolean containsPlayer(L2Character character)
-	{
-		if (character instanceof L2PcInstance)
-		{
-			return _players.contains(character);
-		}
-		return false;
+	public boolean containsPlayer(L2PcInstance player)
+	{		
+		return player.getEvent()==this;		
 	}
 	
 	protected void setScore(L2PcInstance player, int score)
@@ -305,7 +302,7 @@ public abstract class EventBase
 		{
 			EventManager.getInstance().userByPass(player, "info");
 		}
-		if (!player.isInEvent() && isRunning())
+		if (!(player.getEvent()==this) && isRunning())
 		{
 			if (getString("zoneId") != null)
 			{
@@ -443,7 +440,7 @@ public abstract class EventBase
 	*/
 	public boolean canLogOut(L2PcInstance player)
 	{
-		if (!player.isInEvent())
+		if (player.getEvent()!=this)
 		{
 			return true;
 		}
@@ -457,7 +454,7 @@ public abstract class EventBase
 	
 	public boolean canUseItem(L2PcInstance player, ItemInstance item)
 	{
-		if (!player.isInEvent())
+		if (player.getEvent()!=this)
 		{
 			return true;
 		}
@@ -471,7 +468,7 @@ public abstract class EventBase
 	
 	public boolean canUseSkill(L2PcInstance player, L2Skill skill)
 	{
-		if (!player.isInEvent())
+		if (player.getEvent()!=this)
 		{
 			return true;
 		}
@@ -492,11 +489,11 @@ public abstract class EventBase
 	{
 		return false;
 	}	
-	public boolean canRequestToNpc(L2Character player, L2Character npc)
+	public boolean canRequestToNpc(L2PcInstance player, L2Character npc)
 	{
 		return true;
 	}
-	public boolean canUseMagic(L2Character player,L2Character target)
+	public boolean canUseMagic(L2Character player, L2Character target)
 	{
 		return true;
 	}
@@ -684,6 +681,9 @@ public abstract class EventBase
 				}
 			}
 		}
-	}
-	
+	}	
+	public boolean playersAutoAttackable(L2Character target, L2Character attacker)
+	{
+		return false;
+	}	
 }

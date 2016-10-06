@@ -49,7 +49,7 @@ public class EventManager
 		}
 		
 		@Override
-		public synchronized void run()
+		public void run()
 		{
 			if (getCurrentEvent() == null)
 			{
@@ -240,8 +240,8 @@ public class EventManager
 	
 	public EventConfig _config;
 	public AutoEventScheduler _autoEventScheduler;
-	private EventBase _currentEvent;
-	private final List<EventBase> _events = new ArrayList<>();
+	private Event _currentEvent;
+	private final List<Event> _events = new ArrayList<>();
 	
 	public static EventManager getInstance()
 	{
@@ -262,7 +262,7 @@ public class EventManager
 		}
 	}
 	
-	public EventBase getCurrentEvent()
+	public Event getCurrentEvent()
 	{
 		return _currentEvent;
 	}
@@ -276,7 +276,7 @@ public class EventManager
 		return _config.getVar(key);
 	}
 	
-	public final void addEvent(EventBase event)
+	public final void addEvent(Event event)
 	{
 		// Quest does not exist, return.
 		if (event == null)
@@ -284,8 +284,8 @@ public class EventManager
 			return;
 		}
 		
-		// Quest already loaded, unload id.
-		EventBase old = getEvent(event.getEventId());
+		// Event already loaded, unload id.
+		Event old = getEvent(event.getEventId());
 		if ((old != null))
 		{
 			_events.remove(old);
@@ -301,9 +301,9 @@ public class EventManager
 	 * @param eventId
 	 * @return
 	 */
-	public final EventBase getEvent(int eventId)
+	public final Event getEvent(int eventId)
 	{
-		for (EventBase event : _events)
+		for (Event event : _events)
 		{
 			if (event.getEventId() == eventId)
 			{
@@ -313,9 +313,9 @@ public class EventManager
 		return null;
 	}
 	
-	public final EventBase getEvent(String eventName)
+	public final Event getEvent(String eventName)
 	{
-		for (EventBase event : _events)
+		for (Event event : _events)
 		{
 			if (event.getName().equalsIgnoreCase(eventName))
 			{
@@ -365,7 +365,7 @@ public class EventManager
 				{
 					player.sendMessage("Нельзя присоединиться во время боя.");
 				}
-				else if (player.isInEvent())
+				else if (player.getEvent()==getCurrentEvent())
 				{
 					player.sendMessage("Вы уже зарегистрированы.");
 				}
@@ -399,7 +399,7 @@ public class EventManager
 		{
 			if (getCurrentEvent() != null)
 			{
-				if (player.isInEvent())
+				if (player.getEvent()==getCurrentEvent())
 				{
 					if (player.isInCombat())
 					{

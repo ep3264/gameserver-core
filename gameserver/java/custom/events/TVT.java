@@ -15,7 +15,6 @@ import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.model.actor.instance.L2SummonInstance;
 
 import custom.events.CustomUtil;
-import custom.events.EventBase;
 import custom.events.EventManager;
 
 /**
@@ -27,7 +26,7 @@ import custom.events.EventManager;
  * Time: 0:15:55<br>
  * <br>
  */
-public class TVT extends EventBase
+public class TVT extends CombatEvent
 {
 	private enum EventState
 	{
@@ -243,7 +242,7 @@ public class TVT extends EventBase
 		{
 			case IDLE:
 				announce("TVT: Регистрация игроков открыта.");
-				announce("Команды: "+EVENT_COMMANDS);
+				announce("Команды: " + EVENT_COMMANDS);
 				_eventState = EventState.REGISTERING;
 				schedule(getInt("registrationTime"));
 				break;
@@ -256,7 +255,7 @@ public class TVT extends EventBase
 				}
 				else
 				{
-					announce("Event был прерван, потому что не было достаточного количества участников.");
+					announce("Event has been aborted because there was not enough participants.");
 					debug("Event has been aborted because there was not enough participants.");
 					EventManager.getInstance().end(false);
 				}
@@ -459,7 +458,7 @@ public class TVT extends EventBase
 			}
 			else if (_1stPlace != null)
 			{
-				announce("1-е место заняла команда " + getString("team" + _1stPlace.getId() + "Name") + ". Сделав " + _1stPlace.getScore()+ " убийств.");
+				announce("1-е место заняла команда " + getString("team" + _1stPlace.getId() + "Name") + ". Сделав " + _1stPlace.getScore() + " убийств.");
 				for (L2PcInstance member : _1stPlace.getMembers())
 				{
 					if (_scores.get(member) >= getInt("minKillsToGetReward"))
@@ -685,21 +684,49 @@ public class TVT extends EventBase
 	}
 	
 	@Override
-	public boolean canAttackInPeace(L2Character player, L2Character target)
+	public boolean canAttackInPeace(L2Character attacker, L2Character target)
 	{
 		if (!isRunning())
 		{
 			return false;
 		}
-		if (!(player instanceof L2PcInstance) || !(target instanceof L2PcInstance))
+		L2PcInstance attackerInstance;
+		if (!(attacker instanceof L2PcInstance))
+		{
+			if (target instanceof L2SummonInstance)
+			{
+				attackerInstance = ((L2SummonInstance) target).getOwner();
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else
+		{
+			attackerInstance = (L2PcInstance) attacker;
+		}
+		L2PcInstance targetInstance;
+		if (!(target instanceof L2PcInstance))
+		{
+			if (target instanceof L2SummonInstance)
+			{
+				targetInstance = ((L2SummonInstance) target).getOwner();
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else
+		{
+			targetInstance = (L2PcInstance) target;
+		}
+		if (!containsPlayer(attackerInstance) || !containsPlayer(targetInstance))
 		{
 			return false;
-		}
-		if (((L2PcInstance) player).isInEvent() && ((L2PcInstance) target).isInEvent())
-		{
-			return true;
-		}
-		return false;
+		} 
+		return true;		
 	}
 	
 	/*
@@ -709,7 +736,6 @@ public class TVT extends EventBase
 	@Override
 	public String getName()
 	{
-		// TODO Auto-generated method stub
 		return NAME;
 	}
 	
@@ -720,13 +746,7 @@ public class TVT extends EventBase
 	@Override
 	public int getEventId()
 	{
-		// TODO Auto-generated method stub
 		return ID;
 	}
-	/**
-	 * @param args
-	 */
-	/*
-	 * public static void main(String[] args) { new TVT(); }
-	 */
+	
 }

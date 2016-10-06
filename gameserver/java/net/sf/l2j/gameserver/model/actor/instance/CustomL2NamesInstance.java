@@ -14,10 +14,10 @@
  */
 package net.sf.l2j.gameserver.model.actor.instance;
 
+import net.sf.l2j.Config;
 import net.sf.l2j.commons.lang.StringUtil;
-import net.sf.l2j.gameserver.cache.HtmCache;
 import net.sf.l2j.gameserver.datatables.CharNameTable;
-
+import net.sf.l2j.gameserver.datatables.ItemTable;
 import net.sf.l2j.gameserver.model.actor.template.NpcTemplate;
 import net.sf.l2j.gameserver.model.item.instance.ItemInstance;
 import net.sf.l2j.gameserver.network.SystemMessageId;
@@ -28,10 +28,7 @@ import net.sf.l2j.gameserver.network.serverpackets.SystemMessage;
  * @author Redist
  */
 public class CustomL2NamesInstance extends L2NpcInstance
-{
-	private static final int PRICE = 5;
-	private final static int COL = 9213;
-	
+{	
 	public CustomL2NamesInstance(int objectId, NpcTemplate template)
 	{
 		super(objectId, template);
@@ -43,6 +40,9 @@ public class CustomL2NamesInstance extends L2NpcInstance
 		NpcHtmlMessage html = new NpcHtmlMessage(1);
 		html.setFile(getHtmlPath(getNpcId(), val));
 		html.replace("%objectId%", getObjectId());
+		html.replace("%price%", Config.NAME_CHANGE_PRICE);
+		String itemName = ItemTable.getInstance().getTemplate(Config.NAME_CHANGE_ITEM).getName();
+		html.replace("%item%", itemName);
 		player.sendPacket(html);
 	}
 	
@@ -54,7 +54,7 @@ public class CustomL2NamesInstance extends L2NpcInstance
 			filename = "data/html/mods/names/" + npcId + ".htm";
 		else
 			filename = "data/html/mods/names/" + npcId + "-" + val + ".htm";
-			
+		
 		return filename;
 	}
 	
@@ -92,8 +92,8 @@ public class CustomL2NamesInstance extends L2NpcInstance
 	
 	private static boolean checkCondition(L2PcInstance player, String name)
 	{
-		ItemInstance item = player.getInventory().getItemByItemId(COL);
-		if (item == null || item.getCount() < PRICE)
+		ItemInstance item = player.getInventory().getItemByItemId(Config.NAME_CHANGE_ITEM);
+		if (item == null || item.getCount() < Config.NAME_CHANGE_PRICE)
 		{
 			player.sendPacket(SystemMessage.getSystemMessage(SystemMessageId.INCORRECT_ITEM_COUNT));
 			return false;
@@ -108,7 +108,7 @@ public class CustomL2NamesInstance extends L2NpcInstance
 			player.sendMessage("Персонаж с таким именем уже существует.");
 			return false;
 		}
-		if (!player.destroyItem("Name Manager", item, PRICE, player, true))
+		if (!player.destroyItem("Name Manager", item, Config.NAME_CHANGE_PRICE, player, true))
 		{
 			return false;
 		}

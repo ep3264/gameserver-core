@@ -24,10 +24,13 @@ import net.sf.l2j.gameserver.datatables.ItemTable;
 import net.sf.l2j.gameserver.model.actor.template.NpcTemplate;
 import net.sf.l2j.gameserver.model.base.ClassId;
 import net.sf.l2j.gameserver.model.holder.IntIntHolder;
+import net.sf.l2j.gameserver.model.item.instance.ItemInstance;
+import net.sf.l2j.gameserver.model.item.kind.Item;
 import net.sf.l2j.gameserver.network.SystemMessageId;
 import net.sf.l2j.gameserver.network.serverpackets.ActionFailed;
 import net.sf.l2j.gameserver.network.serverpackets.HennaInfo;
 import net.sf.l2j.gameserver.network.serverpackets.NpcHtmlMessage;
+import net.sf.l2j.gameserver.network.serverpackets.SystemMessage;
 import net.sf.l2j.gameserver.network.serverpackets.UserInfo;
 
 /**
@@ -45,9 +48,12 @@ import net.sf.l2j.gameserver.network.serverpackets.UserInfo;
  */
 public final class L2ClassMasterInstance extends L2NpcInstance
 {
+	
+
+	
 	public L2ClassMasterInstance(int objectId, NpcTemplate template)
 	{
-		super(objectId, template);
+		super(objectId, template);		
 	}
 	
 	@Override
@@ -62,6 +68,9 @@ public final class L2ClassMasterInstance extends L2NpcInstance
 		final NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
 		html.setFile(filename);
 		html.replace("%objectId%", getObjectId());
+		html.replace("%price%", Config.CLASS_MASTER_BECOME_NOBLE_PRICE);
+		String itemName = ItemTable.getInstance().getTemplate(Config.CLASS_MASTER_BECOME_NOBLE_ITEM).getName();
+		html.replace("%item%", itemName);
 		player.sendPacket(html);
 	}
 	
@@ -88,12 +97,12 @@ public final class L2ClassMasterInstance extends L2NpcInstance
 				html.replace("%name%", CharTemplateTable.getInstance().getClassNameById(val));
 				player.sendPacket(html);
 			}
-		}/*
-		else if (command.startsWith("become_noble"))
+		}
+		else if (Config.CLASS_MASTER_BECOME_NOBLE && command.startsWith("become_noble"))
 		{
 			final NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
 			
-			if (!player.isNoble())
+			if (!player.isNoble()  && payBecomeNoble(player))
 			{
 				player.setNoble(true, true);
 				player.sendPacket(new UserInfo(player));
@@ -110,12 +119,26 @@ public final class L2ClassMasterInstance extends L2NpcInstance
 		{
 			player.giveAvailableSkills();
 			player.sendSkillList();
-		}*/
+		}
 		else{
 			super.onBypassFeedback(player, command);
 		}
 	}
 	
+	private static boolean payBecomeNoble(L2PcInstance player)
+	{
+		ItemInstance item = player.getInventory().getItemByItemId( Config.CLASS_MASTER_BECOME_NOBLE_ITEM);
+		if (item == null || item.getCount() <  Config.CLASS_MASTER_BECOME_NOBLE_PRICE)
+		{
+			player.sendPacket(SystemMessage.getSystemMessage(SystemMessageId.INCORRECT_ITEM_COUNT));
+			return false;
+		}
+		if (!player.destroyItem("Class Manager", item,  Config.CLASS_MASTER_BECOME_NOBLE_PRICE, player, true))
+		{
+			return false;
+		}
+		return true;
+	}
 	private static final void showHtmlMenu(L2PcInstance player, int objectId, int level)
 	{
 		final NpcHtmlMessage html = new NpcHtmlMessage(objectId);

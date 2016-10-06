@@ -17,9 +17,11 @@ package net.sf.l2j.gameserver.model.actor.instance;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import net.sf.l2j.gameserver.cache.HtmCache;
+import net.sf.l2j.Config;
+import net.sf.l2j.gameserver.datatables.ItemTable;
 import net.sf.l2j.gameserver.model.actor.template.NpcTemplate;
 import net.sf.l2j.gameserver.model.item.instance.ItemInstance;
+import net.sf.l2j.gameserver.model.item.kind.Item;
 import net.sf.l2j.gameserver.network.SystemMessageId;
 import net.sf.l2j.gameserver.network.serverpackets.NpcHtmlMessage;
 import net.sf.l2j.gameserver.network.serverpackets.SystemMessage;
@@ -30,14 +32,13 @@ import custom.colors.ColorsManager;
  * @author Redist
  */
 public class CustomL2ColorsInstance extends L2NpcInstance
-{
-	private static final int PRICE = 5;
-	private final static int COL = 9213;
+{	
 	public static final HashSet<String> ALLOWED_COLORS = new HashSet<>(Arrays.asList("009900", "007fff", "ff00ff", "ffff00", "ff0000", "ff9900", "93db70", "9f9f9f", "00ffff"));
 	
 	public CustomL2ColorsInstance(int objectId, NpcTemplate template)
 	{
 		super(objectId, template);
+		
 	}
 	
 	@Override
@@ -46,6 +47,12 @@ public class CustomL2ColorsInstance extends L2NpcInstance
 		NpcHtmlMessage html = new NpcHtmlMessage(1);
 		html.setFile(getHtmlPath(getNpcId(), val));
 		html.replace("%objectId%", getObjectId());
+		if(val==1 || val==2)
+		{
+			String itemName = ItemTable.getInstance().getTemplate(Config.COLOR_CHANGE_ITEM).getName();
+			html.replace("%price%", Config.COLOR_CHANGE_PRICE);
+			html.replace("%item%", itemName);
+		}
 		player.sendPacket(html);
 	}
 	
@@ -130,13 +137,13 @@ public class CustomL2ColorsInstance extends L2NpcInstance
 	
 	private static boolean pay(L2PcInstance player)
 	{
-		ItemInstance item = player.getInventory().getItemByItemId(COL);
-		if (item == null || item.getCount() < PRICE)
+		ItemInstance item = player.getInventory().getItemByItemId(Config.COLOR_CHANGE_ITEM);
+		if (item == null || item.getCount() < Config.COLOR_CHANGE_PRICE)
 		{
 			player.sendPacket(SystemMessage.getSystemMessage(SystemMessageId.INCORRECT_ITEM_COUNT));
 			return false;
 		}
-		if (!player.destroyItem("Color Manager", item, PRICE, player, true))
+		if (!player.destroyItem("Color Manager", item, Config.COLOR_CHANGE_PRICE, player, true))
 		{
 			return false;
 		}

@@ -249,6 +249,7 @@ import net.sf.l2j.gameserver.util.Util;
 
 import custom.AcpTask;
 import custom.colors.ColorsManager;
+import custom.events.Event;
 import custom.events.EventManager;
 
 
@@ -4105,7 +4106,7 @@ public final class L2PcInstance extends L2Playable
 			
 		if (EventManager.getInstance().getCurrentEvent() != null)
 		{
-			if (this.isInEvent() && targetPlayer.isInEvent())
+			if (this.getEvent()!=null && targetPlayer.getEvent()!=null)
 			{
 				return;
 			}
@@ -4184,14 +4185,7 @@ public final class L2PcInstance extends L2Playable
 		if (player == null)
 		{
 			return;
-		}
-		if (EventManager.getInstance().getCurrentEvent() != null)
-		{
-			if (this.isInEvent() && player.isInEvent())
-			{
-				return;
-			}
-		}
+		}		
 		
 		if (isInDuel() && player.getDuelId() == getDuelId())
 			return;
@@ -6497,7 +6491,7 @@ public final class L2PcInstance extends L2Playable
 			
 			if (EventManager.getInstance().getCurrentEvent() != null)
 			{
-				if (this.isInEvent() && cha.isInEvent())
+				if(EventManager.getInstance().getCurrentEvent().playersAutoAttackable(this, attacker))
 				{
 					return true;
 				}
@@ -10698,27 +10692,17 @@ public final class L2PcInstance extends L2Playable
 		broadcastUserInfo();
 	}
 	
-	private boolean _inEvent = false;
-	private boolean _inEventReg = false;
+	private Event _event = null;
+
 	
-	public void setInEvent(boolean inEvent)
+	public void setEvent(Event event)
 	{
-		this._inEvent = inEvent;
+		this._event = event;
 	}
 	
-	public boolean isInEvent()
+	public Event getEvent()
 	{
-		return _inEvent;
-	}
-	
-	public void setInEventReg(boolean inEventReg)
-	{
-		this._inEventReg = inEventReg;
-	}
-	
-	public boolean isInEventReg()
-	{
-		return _inEventReg;
+		return _event;
 	}
 	
 	private boolean _isEnteredWorld = false;

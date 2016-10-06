@@ -56,7 +56,7 @@ public final class RequestRestartPoint extends L2GameClientPacket
 			Castle castle = null;
 			if (EventManager.getInstance().getCurrentEvent() != null)
 			{
-				if (activeChar.isInEvent() && activeChar.isDead())
+				if (activeChar.getEvent()!=null && activeChar.isDead())
 				{
 					if (EventManager.getInstance().getCurrentEvent().getBoolean("allowFixedResurrection"))
 					{

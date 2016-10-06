@@ -39,10 +39,9 @@ import net.sf.l2j.gameserver.model.zone.ZoneId;
 //import net.sf.l2j.gameserver.network.serverpackets.SetupGauge;
 
 import custom.events.CustomUtil;
-import custom.events.EventBase;
 import custom.events.EventManager;
 
-public class EW extends EventBase
+public class EW extends CombatEvent
 {
 	private enum EventState
 	{
@@ -180,15 +179,27 @@ public class EW extends EventBase
 	}
 	
 	@Override
-	public boolean canAttackInPeace(L2Character player, L2Character target)
+	public boolean canAttackInPeace(L2Character attacker, L2Character target)
 	{
 		if (!isRunning())
 		{
 			return false;
 		}
-		if (!(player instanceof L2PcInstance))
+		L2PcInstance attackerInstance;
+		if (!(attacker instanceof L2PcInstance))
 		{
-			return false;
+			if (target instanceof L2SummonInstance)
+			{
+				attackerInstance = ((L2SummonInstance) target).getOwner();
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else
+		{
+			attackerInstance = (L2PcInstance) attacker;
 		}
 		L2PcInstance targetInstance;
 		if (!(target instanceof L2PcInstance))
@@ -206,11 +217,11 @@ public class EW extends EventBase
 		{
 			targetInstance = (L2PcInstance) target;
 		}
-		if (!((L2PcInstance) player).isInEvent() || !targetInstance.isInEvent())
+		if (!containsPlayer(attackerInstance) || !containsPlayer(targetInstance))
 		{
 			return false;
 		}
-		if (MapRegionTable.getClosestTown(player.getX(), player.getY()) == MapRegionTable.getTown(_townId))
+		if (MapRegionTable.getClosestTown(attackerInstance.getX(), attackerInstance.getY()) == MapRegionTable.getTown(_townId))
 		{
 			return true;
 		}
@@ -224,7 +235,7 @@ public class EW extends EventBase
 		{
 			return;
 		}
-		if (!player.isInEvent())
+		if (!containsPlayer(player))
 		{
 			return;
 		}
@@ -376,16 +387,15 @@ public class EW extends EventBase
 	}
 	
 	@Override
-	public boolean canRequestToNpc(L2Character player, L2Character npc)
+	public boolean canRequestToNpc(L2PcInstance player, L2Character npc)
 	{
 		
 		NpcTemplate npcTemplate = (NpcTemplate) npc.getTemplate();
-		if (!((L2PcInstance) player).isInEvent() && npcTemplate.getNpcId() == NPC_ID)
+		if (containsPlayer(player) && npcTemplate.getNpcId() == NPC_ID)
 		{
 			player.sendMessage("Вы не участник Enchant War.");
 			return false;
 		}
-		
 		return true;
 	}
 	
@@ -537,7 +547,6 @@ public class EW extends EventBase
 	@Override
 	public String getName()
 	{
-		// TODO Auto-generated method stub
 		return NAME;
 	}
 	
@@ -548,19 +557,31 @@ public class EW extends EventBase
 	@Override
 	public int getEventId()
 	{
-		// TODO Auto-generated method stub
 		return ID;
 	}
+	
 	@Override
-	public boolean canUseMagic(L2Character player,L2Character target)
+	public boolean canUseMagic(L2Character attacker, L2Character target)
 	{
 		if (!isRunning())
 		{
 			return true;
 		}
-		if (!(player instanceof L2PcInstance))
+		L2PcInstance attackerInstance;
+		if (!(attacker instanceof L2PcInstance))
 		{
-			return true;
+			if (target instanceof L2SummonInstance)
+			{
+				attackerInstance = ((L2SummonInstance) target).getOwner();
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else
+		{
+			attackerInstance = (L2PcInstance) attacker;
 		}
 		L2PcInstance targetInstance;
 		if (!(target instanceof L2PcInstance))
@@ -578,14 +599,12 @@ public class EW extends EventBase
 		{
 			targetInstance = (L2PcInstance) target;
 		}
-		if (!((L2PcInstance) player).isInEvent() && targetInstance.isInEvent())
+		if (!containsPlayer(attackerInstance) && containsPlayer(targetInstance))
 		{
-			player.sendMessage("В данный момент нельзя взаимодействовать с персонажем!");
+			attackerInstance.sendMessage("В данный момент нельзя взаимодействовать с персонажем!");
 			return false;
 		}
 		return true;
 	}
-	/*
-	 * public static void main(String[] args) { new EW(); }
-	 */	
+
 }
