@@ -1,12 +1,6 @@
 package protection.crypt;
 
 import java.io.IOException;
-
-
-
-
-
-
 /**
  * Developers: Redist Team<br>
  * <br>

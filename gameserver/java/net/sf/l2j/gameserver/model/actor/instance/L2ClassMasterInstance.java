@@ -25,7 +25,6 @@ import net.sf.l2j.gameserver.model.actor.template.NpcTemplate;
 import net.sf.l2j.gameserver.model.base.ClassId;
 import net.sf.l2j.gameserver.model.holder.IntIntHolder;
 import net.sf.l2j.gameserver.model.item.instance.ItemInstance;
-import net.sf.l2j.gameserver.model.item.kind.Item;
 import net.sf.l2j.gameserver.network.SystemMessageId;
 import net.sf.l2j.gameserver.network.serverpackets.ActionFailed;
 import net.sf.l2j.gameserver.network.serverpackets.HennaInfo;
@@ -102,12 +101,15 @@ public final class L2ClassMasterInstance extends L2NpcInstance
 		{
 			final NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
 			
-			if (!player.isNoble()  && payBecomeNoble(player))
+			if (!player.isNoble())
 			{
-				player.setNoble(true, true);
-				player.sendPacket(new UserInfo(player));
-				html.setFile("data/html/classmaster/nobleok.htm");
-				player.sendPacket(html);
+				if (payBecomeNoble(player))
+				{
+					player.setNoble(true, true);
+					player.sendPacket(new UserInfo(player));
+					html.setFile("data/html/classmaster/nobleok.htm");
+					player.sendPacket(html);
+				}
 			}
 			else
 			{

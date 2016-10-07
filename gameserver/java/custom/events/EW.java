@@ -391,7 +391,7 @@ public class EW extends CombatEvent
 	{
 		
 		NpcTemplate npcTemplate = (NpcTemplate) npc.getTemplate();
-		if (containsPlayer(player) && npcTemplate.getNpcId() == NPC_ID)
+		if (!containsPlayer(player) && npcTemplate.getNpcId() == NPC_ID)
 		{
 			player.sendMessage("Вы не участник Enchant War.");
 			return false;
