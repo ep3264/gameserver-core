@@ -18,7 +18,7 @@ public class LeaveWorld extends L2GameServerPacket
 {
 	public static final LeaveWorld STATIC_PACKET = new LeaveWorld();
 	
-	private LeaveWorld()
+	LeaveWorld()
 	{
 	}
 	

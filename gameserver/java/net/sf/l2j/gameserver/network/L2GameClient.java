@@ -520,7 +520,13 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>>im
 	public void closeNow()
 	{
 		_isDetached = true; // prevents more packets execution
+		if(getActiveChar()!=null && getActiveChar().isGhost())
+		{
+			getActiveChar().unsetGhost();
+			
+		} else {	
 		close(ServerClose.STATIC_PACKET);
+		}
 		synchronized (this)
 		{
 			if (_cleanupTask != null)
@@ -573,6 +579,14 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>>im
 				{
 					setDetached(true);
 					fast = !getActiveChar().isInCombat() && !getActiveChar().isLocked();
+				}
+				L2PcInstance player = getActiveChar();
+				if (player != null)
+				{
+					if (player.isOfflineTrader() || player.isGhost())
+					{
+						return;
+					}
 				}
 				cleanMe(fast);
 			}
@@ -644,7 +658,7 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>>im
 		{
 			try
 			{
-				if (getActiveChar() != null && getActiveChar().isOnline())
+				if (getActiveChar() != null && getActiveChar().isOnline() && !getActiveChar().isGhost() )
 				{
 					getActiveChar().store();
 					
@@ -865,5 +879,10 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>>im
 	public void banByHwid()
 	{
 		_bannedHwid = true;
+	}
+	
+	public void stopAutoSave()
+	{
+		_autoSaveInDB.cancel(true);
 	}
 }

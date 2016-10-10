@@ -508,7 +508,8 @@ public final class Config
 	public static boolean CONSUME_SHOTS_CHAR;
 	public static boolean CONSUME_SHOTS_PET;
 	// ghosts
-	public static boolean GHOSTS_PLAYERS_ENABLE;
+	public static boolean ENABLE_GHOSTS_PLAYERS;
+	public static boolean ENABLE_GHOSTS_SHOUTS;
 	public static boolean GHOSTS_PLAYERS_SIT;
 	// enchant
 	public static boolean ALT_FAILED_ENC_LEVEL;
@@ -544,6 +545,10 @@ public final class Config
 	public static boolean CLASS_MASTER_BECOME_NOBLE;
 	public static int  CLASS_MASTER_BECOME_NOBLE_ITEM;
 	public static int  CLASS_MASTER_BECOME_NOBLE_PRICE;
+	//offline trade
+	public static boolean ALLOW_OFFLINE_TRADE;
+	public static boolean OFFLINE_SET_NAME_COLOR;
+	public static int OFFLINE_NAME_COLOR;
 	// --------------------------------------------------
 	// Server
 	// --------------------------------------------------
@@ -1478,8 +1483,9 @@ public final class Config
 		AUTO_EVENT_SCHEDULER = custom.getProperty("AUTO_EVENT_SCHEDULER", false);
 		CONSUME_SHOTS_CHAR = Boolean.parseBoolean(custom.getProperty("ConsumeShotsChar", "True"));
 		CONSUME_SHOTS_PET = Boolean.parseBoolean(custom.getProperty("ConsumeShotsPet", "True"));
-		GHOSTS_PLAYERS_ENABLE = Boolean.parseBoolean(custom.getProperty("GhostsPlayersEnable", "False"));
+		ENABLE_GHOSTS_PLAYERS = Boolean.parseBoolean(custom.getProperty("GhostsPlayersEnable", "False"));
 		GHOSTS_PLAYERS_SIT = Boolean.parseBoolean(custom.getProperty("GhostsPlayersSit", "False"));
+		ENABLE_GHOSTS_SHOUTS=Boolean.parseBoolean(custom.getProperty("GhostsShoutsEnable", "False"));
 		ALT_FAILED_ENC_LEVEL = Boolean.parseBoolean(custom.getProperty("AltEncLvlAfterFail", "false"));
 		// oly
 		ALT_OLY_RESET_SKILL_TIME = Boolean.parseBoolean(custom.getProperty("AltOlyResetSkillTime", "true"));
@@ -1504,7 +1510,10 @@ public final class Config
 		CLASS_MASTER_BECOME_NOBLE = Boolean.parseBoolean(custom.getProperty("CLASS_MASTER_BECOME_NOBLE", "false"));
 		CLASS_MASTER_BECOME_NOBLE_ITEM=Integer.parseInt(custom.getProperty("CLASS_MASTER_BECOME_NOBLE_ITEM", "9213"));
 		CLASS_MASTER_BECOME_NOBLE_PRICE=Integer.parseInt(custom.getProperty("CLASS_MASTER_BECOME_NOBLE_PRICE", "5"));
-		
+		//offline trade
+		ALLOW_OFFLINE_TRADE=Boolean.parseBoolean(custom.getProperty("ALLOW_OFFLINE_TRADE", "false"));
+		OFFLINE_SET_NAME_COLOR = custom.getProperty("OfflineSetNameColor", false);
+		OFFLINE_NAME_COLOR = Integer.decode("0x" + custom.getProperty("OfflineNameColor", "808080"));
 	}
 	
 	public static final void loadGameServer()

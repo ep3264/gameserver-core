@@ -47,7 +47,11 @@ public final class L2GamePacketHandler implements IPacketHandler<L2GameClient>, 
 		
 		ReceivablePacket<L2GameClient> msg = null;
 		GameClientState state = client.getState();
-		
+		//Fix Redist offlinetrader
+		if(client.getActiveChar()!=null && client.getActiveChar().isOfflineTrader())
+		{
+			return null;
+		}
 		switch (state)
 		{
 			case CONNECTED:

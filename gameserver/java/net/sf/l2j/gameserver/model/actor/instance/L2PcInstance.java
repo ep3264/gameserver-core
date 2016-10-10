@@ -251,6 +251,7 @@ import custom.AcpTask;
 import custom.colors.ColorsManager;
 import custom.events.Event;
 import custom.events.EventManager;
+import custom.ghosts.GhostsPlayers;
 
 
 /**
@@ -3381,7 +3382,7 @@ public final class L2PcInstance extends L2Playable
 	@Override
 	public void sendPacket(L2GameServerPacket packet)
 	{
-		if (_client != null && !_isGhost)
+		if (_client != null && !isGhost() && !isOfflineTrader())
 			_client.sendPacket(packet);
 	}
 	
@@ -10737,16 +10738,32 @@ public final class L2PcInstance extends L2Playable
 		return _savedBuffs;
 	}
 	
-	private boolean _isGhost;
+	private boolean _isGhost=false;
 	
 	public boolean isGhost()
 	{
 		return _isGhost;
 	}
-	
-	public void setIsGhost(boolean b)
+	public void setIsGhost(boolean value)
 	{
-		_isGhost = b;
+		_isGhost=value;
+	}
+	public void unsetGhost()
+	{
+		_isGhost=false;
+		GhostsPlayers.getInstance().deleteGhost(this);
+	}
+	public void setGhost()
+	{
+		if (getPet() != null)
+		{
+			getPet().unSummon(this);
+		}
+		getClient().stopAutoSave();
+		store();
+		_isGhost=true;
+		GhostsPlayers.getInstance().addGhost(this);
+		closeNetConnection(true);			
 	}
 	private boolean _stopexp = false;
 	
@@ -10795,4 +10812,31 @@ public final class L2PcInstance extends L2Playable
 			_acpScheduledFuture = null;			
 		}		
 	}
+	//TODO Redist
+	private boolean _isOffline = false;
+	public boolean isOfflineTrader()
+	{
+		return _isOffline;
+	}
+	public void setOfflineTrader()
+	{		
+		if (getParty() != null)
+		{
+			getParty().removePartyMember(this, MessageType.Disconnected);
+		}
+		if (getPet() != null)
+		{
+			getPet().unSummon(this);
+		}		
+		if (Config.OFFLINE_SET_NAME_COLOR)
+		{
+			getAppearance().setNameColor(Config.OFFLINE_NAME_COLOR);
+			broadcastUserInfo();
+		}
+		getClient().stopAutoSave();
+		store();	
+		_isOffline = true;
+		closeNetConnection(true);			
+	}
+	
 }

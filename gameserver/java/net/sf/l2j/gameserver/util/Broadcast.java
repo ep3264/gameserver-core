@@ -64,8 +64,14 @@ public final class Broadcast
 	 */
 	public static void toKnownPlayers(L2Character character, L2GameServerPacket mov)
 	{
-		for (L2PcInstance player : character.getKnownList().getKnownType(L2PcInstance.class))
+		for (L2PcInstance player : character.getKnownList().getKnownType(L2PcInstance.class)){
+			//Fix Redist offlinetrader
+			if(player.isOfflineTrader())
+			{
+				continue;
+			}			
 			player.sendPacket(mov);
+		}
 	}
 	
 	/**

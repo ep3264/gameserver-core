@@ -45,6 +45,7 @@ import net.sf.l2j.gameserver.taskmanager.ItemsOnGroundTaskManager;
 import net.sf.l2j.gameserver.taskmanager.MovementTaskManager;
 import net.sf.l2j.gameserver.util.Broadcast;
 
+import custom.ghosts.GhostsPlayers;
 import protection.ProtectionProperties;
 import protection.hwid.HWIDManager;
 
@@ -189,6 +190,10 @@ public class Shutdown extends Thread
 			FishingChampionshipManager.getInstance().shutdown();
 			_log.info("Fishing Championship data has been saved.");
 			
+			if(Config.ENABLE_GHOSTS_PLAYERS)
+			{
+				GhostsPlayers.getInstance().saveGhosts();
+			}
 			// Schemes save.
 			BufferTable.getInstance().saveSchemes();
 			_log.info("BufferTable data has been saved.");

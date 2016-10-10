@@ -27,7 +27,9 @@ public class VoicedCommandHandler
 	{
 		registerHandler(new Event());
 		registerHandler(new Exp());	
-		registerHandler(new Acp());		
+		registerHandler(new Acp());	
+		registerHandler(new Offline());	
+		registerHandler(new Ghost());	
 	}
 	
 	

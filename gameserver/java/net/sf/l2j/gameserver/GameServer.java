@@ -314,11 +314,15 @@ public class GameServer
 		
 		if (Config.ALT_FISH_CHAMPIONSHIP_ENABLED)
 			FishingChampionshipManager.getInstance();
-		if(Config.GHOSTS_PLAYERS_ENABLE)
-		{
-			ThreadPool.scheduleAtFixedRate(GhostsShouts.getInstance(), GhostsShouts.getIntialDelay(), GhostsShouts.getShoutRndTime());
+		if(Config.ENABLE_GHOSTS_PLAYERS)
+		{			
 			GhostsPlayers.getInstance().loadGhosts();
 		}
+		if(Config.ENABLE_GHOSTS_SHOUTS){
+			_log.info("GhostsShouts: Activated.");
+		ThreadPool.scheduleAtFixedRate(GhostsShouts.getInstance(), GhostsShouts.getIntialDelay(), GhostsShouts.getShoutRndTime());
+		}
+		
 		StringUtil.printSection("Protection System");
 		protection.ProtectionProperties.init();
 		if(protection.ProtectionProperties.HWID)

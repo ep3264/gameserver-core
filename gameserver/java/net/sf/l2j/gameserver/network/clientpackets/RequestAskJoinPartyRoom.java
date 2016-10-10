@@ -41,6 +41,12 @@ public class RequestAskJoinPartyRoom extends L2GameClientPacket
 		final L2PcInstance target = L2World.getInstance().getPlayer(_name);
 		if (target != null)
 		{
+			//Fix redist offline trader
+			if (target.isOfflineTrader())
+			{
+				activeChar.sendMessage(target.getName() + " не может вступить в группу."); 
+				return;
+			}
 			if (!target.isProcessingRequest())
 			{
 				activeChar.onTransactionRequest(target);

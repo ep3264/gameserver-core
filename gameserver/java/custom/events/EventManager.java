@@ -431,7 +431,7 @@ public class EventManager
 		ThreadPool.schedule(new Runnable()
 		{
 			@Override
-			public synchronized void run()
+			public void run()
 			{
 				debug("AdminByPass: " + player.getName() + " Command " + command);
 				

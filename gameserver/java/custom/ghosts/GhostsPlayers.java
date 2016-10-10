@@ -5,21 +5,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.concurrent.ScheduledFuture;
 import java.util.logging.Logger;
-
 import net.sf.l2j.Config;
-import net.sf.l2j.gameserver.model.Location;
+import net.sf.l2j.gameserver.LoginServerThread;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
-
 import net.sf.l2j.gameserver.network.L2GameClient;
 import net.sf.l2j.gameserver.network.L2GameClient.GameClientState;
-
-
-
-
 import net.sf.l2j.L2DatabaseFactory;
 import net.sf.l2j.commons.concurrent.ThreadPool;
 import net.sf.l2j.commons.random.Rnd;
@@ -38,28 +31,31 @@ public class GhostsPlayers
 	protected class GhostsResurrector implements Runnable
 	{
 		private ScheduledFuture<?> _task = null;
-		ArrayList<L2PcInstance> _ghosts;
+		HashSet<L2PcInstance> _ghosts;
 		
 		
-		public GhostsResurrector(ArrayList<L2PcInstance> ghosts)
+		public GhostsResurrector(HashSet<L2PcInstance> ghosts)
 		{
 			_ghosts = ghosts;				
 		}
 		
 		@Override
-		public synchronized void run()
+		public void run()
 		{
-			for(L2PcInstance ghost :_ghosts)
-			 {
-				if(ghost.isDead())
+			synchronized (_ghosts)
+			{
+				for (L2PcInstance ghost : _ghosts)
 				{
-					ghost.doRevive();			
+					if (ghost.isDead())
+					{
+						ghost.doRevive();
+					}
 				}
-			 }
-			_task = null;			
+			}
+			_task = null;
 		}
 		
-		public synchronized void cancel()
+		public  void cancel()
 		{
 			if (_task != null)
 			{
@@ -72,8 +68,12 @@ public class GhostsPlayers
 	
 	//private static final String CLEAR_OFFLINE_TABLE = "DELETE FROM fake_players";
 	private static final String SELECT_GHOSTS = "SELECT * FROM ghosts_players";
-    private LinkedList<Location> locs = new LinkedList<>();
-    private ArrayList<L2PcInstance> ghosts = new ArrayList<>(100);
+	private static final String SAVE_GHOST = "INSERT INTO `ghosts_players` (`obj_Id`) VALUES (?)";
+	//private static final String DELETE_GHOST = "DELETE FROM `ghosts_players` WHERE `obj_Id`=?";
+	private static final String DELETE_GHOSTS = "TRUNCATE TABLE ghosts_players";
+    //private LinkedList<Location> locs = new LinkedList<>();
+    private final HashSet<L2PcInstance> _ghosts = new HashSet<>();
+    boolean _changeTable=false;
 	private static class SingletonHolder
 	{
 		protected static final GhostsPlayers _instance = new GhostsPlayers();
@@ -88,10 +88,10 @@ public class GhostsPlayers
 	protected GhostsPlayers()
 	{		
 	}
-     
+    /* 
 	private void spawnGhosts()
 	{
-		 Collections.shuffle(locs);
+		 //Collections.shuffle(locs);
 		 int i =0;
 		 if(ghosts.size()>1){
 		 ThreadPool.scheduleAtFixedRate(new GhostsResurrector(ghosts), 60000, 60000);
@@ -101,12 +101,51 @@ public class GhostsPlayers
 			 ghosts.get(i).spawnMe(loc.getX(),loc.getY(),loc.getZ());
 			 i++;
 		 }
+	} */
+	public void addGhost(L2PcInstance player)
+	{
+		if(!_changeTable)
+			_changeTable=true;
+		_ghosts.add(player);
+	}
+	public void deleteGhost(L2PcInstance player)
+	{
+		if(!_changeTable)
+			_changeTable=true;
+		_ghosts.remove(player);		
+	}
+	public void saveGhosts()
+	{
+		if(!_changeTable){
+			_log.info("GhostsPlayers: Nothing to save.");
+			return;
+		}
+		_log.info("GhostsPlayers: Save ghosts.");
+		try (Connection con = L2DatabaseFactory.getInstance().getConnection())
+		{
+			PreparedStatement st = con.prepareStatement(DELETE_GHOSTS);
+			st.execute();
+			st.close();
+			PreparedStatement statementInsert = con.prepareStatement(SAVE_GHOST);
+		for (L2PcInstance ghost : _ghosts){
+				statementInsert.setInt(1, ghost.getObjectId());		
+				statementInsert.execute();
+				statementInsert.clearParameters();
+			}
+			statementInsert.close();
+			_log.info("GhostsPlayers: Saved " + (_ghosts.size()) + " ghost(s)");
+		}
+		catch (SQLException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	public void loadGhosts()
 	{
 		_log.info("GhostsPlayers: Activated.");
-		Connection con = null;
-		int nPlayers = 0;
+		Connection con = null;		
 		try
 		{
 			con = L2DatabaseFactory.getInstance().getConnection();
@@ -124,28 +163,28 @@ public class GhostsPlayers
 					player = L2PcInstance.restore(rs.getInt("obj_Id"));					
 					player.setIsGhost(true);
 					client.setActiveChar(player);
-					//client.setAccountName(player.getAccountName());
+					client.setAccountName(player.getAccountName());
 					client.setState(GameClientState.IN_GAME);
+					player.setOnlineStatus(true, false);
 					player.setClient(client);					
-					locs.add(new Location(player.getX(), player.getY(), player.getZ()));
-					ghosts.add(player);
-					//player.spawnMe(player.getX(), player.getY(), player.getZ());
+					//locs.add(new Location(player.getX(), player.getY(), player.getZ()));
+					_ghosts.add(player);
+					player.spawnMe(player.getX(), player.getY(), player.getZ());
 					
-					//LoginServerThread.getInstance().addGameServerLogin(player.getAccountName(), client);
+					LoginServerThread.getInstance().addGameServerLogin(player.getAccountName(), client);
 					
 					if(Config.GHOSTS_PLAYERS_SIT)
 					{
-						int _random = Rnd.get(100);
+						int random = Rnd.get(100);
 						
-						if (_random <= 50)
+						if (random <= 50)
 						{
 							player.sitDown();
 						}
 					}
 					//player.setOnlineStatus(true);
 					//player.restoreEffects();
-					player.broadcastUserInfo();
-					nPlayers++;
+					player.broadcastUserInfo();					
 				}
 				catch(Exception e)
 				{
@@ -159,8 +198,12 @@ public class GhostsPlayers
 			}
 			rs.close();
 			stm.close();
-			spawnGhosts();
-			_log.info("Loaded: " + nPlayers + " Ghosts Players.");
+			//spawnGhosts();			
+			if(_ghosts.size()>1){
+				 ThreadPool.scheduleAtFixedRate(new GhostsResurrector(_ghosts), 60000, 60000);
+				 }
+			
+			_log.info("Loaded: " + _ghosts.size() + " Ghosts Players.");
 		}
 		catch(Exception e)
 		{
