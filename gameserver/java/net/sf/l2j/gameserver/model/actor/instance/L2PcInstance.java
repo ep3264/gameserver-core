@@ -247,7 +247,8 @@ import net.sf.l2j.gameserver.templates.skills.L2SkillType;
 import net.sf.l2j.gameserver.util.Broadcast;
 import net.sf.l2j.gameserver.util.Util;
 
-import custom.AcpTask;
+import custom.acp.AcpAllTask;
+import custom.acp.AcpTask;
 import custom.colors.ColorsManager;
 import custom.events.Event;
 import custom.events.EventManager;
@@ -10790,27 +10791,31 @@ public final class L2PcInstance extends L2Playable
 	{
 		return  _acp;
 	}
-	public void setAcp(boolean value)
+	private void setAcp(boolean value)
 	{
 		_acp = value;
 	}
 	
-	public void useAcp()
-	{
-		// ACP ADD REDIST 
-		if (acp())
+	public void onAcp(AcpTask acpTask)
+	{		
+		offAcp();		
+		if (_acpScheduledFuture == null)
 		{
-			if (_acpScheduledFuture == null)
-			{
-				AcpTask acpTask = new AcpTask(this);
-				_acpScheduledFuture = ThreadPool.scheduleAtFixedRate(acpTask, 100, 750);
-			}
+			sendMessage("создан поток");
+			setAcp(true);
+			_acpScheduledFuture = ThreadPool.scheduleAtFixedRate(acpTask, 100, 750);
 		}
-		else if (_acpScheduledFuture != null)
+	}
+	
+	public void offAcp()
+	{
+		if (_acpScheduledFuture != null)
 		{
+			sendMessage("завершен поток");
+			setAcp(false);
 			_acpScheduledFuture.cancel(false);
-			_acpScheduledFuture = null;			
-		}		
+			_acpScheduledFuture = null;
+		}
 	}
 	//TODO Redist
 	private boolean _isOffline = false;

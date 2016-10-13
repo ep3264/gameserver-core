@@ -12,25 +12,19 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package custom;
+package custom.acp;
+
+import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 
 /**
- * @author redist
+ * @author user
  *
  */
-import java.util.concurrent.TimeUnit;
-
-
-public final class L2System
+public abstract class AcpTask implements Runnable
 {
-	private static final long ZERO = System.nanoTime();
-
-	private L2System()
+	protected L2PcInstance activeChar=null;
+	public AcpTask(L2PcInstance activeChar)
 	{
-	}
-
-	public static long milliTime()
-	{
-		return TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - ZERO);
+		this.activeChar=activeChar;
 	}
 }

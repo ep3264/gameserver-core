@@ -12,9 +12,8 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package custom;
+package custom.acp;
 
-import java.util.logging.Logger;
 
 import net.sf.l2j.gameserver.handler.IItemHandler;
 import net.sf.l2j.gameserver.handler.ItemHandler;
@@ -25,16 +24,17 @@ import net.sf.l2j.gameserver.model.item.instance.ItemInstance;
  * @author user
  *
  */
-public class AcpTask implements Runnable
-{	
-	private L2PcInstance activeChar=null;
-	
-	
-	public AcpTask(L2PcInstance activeChar)
+public class AcpAllTask extends AcpTask
+{		
+	/**
+	 * @param activeChar
+	 */
+	public AcpAllTask(L2PcInstance activeChar)
 	{
-		this.activeChar=activeChar;
+		super(activeChar);
+		// TODO Auto-generated constructor stub
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Runnable#run()
 	 */

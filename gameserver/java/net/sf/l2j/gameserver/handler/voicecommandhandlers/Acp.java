@@ -18,6 +18,8 @@ package net.sf.l2j.gameserver.handler.voicecommandhandlers;
 import net.sf.l2j.gameserver.handler.IVoicedCommandHandler;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 
+import custom.acp.*;
+
 /**
  * @author user
  *
@@ -26,7 +28,12 @@ public class Acp implements IVoicedCommandHandler
 {  	
 	private final String[] _voicedCommands =
 	{
-		"acp"				
+		"acp"/*,
+		"acp all",
+		"acp cp",
+		"acp hp",
+		"acp mp",
+		"acp off" */
 	};
 
 	/* (non-Javadoc)
@@ -34,16 +41,47 @@ public class Acp implements IVoicedCommandHandler
 	 */
 	@Override
 	public boolean useVoicedCommand(String command, L2PcInstance activeChar, String params)
-	{	
-		if (activeChar.acp()){
-			activeChar.sendMessage("Acp выключен.");
+	{		
+		if (command.equalsIgnoreCase("acp"))
+		{
+			if(params==null)
+			{
+				activeChar.sendMessage("Команды чата ACP:");
+				activeChar.sendMessage(".acp all — CP/HP/MP");
+				activeChar.sendMessage(".acp cp — CP");
+				activeChar.sendMessage(".acp hp — HP");
+				activeChar.sendMessage(".acp mp — MP");
+				activeChar.sendMessage(".acp off — выключить");
+			}
+			else
+			{				
+				if(params.equalsIgnoreCase("all"))
+				{
+					activeChar.onAcp(new AcpAllTask(activeChar));
+					activeChar.sendMessage("Автоиспользование CP/HP/MP активировано.");
+				}
+				else if(params.equalsIgnoreCase("cp"))
+				{
+					activeChar.onAcp(new AcpCpTask(activeChar));
+					activeChar.sendMessage("Автоиспользование CP активировано.");
+				}
+				else if(params.equalsIgnoreCase("hp"))
+				{
+					activeChar.onAcp(new AcpHpTask(activeChar));
+					activeChar.sendMessage("Автоиспользование HP активировано.");
+				}
+				else if(params.equalsIgnoreCase("mp"))
+				{
+					activeChar.onAcp(new AcpMpTask(activeChar));
+					activeChar.sendMessage("Автоиспользование MP активировано.");
+				}
+				else if(params.equalsIgnoreCase("off"))
+				{
+					activeChar.offAcp();
+					activeChar.sendMessage("ACP деактивировано.");
+				}
+			}		
 		}
-		else {
-			activeChar.sendMessage("Acp включен.");
-		}
-		
-		activeChar.setAcp(!activeChar.acp());
-		activeChar.useAcp();
 		return true;
 	}
 
@@ -54,6 +92,5 @@ public class Acp implements IVoicedCommandHandler
 	public String[] getVoicedCommandList()
 	{
 		return _voicedCommands;
-	}
-	
+	}	
 }
