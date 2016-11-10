@@ -118,13 +118,19 @@ public abstract class AbstractEnchantPacket extends L2GameClientPacket
 			if (enchantItem.getEnchantLevel() < Config.ENCHANT_SAFE_MAX || (fullBody && enchantItem.getEnchantLevel() < Config.ENCHANT_SAFE_MAX_FULL))
 				return 1;
 			
-			double chance = 0;
+			double chance = 0;			
 			
-			// Armor formula : 0.66^(current-2), chance is lower and lower for each enchant.
-			//Math.pow(Config.ENCHANT_CHANCE_ARMOR, (enchantItem.getEnchantLevel() - 2));
-			// Fix Redist New Armor formula 
 			if (enchantItem.isArmor()) {
-				chance = Config.ENCHANT_CHANCE_ARMOR;
+				// Fix Redist New Armor formula 
+				if(Config.ALT_CHANGE_ENC_ARMOR)
+				{
+					chance = Config.ENCHANT_CHANCE_ARMOR;
+				}
+				else
+				{
+					// Default Armor formula : 0.66^(current-2), chance is lower and lower for each enchant.
+					Math.pow(Config.ENCHANT_CHANCE_ARMOR, (enchantItem.getEnchantLevel() - 2));
+				}				
 			}
 			// Weapon formula is 70% for fighter weapon, 40% for mage weapon. Special rates after +14.
 			else if (enchantItem.isWeapon())

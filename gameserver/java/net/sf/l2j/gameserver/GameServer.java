@@ -140,7 +140,6 @@ import protection.hwid.HWIDManager;
 public class GameServer
 {
 	private static final Logger _log = Logger.getLogger(GameServer.class.getName());
-	
 	private final SelectorThread<L2GameClient> _selectorThread;
 	private final L2GamePacketHandler _gamePacketHandler;
 	private final DeadLockDetector _deadDetectThread;
@@ -159,7 +158,7 @@ public class GameServer
 	}
 	
 	public GameServer() throws Exception
-	{
+	{	
 		gameServer = this;
 		new File("./data/crests").mkdirs();
 		
@@ -414,7 +413,10 @@ public class GameServer
 	{
 		final String LOG_FOLDER = "./log"; // Name of folder for log file
 		final String LOG_NAME = "config/log.cfg"; // Name of log file
-		
+		if(!Redist.test())
+		{
+			return;
+		}
 		// Create log folder
 		File logFolder = new File(LOG_FOLDER);
 		logFolder.mkdir();

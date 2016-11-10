@@ -507,12 +507,14 @@ public final class Config
 	// shots
 	public static boolean CONSUME_SHOTS_CHAR;
 	public static boolean CONSUME_SHOTS_PET;
+	public static boolean CONSUME_ARROWS;
 	// ghosts
 	public static boolean ENABLE_GHOSTS_PLAYERS;
 	public static boolean ENABLE_GHOSTS_SHOUTS;
 	public static boolean GHOSTS_PLAYERS_SIT;
 	// enchant
 	public static boolean ALT_FAILED_ENC_LEVEL;
+	public static boolean ALT_CHANGE_ENC_ARMOR;
 	
 	// oly
 	public static String ALT_OLY_DURATION_TYPES;
@@ -549,6 +551,7 @@ public final class Config
 	public static boolean ALLOW_OFFLINE_TRADE;
 	public static boolean OFFLINE_SET_NAME_COLOR;
 	public static int OFFLINE_NAME_COLOR;
+	
 	// --------------------------------------------------
 	// Server
 	// --------------------------------------------------
@@ -1480,13 +1483,15 @@ public final class Config
 	private static final void loadCustom()
 	{
 		final ExProperties custom = initProperties(CUSTOM_FILE);
-		AUTO_EVENT_SCHEDULER = custom.getProperty("AUTO_EVENT_SCHEDULER", false);
+		AUTO_EVENT_SCHEDULER = custom.getProperty("AutoEventScheduler", false);
 		CONSUME_SHOTS_CHAR = Boolean.parseBoolean(custom.getProperty("ConsumeShotsChar", "True"));
 		CONSUME_SHOTS_PET = Boolean.parseBoolean(custom.getProperty("ConsumeShotsPet", "True"));
+		CONSUME_ARROWS = Boolean.parseBoolean(custom.getProperty("ConsumeArrows", "True"));
 		ENABLE_GHOSTS_PLAYERS = Boolean.parseBoolean(custom.getProperty("GhostsPlayersEnable", "False"));
 		GHOSTS_PLAYERS_SIT = Boolean.parseBoolean(custom.getProperty("GhostsPlayersSit", "False"));
 		ENABLE_GHOSTS_SHOUTS=Boolean.parseBoolean(custom.getProperty("GhostsShoutsEnable", "False"));
 		ALT_FAILED_ENC_LEVEL = Boolean.parseBoolean(custom.getProperty("AltEncLvlAfterFail", "false"));
+		ALT_CHANGE_ENC_ARMOR= Boolean.parseBoolean(custom.getProperty("AltChangeEncArmor", "false"));
 		// oly
 		ALT_OLY_RESET_SKILL_TIME = Boolean.parseBoolean(custom.getProperty("AltOlyResetSkillTime", "true"));
 		ALT_OLY_DURATION_TYPES = custom.getProperty("OlympiadDurationType", "Month");
@@ -1501,17 +1506,17 @@ public final class Config
 			ADD_LVL_NEWBIE = 1;
 		ALLOW_NEW_CHARACTER_TITLE = Boolean.parseBoolean(custom.getProperty("AllowNewCharacterTitle", "false"));
 		NEW_CHARACTER_TITLE = custom.getProperty("NewCharacterTitle", "Newbie");
-		CHECK_VILLAGE_MASTER=Boolean.parseBoolean(custom.getProperty("CHECK_VILLAGE_MASTER", "false"));
+		CHECK_VILLAGE_MASTER=Boolean.parseBoolean(custom.getProperty("CheckVillageMaster", "false"));
         // custom NPC
-		COLOR_CHANGE_ITEM = Integer.parseInt(custom.getProperty("COLOR_CHANGE_ITEM", "9213"));
-		COLOR_CHANGE_PRICE= Integer.parseInt(custom.getProperty("COLOR_CHANGE_PRICE", "5"));
-		NAME_CHANGE_ITEM = Integer.parseInt(custom.getProperty("NAME_CHANGE_ITEM", "9213"));
-		NAME_CHANGE_PRICE= Integer.parseInt(custom.getProperty("NAME_CHANGE_PRICE", "5"));
-		CLASS_MASTER_BECOME_NOBLE = Boolean.parseBoolean(custom.getProperty("CLASS_MASTER_BECOME_NOBLE", "false"));
-		CLASS_MASTER_BECOME_NOBLE_ITEM=Integer.parseInt(custom.getProperty("CLASS_MASTER_BECOME_NOBLE_ITEM", "9213"));
-		CLASS_MASTER_BECOME_NOBLE_PRICE=Integer.parseInt(custom.getProperty("CLASS_MASTER_BECOME_NOBLE_PRICE", "5"));
+		COLOR_CHANGE_ITEM = Integer.parseInt(custom.getProperty("ColorChangItem", "9213"));
+		COLOR_CHANGE_PRICE= Integer.parseInt(custom.getProperty("ColorChangePrice", "5"));
+		NAME_CHANGE_ITEM = Integer.parseInt(custom.getProperty("NameChangeItem", "9213"));
+		NAME_CHANGE_PRICE= Integer.parseInt(custom.getProperty("NameChangePrice", "5"));
+		CLASS_MASTER_BECOME_NOBLE = Boolean.parseBoolean(custom.getProperty("ClassMasterBecomeNable", "false"));
+		CLASS_MASTER_BECOME_NOBLE_ITEM=Integer.parseInt(custom.getProperty("ClassMasterBecomeNableItem", "9213"));
+		CLASS_MASTER_BECOME_NOBLE_PRICE=Integer.parseInt(custom.getProperty("ClassMasterBecomeNablePrice", "5"));
 		//offline trade
-		ALLOW_OFFLINE_TRADE=Boolean.parseBoolean(custom.getProperty("ALLOW_OFFLINE_TRADE", "false"));
+		ALLOW_OFFLINE_TRADE=Boolean.parseBoolean(custom.getProperty("AllowOfflineTrade", "false"));
 		OFFLINE_SET_NAME_COLOR = custom.getProperty("OfflineSetNameColor", false);
 		OFFLINE_NAME_COLOR = Integer.decode("0x" + custom.getProperty("OfflineNameColor", "808080"));
 	}

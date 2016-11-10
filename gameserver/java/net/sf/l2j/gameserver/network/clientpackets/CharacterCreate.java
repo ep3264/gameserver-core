@@ -162,8 +162,13 @@ public final class CharacterCreate extends L2GameClientPacket
 			
 			if (item.isEquipable())
 			{
-				if (newChar.getActiveWeaponItem() == null || !(item.getItem().getType2() != Item.TYPE2_WEAPON))
+				if (newChar.getActiveWeaponItem() == null && item.getItem().getType2() == Item.TYPE2_WEAPON){
 					newChar.getInventory().equipItemAndRecord(item);
+				}
+				else if(item.getItem().getType2() == Item.TYPE2_SHIELD_ARMOR)
+				{
+					newChar.getInventory().equipItemAndRecord(item);
+				}
 			}
 		}
 		

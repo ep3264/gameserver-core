@@ -784,8 +784,10 @@ public abstract class L2Character extends L2Object
 		boolean miss1 = Formulas.calcHitMiss(this, target);
 		
 		// Consume arrows
-		reduceArrowCount();
-		
+		if (Config.CONSUME_ARROWS)
+		{
+			reduceArrowCount();
+		}
 		_move = null;
 		
 		// Check if hit isn't missed

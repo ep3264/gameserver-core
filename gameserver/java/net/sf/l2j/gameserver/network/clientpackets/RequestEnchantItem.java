@@ -115,7 +115,7 @@ public final class RequestEnchantItem extends AbstractEnchantPacket
 		
 		synchronized (item)
 		{
-			//добавил Redist 100% Заточка
+			//добавил fix Redist 100% Заточка
 			double chance = 0;
 			int scrollId = scroll.getItemId();
 			if (scrollId >= 9209 && scrollId <=  9212)
