@@ -107,7 +107,11 @@ public class CustomL2BufferInstance extends L2NpcInstance
 			final String targetType = st.nextToken();
 			final String schemeName = st.nextToken();
 			final int cost = Integer.parseInt(st.nextToken());
-			
+			if (player.isInCombat() || player.isInOlympiadMode() || player.isInDuel() || player.isInSiege())
+			{
+				player.sendMessage("You can't use buffer in PvP, Duel, Olympiad or Siege mode.");
+				return;
+			}
 			final L2Character target = (targetType.equalsIgnoreCase("pet")) ? player.getPet() : player;
 			if (target == null)
 			{

@@ -325,7 +325,11 @@ public class L2Attackable extends L2Npc
 						exp *= Config.CHAMPION_REWARDS;
 						sp *= Config.CHAMPION_REWARDS;
 					}
-					
+					if(attacker.getPremiumService()>0)
+					{
+						exp *= Config.PREMIUM_RATE_XP;
+						sp *= Config.PREMIUM_RATE_SP;
+					}
 					exp *= 1 - penalty;
 					
 					if (isOverhit() && _overhitAttacker != null && _overhitAttacker.getActingPlayer() != null && attacker == _overhitAttacker.getActingPlayer())
@@ -765,12 +769,37 @@ public class L2Attackable extends L2Npc
 		}
 		
 		// Applies Drop rates
-		if (drop.getItemId() == 57)
-			dropChance *= Config.RATE_DROP_ADENA;
-		else if (isSweep)
-			dropChance *= Config.RATE_DROP_SPOIL;
+		if (drop.getItemId() == 57){			
+			if(lastAttacker.getPremiumService()<=0)
+			{
+				dropChance *= Config.RATE_DROP_ADENA;				
+			}
+			else 
+			{
+				dropChance *=Config.PREMIUM_RATE_DROP_ADENA;
+			}
+		}
+		else if (isSweep){
+			if (lastAttacker.getPremiumService() <= 0)
+			{
+				dropChance *= Config.RATE_DROP_SPOIL;
+			}
+			else
+			{
+				dropChance *= Config.PREMIUM_RATE_DROP_SPOIL;
+			}
+		}
 		else
-			dropChance *= isRaid() && !isRaidMinion() ? Config.RATE_DROP_ITEMS_BY_RAID : Config.RATE_DROP_ITEMS;
+		{
+			if (lastAttacker.getPremiumService() <= 0)
+			{
+				dropChance *= isRaid() && !isRaidMinion() ? Config.RATE_DROP_ITEMS_BY_RAID : Config.RATE_DROP_ITEMS;
+			}
+			else
+			{
+				dropChance *= isRaid() && !isRaidMinion() ? Config.PREMIUM_RATE_RAID_DROP_ITEMS : Config.PREMIUM_RATE_DROP_ITEMS;
+			}
+		}
 		
 		if (isChampion())
 			dropChance *= Config.CHAMPION_REWARDS;
@@ -838,10 +867,15 @@ public class L2Attackable extends L2Npc
 			// Check if we should apply our maths so deep blue mobs will not drop that easy
 			categoryDropChance = ((categoryDropChance - ((categoryDropChance * levelModifier) / 100)) / deepBlueDrop);
 		}
-		
-		// Applies Drop rates
-		categoryDropChance *= isRaid() && !isRaidMinion() ? Config.RATE_DROP_ITEMS_BY_RAID : Config.RATE_DROP_ITEMS;
-		
+		if (lastAttacker.getPremiumService() <= 0)
+		{			
+			// Applies Drop rates
+			categoryDropChance *= isRaid() && !isRaidMinion() ? Config.RATE_DROP_ITEMS_BY_RAID : Config.RATE_DROP_ITEMS;
+		}
+		else
+		{
+			categoryDropChance *= isRaid() && !isRaidMinion() ? Config.PREMIUM_RATE_RAID_DROP_ITEMS : Config.PREMIUM_RATE_DROP_ITEMS;
+		}
 		if (isChampion())
 			categoryDropChance *= Config.CHAMPION_REWARDS;
 		
@@ -870,9 +904,27 @@ public class L2Attackable extends L2Npc
 			
 			double dropChance = drop.getChance();
 			if (drop.getItemId() == 57)
-				dropChance *= Config.RATE_DROP_ADENA;
+			{
+				if (lastAttacker.getPremiumService() <= 0)
+				{
+					dropChance *= Config.RATE_DROP_ADENA;
+				}
+				else
+				{
+					dropChance *= Config.PREMIUM_RATE_DROP_ADENA;
+				}
+			}
 			else
-				dropChance *= isRaid() && !isRaidMinion() ? Config.RATE_DROP_ITEMS_BY_RAID : Config.RATE_DROP_ITEMS;
+			{
+				if (lastAttacker.getPremiumService() <= 0)
+				{
+					dropChance *= isRaid() && !isRaidMinion() ? Config.RATE_DROP_ITEMS_BY_RAID : Config.RATE_DROP_ITEMS;
+				}
+				else
+				{
+					dropChance *= isRaid() && !isRaidMinion() ? Config.PREMIUM_RATE_RAID_DROP_ITEMS : Config.PREMIUM_RATE_DROP_ITEMS;
+				}
+			}
 			
 			if (isChampion())
 				dropChance *= Config.CHAMPION_REWARDS;

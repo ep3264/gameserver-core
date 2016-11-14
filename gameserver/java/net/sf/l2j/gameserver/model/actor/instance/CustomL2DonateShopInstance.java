@@ -14,16 +14,25 @@
  */
 package net.sf.l2j.gameserver.model.actor.instance;
 
+import java.text.SimpleDateFormat;
+import java.util.StringTokenizer;
+
+import net.sf.l2j.Config;
+import net.sf.l2j.gameserver.datatables.ItemTable;
 import net.sf.l2j.gameserver.model.actor.template.NpcTemplate;
+import net.sf.l2j.gameserver.model.item.instance.ItemInstance;
+import net.sf.l2j.gameserver.network.SystemMessageId;
 import net.sf.l2j.gameserver.network.serverpackets.NpcHtmlMessage;
+import net.sf.l2j.gameserver.network.serverpackets.SystemMessage;
+
+import custom.PremiumAccount;
 
 /**
  * @author user
- *
  */
 public class CustomL2DonateShopInstance extends L2NpcInstance
 {
-
+	
 	/**
 	 * @param objectId
 	 * @param template
@@ -33,16 +42,17 @@ public class CustomL2DonateShopInstance extends L2NpcInstance
 		super(objectId, template);
 		// TODO Auto-generated constructor stub
 	}
+	
 	@Override
 	public String getHtmlPath(int npcId, int val)
 	{
-		String filename;		
+		String filename;
 		if (val == 0)
 			filename = "data/html/mods/donateshop/" + npcId + ".htm";
 		else
 			filename = "data/html/mods/donateshop/" + npcId + "-" + val + ".htm";
-			
-		return filename;		
+		
+		return filename;
 	}
 	
 	@Override
@@ -54,4 +64,86 @@ public class CustomL2DonateShopInstance extends L2NpcInstance
 		player.sendPacket(html);
 	}
 	
+	@Override
+	public void onBypassFeedback(L2PcInstance player, String command)
+	{
+		StringTokenizer st = new StringTokenizer(command, " ");
+		String currentCommand = st.nextToken();
+		if (currentCommand.startsWith("Chat"))
+		{
+			int val = 0;
+			try
+			{
+				val = Integer.parseInt(command.substring(5));
+			}
+			catch (IndexOutOfBoundsException ioobe)
+			{
+			}
+			catch (NumberFormatException nfe)
+			{
+			}
+			
+			showChatWindow(player, val);
+		}
+		else if (currentCommand.startsWith("Premium"))
+		{
+			if (player.getPremiumService() > 0)
+			{
+				SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+				player.sendMessage("Премиум уже активирован до: " + String.valueOf(format.format(player.getPremiumService())));
+				return;
+			}
+			if (st.hasMoreTokens())
+			{
+				String input = st.nextToken();
+				try
+				{
+					int days = Integer.valueOf(input);
+					if (pay(player, days))
+					{
+						PremiumAccount.addPremiumServices(player, player.getAccountName(), days);
+						player.sendMessage("Вы активировали премиум аккаунт на " + days + " дней.");
+					}
+					
+				}
+				catch (NumberFormatException e)
+				{
+					player.sendMessage("Неверный формат, введите количество дней.");
+				}
+				showPaWindow(player);
+			}
+			else
+			{
+				showPaWindow(player);
+			}
+		}
+		else
+		{
+			super.onBypassFeedback(player, command);
+		}
+	}
+	private static boolean pay(L2PcInstance player, int countDays)
+	{
+		ItemInstance item = player.getInventory().getItemByItemId(Config.PREMIUM_ITEM);
+		if (item == null || item.getCount() < Config.PREMIUM_PRICE*countDays)
+		{
+			player.sendPacket(SystemMessage.getSystemMessage(SystemMessageId.INCORRECT_ITEM_COUNT));
+			return false;
+		}
+		if (!player.destroyItem("Premium Manager", item, Config.PREMIUM_PRICE*countDays, player, true))
+		{
+			return false;
+		}
+		return true;
+	}
+	private void showPaWindow(L2PcInstance player)
+	{
+		NpcHtmlMessage html = new NpcHtmlMessage(1);
+		html.setFile(getHtmlPath(getNpcId(), 1));
+		html.replace("%objectId%", getObjectId());
+		html.replace("%price%", Config.PREMIUM_PRICE);
+		String itemName = ItemTable.getInstance().getTemplate(Config.PREMIUM_ITEM).getName();
+		html.replace("%item%", itemName);
+		player.sendPacket(html);
+	}
 }

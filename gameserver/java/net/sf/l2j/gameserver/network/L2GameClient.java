@@ -19,6 +19,7 @@ import java.nio.ByteBuffer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Future;
 import java.util.concurrent.RejectedExecutionException;
@@ -31,7 +32,7 @@ import net.sf.l2j.commons.concurrent.ThreadPool;
 import net.sf.l2j.commons.mmocore.MMOClient;
 import net.sf.l2j.commons.mmocore.MMOConnection;
 import net.sf.l2j.commons.mmocore.ReceivablePacket;
-
+import net.sf.l2j.commons.util.MultiValueSet;
 import net.sf.l2j.Config;
 import net.sf.l2j.L2DatabaseFactory;
 import net.sf.l2j.gameserver.LoginServerThread;
@@ -52,11 +53,12 @@ import net.sf.l2j.gameserver.util.FloodProtectors;
 import protection.ProtectionProperties;
 import protection.crypt.Blowfish;
 
+
 /**
  * Represents a client connected on Game Server
  * @author KenM
  */
-public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>>implements Runnable
+public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>> implements Runnable
 {
 	protected static final Logger _log = Logger.getLogger(L2GameClient.class.getName());
 	
@@ -79,7 +81,9 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>>im
 	private boolean _isAuthedGG;
 	private final long _connectionStartTime;
 	private CharSelectInfoPackage[] _charSlotMapping = null;
-	
+	private MultiValueSet<String> _accountData = new MultiValueSet<>();
+	private static final String LOAD_ACC_DATA = "SELECT valueName,valueData from account_data where account_name=?";
+	private static final String STORE_ACC_DATA = "REPLACE account_data (account_name, valueName,valueData) VALUES(?,?,?)";
 	// floodprotectors
 	private final long[] _floodProtectors = new long[FloodProtectors.Action.VALUES_LENGTH];
 	
@@ -167,7 +171,7 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>>im
 	{
 		_activeChar = pActiveChar;
 		if (_activeChar != null)
-		{			
+		{
 			if (getHWid() == null && !_activeChar.isGhost())
 			{
 				_log.warning("Bad HWID. Account:" + getAccountName());
@@ -194,7 +198,7 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>>im
 		_isAuthedGG = val;
 	}
 	
-	public void setAccountName(String pAccountName)
+	public void setAccountName(String pAccountName) throws SQLException
 	{
 		_accountName = pAccountName;
 		if (_preAuth && ProtectionProperties.HWID)
@@ -202,8 +206,62 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>>im
 			sendPacket(new GameGuardQuery());
 			_preAuth = false;
 		}
+		_accountData.clear();
+		Connection con = null;
+		PreparedStatement stm = null;
+		ResultSet rs = null;
+		try
+		{
+			con = L2DatabaseFactory.getInstance().getConnection();
+			stm = con.prepareStatement(LOAD_ACC_DATA);
+			if (getAccountName() != null && !getAccountName().isEmpty())
+			{
+				stm.setString(1, getAccountName());
+				rs = stm.executeQuery();
+				while (rs.next())
+					_accountData.set(rs.getString(1), rs.getString(2));
+			}
+		}
+		catch (SQLException e)
+		{
+			_log.warning("Error restore account data, for account " + pAccountName + ". Error" + e.toString());
+		}
+		finally
+		{
+			if (rs != null)
+				rs.close();
+			if (stm != null)
+				stm.close();
+			if (con != null)
+				con.close();
+		}
 	}
-	
+	public void storeData() {
+		try
+		{
+			if(_accountName==null)
+				return;
+			Connection con = L2DatabaseFactory.getInstance().getConnection();
+			PreparedStatement statement = con.prepareStatement(STORE_ACC_DATA);
+			statement.setString(1,_accountName);
+			for(String s : _accountData.keySet())
+			{
+				statement.setString(2,s);
+				statement.setString(3,_accountData.getString(s));
+				statement.execute();
+			}
+			statement.close();
+			con.close();
+		}
+	    catch(SQLException e)
+		{
+			_log.warning("Error while saving account data"+ e);
+		}
+		
+	}
+	public MultiValueSet<String> getAccountData() {
+		return _accountData;
+	}
 	public String getAccountName()
 	{
 		return _accountName;
@@ -223,7 +281,7 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>>im
 	{
 		if (_isDetached)
 			return;
-			
+		
 		getConnection().sendPacket(gsp);
 		gsp.runImpl();
 	}
@@ -253,7 +311,7 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>>im
 		
 		if (objid < 0)
 			return -1;
-			
+		
 		try (Connection con = L2DatabaseFactory.getInstance().getConnection())
 		{
 			PreparedStatement statement = con.prepareStatement("SELECT clanId FROM characters WHERE obj_id=?");
@@ -308,7 +366,7 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>>im
 		final int objid = getObjectIdForSlot(charslot);
 		if (objid < 0)
 			return;
-			
+		
 		try (Connection con = L2DatabaseFactory.getInstance().getConnection())
 		{
 			PreparedStatement statement = con.prepareStatement("UPDATE characters SET deletetime=0 WHERE obj_id=?");
@@ -326,7 +384,7 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>>im
 	{
 		if (objid < 0)
 			return;
-			
+		
 		CharNameTable.getInstance().removePlayer(objid);
 		
 		try (Connection con = L2DatabaseFactory.getInstance().getConnection())
@@ -430,7 +488,7 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>>im
 		final int objId = getObjectIdForSlot(charslot);
 		if (objId < 0)
 			return null;
-			
+		
 		L2PcInstance character = L2World.getInstance().getPlayer(objId);
 		if (character != null)
 		{
@@ -440,7 +498,7 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>>im
 				character.getClient().closeNow();
 			else
 				character.deleteMe();
-				
+			
 			return null;
 		}
 		
@@ -454,7 +512,7 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>>im
 		}
 		else
 			_log.severe("L2GameClient: could not restore in slot: " + charslot);
-			
+		
 		return character;
 	}
 	
@@ -470,7 +528,7 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>>im
 	{
 		if ((_charSlotMapping == null) || (charslot < 0) || (charslot >= _charSlotMapping.length))
 			return null;
-			
+		
 		return _charSlotMapping[charslot];
 	}
 	
@@ -520,18 +578,20 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>>im
 	public void closeNow()
 	{
 		_isDetached = true; // prevents more packets execution
-		if(getActiveChar()!=null && getActiveChar().isGhost())
+		if (getActiveChar() != null && getActiveChar().isGhost())
 		{
 			getActiveChar().unsetGhost();
 			
-		} else {	
-		close(ServerClose.STATIC_PACKET);
+		}
+		else
+		{
+			close(ServerClose.STATIC_PACKET);
 		}
 		synchronized (this)
 		{
 			if (_cleanupTask != null)
 				cancelCleanup();
-				
+			
 			_cleanupTask = ThreadPool.schedule(new CleanupTask(), 0); // instant
 		}
 	}
@@ -575,6 +635,7 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>>im
 			
 			try
 			{
+				storeData();
 				if (getActiveChar() != null && !isDetached())
 				{
 					setDetached(true);
@@ -626,12 +687,12 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>>im
 				// we are going to manually save the char below thus we can force the cancel
 				if (_autoSaveInDB != null)
 					_autoSaveInDB.cancel(true);
-					
+				
 				if (getActiveChar() != null) // this should only happen on connection loss
 				{
 					if (getActiveChar().isLocked())
 						_log.log(Level.WARNING, getActiveChar().getName() + " is still performing subclass actions during disconnect.");
-						
+					
 					// prevent closing again
 					getActiveChar().setClient(null);
 					
@@ -658,7 +719,7 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>>im
 		{
 			try
 			{
-				if (getActiveChar() != null && getActiveChar().isOnline() && !getActiveChar().isGhost() )
+				if (getActiveChar() != null && getActiveChar().isOnline() && !getActiveChar().isGhost())
 				{
 					getActiveChar().store();
 					
@@ -773,20 +834,20 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>>im
 			}
 			else
 				sendPacket(ActionFailed.STATIC_PACKET);
-				
+			
 			return;
 		}
 		
 		if (_queueLock.isLocked()) // already processing
 			return;
-			
+		
 		try
 		{
 			if (_state == GameClientState.CONNECTED && getStats().processedPackets > 3)
 			{
 				if (Config.PACKET_HANDLER_DEBUG)
 					_log.severe("Client " + toString() + " - Disconnected, too many packets in non-authed state.");
-					
+				
 				closeNow();
 				return;
 			}
@@ -803,7 +864,7 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>>im
 	{
 		if (!_queueLock.tryLock())
 			return;
-			
+		
 		try
 		{
 			int count = 0;
@@ -813,7 +874,7 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>>im
 				packet = _packetQueue.poll();
 				if (packet == null) // queue is empty
 					return;
-					
+				
 				if (_isDetached) // clear queue immediately after detach
 				{
 					_packetQueue.clear();

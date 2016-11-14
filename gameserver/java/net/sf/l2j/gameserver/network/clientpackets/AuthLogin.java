@@ -14,6 +14,8 @@
  */
 package net.sf.l2j.gameserver.network.clientpackets;
 
+import java.sql.SQLException;
+
 import net.sf.l2j.gameserver.LoginServerThread;
 import net.sf.l2j.gameserver.LoginServerThread.SessionKey;
 import net.sf.l2j.gameserver.network.serverpackets.L2GameServerPacket;
@@ -46,7 +48,15 @@ public final class AuthLogin extends L2GameClientPacket
 		{
 			if (LoginServerThread.getInstance().addGameServerLogin(_loginName, getClient()))
 			{
-				getClient().setAccountName(_loginName);
+				try
+				{
+					getClient().setAccountName(_loginName);
+				}
+				catch (SQLException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				LoginServerThread.getInstance().addWaitingClientAndSendRequest(_loginName, getClient(), new SessionKey(_loginKey1, _loginKey2, _playKey1, _playKey2));
 			}
 			else

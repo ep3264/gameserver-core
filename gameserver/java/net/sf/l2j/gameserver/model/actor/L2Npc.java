@@ -1277,7 +1277,7 @@ public class L2Npc extends L2Character
 	{
 		return (int) (getTemplate().getRewardExp() * Config.RATE_XP);
 	}
-	
+
 	/**
 	 * @return the SP Reward of this L2Npc contained in the L2NpcTemplate (modified by RATE_SP).
 	 */
@@ -1285,7 +1285,7 @@ public class L2Npc extends L2Character
 	{
 		return (int) (getTemplate().getRewardSp() * Config.RATE_SP);
 	}
-	
+
 	/**
 	 * Kill the L2Npc (the corpse disappeared after 7 seconds).<BR>
 	 * <BR>

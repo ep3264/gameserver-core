@@ -17,6 +17,7 @@ package net.sf.l2j.gameserver.network.clientpackets;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 
 import net.sf.l2j.Config;
@@ -69,6 +70,7 @@ import net.sf.l2j.gameserver.scripting.ScriptManager;
 import net.sf.l2j.gameserver.taskmanager.GameTimeTaskManager;
 
 import custom.events.EventManager;
+
 
 public class EnterWorld extends L2GameClientPacket
 {
@@ -315,7 +317,21 @@ public class EnterWorld extends L2GameClientPacket
 			html.setFile("data/html/servnews.htm");
 			sendPacket(html);
 		}
-		
+		// Check premium state
+		if (activeChar.getPremiumService() > 0)
+		{
+			if (System.currentTimeMillis() > activeChar.getPremiumService())
+				activeChar.setPremiumService(0);
+			else
+			{
+				activeChar.setPremiumService(activeChar.getPremiumService());
+				if (Config.SHOW_PREMIUM_STATE_ON_ENTER)
+				{
+					SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+					activeChar.sendMessage("Премиум до: "+ String.valueOf(format.format(activeChar.getPremiumService())));
+				}
+			}			
+		}
 		PetitionManager.getInstance().checkPetitionMessages(activeChar);
 		
 		// no broadcast needed since the player will already spawn dead to others

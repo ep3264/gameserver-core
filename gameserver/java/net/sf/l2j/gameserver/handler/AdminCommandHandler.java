@@ -55,6 +55,7 @@ import net.sf.l2j.gameserver.handler.admincommandhandlers.AdminPForge;
 import net.sf.l2j.gameserver.handler.admincommandhandlers.AdminPetition;
 import net.sf.l2j.gameserver.handler.admincommandhandlers.AdminPledge;
 import net.sf.l2j.gameserver.handler.admincommandhandlers.AdminPolymorph;
+import net.sf.l2j.gameserver.handler.admincommandhandlers.AdminPremium;
 import net.sf.l2j.gameserver.handler.admincommandhandlers.AdminRes;
 import net.sf.l2j.gameserver.handler.admincommandhandlers.AdminRideWyvern;
 import net.sf.l2j.gameserver.handler.admincommandhandlers.AdminShop;
@@ -113,6 +114,7 @@ public class AdminCommandHandler
 		registerAdminCommandHandler(new AdminPForge());
 		registerAdminCommandHandler(new AdminPledge());
 		registerAdminCommandHandler(new AdminPolymorph());
+		registerAdminCommandHandler(new AdminPremium());
 		registerAdminCommandHandler(new AdminRes());
 		registerAdminCommandHandler(new AdminRideWyvern());
 		registerAdminCommandHandler(new AdminShop());

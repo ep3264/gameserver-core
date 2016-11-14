@@ -547,11 +547,25 @@ public final class Config
 	public static boolean CLASS_MASTER_BECOME_NOBLE;
 	public static int  CLASS_MASTER_BECOME_NOBLE_ITEM;
 	public static int  CLASS_MASTER_BECOME_NOBLE_PRICE;
+	public static int VIP_BUFF_ITEM;
+	public static int VIP_BUFF_PRICE;
 	//offline trade
 	public static boolean ALLOW_OFFLINE_TRADE;
 	public static boolean OFFLINE_SET_NAME_COLOR;
 	public static int OFFLINE_NAME_COLOR;
-	
+	// PA
+	public static float			PREMIUM_RATE_XP;
+	public static float			PREMIUM_RATE_SP;
+	public static float			PREMIUM_RATE_DROP_ADENA;
+	public static float			PREMIUM_RATE_DROP_SPOIL;
+	public static float			PREMIUM_RATE_DROP_ITEMS;
+	public static float			PREMIUM_RATE_RAID_DROP_ITEMS;
+	public static float			PREMIUM_PET_XP_RATE;
+	public static float			PREMIUM_SINEATER_XP_RATE;
+	public static float			PREMIUM_RATE_DROP_QUEST;
+	public static boolean		SHOW_PREMIUM_STATE_ON_ENTER;
+	public static int PREMIUM_ITEM;
+	public static int PREMIUM_PRICE;
 	// --------------------------------------------------
 	// Server
 	// --------------------------------------------------
@@ -1515,10 +1529,23 @@ public final class Config
 		CLASS_MASTER_BECOME_NOBLE = Boolean.parseBoolean(custom.getProperty("ClassMasterBecomeNable", "false"));
 		CLASS_MASTER_BECOME_NOBLE_ITEM=Integer.parseInt(custom.getProperty("ClassMasterBecomeNableItem", "9213"));
 		CLASS_MASTER_BECOME_NOBLE_PRICE=Integer.parseInt(custom.getProperty("ClassMasterBecomeNablePrice", "5"));
+		VIP_BUFF_ITEM = Integer.parseInt(custom.getProperty("VipBuffItem", "4358"));
+		VIP_BUFF_PRICE= Integer.parseInt(custom.getProperty("VipBuffPrice", "1"));
 		//offline trade
 		ALLOW_OFFLINE_TRADE=Boolean.parseBoolean(custom.getProperty("AllowOfflineTrade", "false"));
 		OFFLINE_SET_NAME_COLOR = custom.getProperty("OfflineSetNameColor", false);
 		OFFLINE_NAME_COLOR = Integer.decode("0x" + custom.getProperty("OfflineNameColor", "808080"));
+		//PA
+		PREMIUM_RATE_XP = Float.parseFloat(custom.getProperty("RateXp", "1."));
+		PREMIUM_RATE_SP = Float.parseFloat(custom.getProperty("RateSp", "1."));
+		PREMIUM_RATE_DROP_ADENA = Float.parseFloat(custom.getProperty("RateDropAdena", "1."));
+		PREMIUM_RATE_DROP_SPOIL = Float.parseFloat(custom.getProperty("RateDropSpoil", "1."));
+		PREMIUM_RATE_DROP_ITEMS = Float.parseFloat(custom.getProperty("RateDropItems", "1."));
+		PREMIUM_RATE_RAID_DROP_ITEMS = Float.parseFloat(custom.getProperty("RateRaidDropItems", "1."));
+		PREMIUM_RATE_DROP_QUEST = Float.parseFloat(custom.getProperty("RateDropQuest", "1."));
+		SHOW_PREMIUM_STATE_ON_ENTER = Boolean.parseBoolean(custom.getProperty("ShowPAStatusOnEnter", "true"));
+		PREMIUM_ITEM =  Integer.parseInt(custom.getProperty("PremiumItem", "9213"));
+		PREMIUM_PRICE =  Integer.parseInt(custom.getProperty("PremiumPrice", "1"));
 	}
 	
 	public static final void loadGameServer()

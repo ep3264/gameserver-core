@@ -38,7 +38,7 @@ import java.util.logging.Level;
 
 import net.sf.l2j.commons.concurrent.ThreadPool;
 import net.sf.l2j.commons.random.Rnd;
-
+import net.sf.l2j.commons.util.MultiValueSet;
 import net.sf.l2j.Config;
 import net.sf.l2j.L2DatabaseFactory;
 import net.sf.l2j.gameserver.LoginServerThread;
@@ -10730,15 +10730,8 @@ public final class L2PcInstance extends L2Playable
 			setClient(null);
 		}
 		deleteMe();
-	}
-	
-	private LinkedList<String> _savedBuffs = new LinkedList<>();
-	
-	public LinkedList<String> getSavedBuffs()
-	{
-		return _savedBuffs;
-	}
-	
+	}	
+//Призраки
 	private boolean _isGhost=false;
 	
 	public boolean isGhost()
@@ -10766,6 +10759,7 @@ public final class L2PcInstance extends L2Playable
 		GhostsPlayers.getInstance().addGhost(this);
 		closeNetConnection(true);			
 	}
+	// Остановить опыт
 	private boolean _stopexp = false;
 	
 	public void setStopExp(boolean mode)
@@ -10784,7 +10778,7 @@ public final class L2PcInstance extends L2Playable
 		getDisabledSkills().clear();
 		sendPacket(new SkillCoolTime(this));
 	}
-	//
+	// Авто использование банок
 	private boolean _acp =false;
 	private ScheduledFuture<?> _acpScheduledFuture = null;
 	public boolean acp()
@@ -10817,7 +10811,7 @@ public final class L2PcInstance extends L2Playable
 			_acpScheduledFuture = null;
 		}
 	}
-	//TODO Redist
+	//TODO Redist Офлайн трейд
 	private boolean _isOffline = false;
 	public boolean isOfflineTrader()
 	{
@@ -10843,5 +10837,35 @@ public final class L2PcInstance extends L2Playable
 		_isOffline = true;
 		closeNetConnection(true);			
 	}
+	//PA
+	private MultiValueSet<String> _fakeAccData = new MultiValueSet<>();
+
+	public MultiValueSet<String> getAccountData()
+	{
+		if(getClient()!=null)
+			return getClient().getAccountData();
+
+		return _fakeAccData;
+	}
 	
+	public long getPremiumService()
+	{
+		return getAccountData().getLong("premium", 0);
+	}
+
+	public boolean isPremium()
+	{
+		return getPremiumService() > 0;
+	}
+
+	public void setPremiumService(long PS)
+	{
+		if(PS <= 0)
+		{
+			getAccountData().remove("premium");
+			return;
+		}
+
+		getAccountData().set("premium", PS);
+	}
 }
