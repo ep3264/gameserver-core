@@ -40,6 +40,11 @@ public class ChatShout implements IChatHandler
 		if (!FloodProtectors.performAction(activeChar.getClient(), Action.GLOBAL_CHAT))
 			return;
 		
+		if(activeChar.getLevel()< Config.MIN_LEVEL_SHOUT)
+		{
+			activeChar.sendMessage("Реклама в чате запрещена, чат доступен для игроков с "+Config.MIN_LEVEL_SHOUT+"-го уровня.");
+			return;
+		}
 		final CreatureSay cs = new CreatureSay(activeChar.getObjectId(), type, activeChar.getName(), text);
 		if (Config.DEFAULT_GLOBAL_CHAT == ChatMode.REGION) {
 			final int region = MapRegionTable.getMapRegion(activeChar.getX(), activeChar.getY());			

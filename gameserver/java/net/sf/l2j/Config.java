@@ -532,6 +532,11 @@ public final class Config
 	
 	public static ChatMode DEFAULT_GLOBAL_CHAT;
 	public static ChatMode DEFAULT_TRADE_CHAT;
+	//
+	public static int MIN_LEVEL_SHOUT;
+	public static int MIN_LEVEL_TRADE;
+	public static int MIN_LEVEL_ALL;
+	public static int MIN_LEVEL_TELL;
 	// start
 	public static boolean ENABLE_STARTUP_LVL;
 	public static int ADD_LVL_NEWBIE;
@@ -1513,6 +1518,10 @@ public final class Config
 		// chat
 		DEFAULT_GLOBAL_CHAT = ChatMode.valueOf(custom.getProperty("GlobalChat", "REGION").toUpperCase());
 		DEFAULT_TRADE_CHAT = ChatMode.valueOf(custom.getProperty("TradeChat", "REGION").toUpperCase());
+		MIN_LEVEL_SHOUT =  Integer.parseInt(custom.getProperty("MinLevelShout", "25"));
+		MIN_LEVEL_TRADE =  Integer.parseInt(custom.getProperty("MinLevelTrade", "25"));
+		MIN_LEVEL_ALL =  Integer.parseInt(custom.getProperty("MinLevelAll", "25"));
+		MIN_LEVEL_TELL =  Integer.parseInt(custom.getProperty("MinLevelTell", "25"));
 		// start lvl
 		ENABLE_STARTUP_LVL = Boolean.parseBoolean(custom.getProperty("EnableStartupLvl", "false"));
 		ADD_LVL_NEWBIE = Integer.parseInt(custom.getProperty("StartupLvl", "1"));

@@ -35,7 +35,7 @@ import net.sf.l2j.gameserver.network.serverpackets.ActionFailed;
 import net.sf.l2j.gameserver.network.serverpackets.NpcSay;
 import net.sf.l2j.gameserver.util.Util;
 
-import custom.L2System;
+
 import custom.events.EventManager;
 
 public final class RequestActionUse extends L2GameClientPacket

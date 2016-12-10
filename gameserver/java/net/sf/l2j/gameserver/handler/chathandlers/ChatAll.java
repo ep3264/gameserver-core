@@ -16,6 +16,7 @@ package net.sf.l2j.gameserver.handler.chathandlers;
 
 import java.util.StringTokenizer;
 
+import net.sf.l2j.Config;
 import net.sf.l2j.gameserver.handler.IChatHandler;
 import net.sf.l2j.gameserver.handler.IVoicedCommandHandler;
 import net.sf.l2j.gameserver.handler.VoicedCommandHandler;
@@ -63,6 +64,11 @@ public class ChatAll implements IChatHandler
 		}
 		if(!thisVoiceCommand)
 		{
+			if(activeChar.getLevel()< Config.MIN_LEVEL_ALL)
+			{
+				activeChar.sendMessage("Реклама в чате запрещена, чат доступен для игроков с "+Config.MIN_LEVEL_ALL+"-го уровня.");
+				return;
+			}
 			final CreatureSay cs = new CreatureSay(activeChar.getObjectId(), type, activeChar.getName(), text);
 			for (L2PcInstance player : activeChar.getKnownList().getKnownTypeInRadius(L2PcInstance.class, 1250))
 			{

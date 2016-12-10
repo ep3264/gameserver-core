@@ -14,6 +14,7 @@
  */
 package net.sf.l2j.gameserver.handler.chathandlers;
 
+import net.sf.l2j.Config;
 import net.sf.l2j.gameserver.handler.IChatHandler;
 import net.sf.l2j.gameserver.model.BlockList;
 import net.sf.l2j.gameserver.model.L2World;
@@ -33,7 +34,11 @@ public class ChatTell implements IChatHandler
 	{
 		if (target == null)
 			return;
-		
+		if(activeChar.getLevel()< Config.MIN_LEVEL_TELL)
+		{
+			activeChar.sendMessage("Реклама в чате запрещена, чат доступен для игроков с "+Config.MIN_LEVEL_TELL+"-го уровня.");
+			return;
+		}
 		final L2PcInstance receiver = L2World.getInstance().getPlayer(target);
 		if (receiver == null || receiver.getClient().isDetached())
 		{

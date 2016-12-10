@@ -38,6 +38,11 @@ public class ChatTrade implements IChatHandler
 		if (!FloodProtectors.performAction(activeChar.getClient(), Action.TRADE_CHAT))
 			return;
 		
+		if(activeChar.getLevel()< Config.MIN_LEVEL_TRADE)
+		{
+			activeChar.sendMessage("Реклама в чате запрещена, чат доступен для игроков с "+Config.MIN_LEVEL_TRADE+"-го уровня.");
+			return;
+		}
 		final CreatureSay cs = new CreatureSay(activeChar.getObjectId(), type, activeChar.getName(), text);
 		
 		if (Config.DEFAULT_TRADE_CHAT == ChatMode.REGION) {
