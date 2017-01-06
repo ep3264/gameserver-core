@@ -219,6 +219,5 @@ public class Roulette
     	}
     	
     	return;
-    }
-   
+    }   
 }

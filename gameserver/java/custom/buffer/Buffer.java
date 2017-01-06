@@ -181,15 +181,13 @@ public class Buffer
 		}
 		else
 		{
-			String regex = "\\d*,\\d{1}";
+			String regex = "\\d*";
 			if (action.matches(regex))
 			{
 				if (AllowedBuffsSet.ALLOWED_PLAYER_BUFFS.contains(action))
-				{
-					int lenStr = action.length();
-					int buff = Integer.parseInt(action.substring(0, lenStr - 2));
-					int levelBuff = Integer.parseInt(action.substring(lenStr - 1, lenStr));
-					SkillTable.getInstance().getInfo(buff, levelBuff).getEffects(l2Character, l2Character);
+				{					
+					int skillId = Integer.parseInt(action);				
+					SkillTable.getInstance().getInfo(skillId, SkillTable.getInstance().getMaxLevel(skillId)).getEffects(l2Character, l2Character);
 				}
 				else
 				{
