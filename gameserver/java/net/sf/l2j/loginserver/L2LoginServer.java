@@ -70,7 +70,7 @@ public class L2LoginServer
 		LogManager.getLogManager().readConfiguration(is);
 		is.close();
 		
-		StringUtil.printSection("L2JE");
+		StringUtil.printSection("L2JE.COM");
 		
 		// Initialize config
 		Config.loadLoginServer();

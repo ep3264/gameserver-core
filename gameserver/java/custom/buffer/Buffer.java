@@ -14,6 +14,9 @@
  */
 package custom.buffer;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import net.sf.l2j.Config;
 import net.sf.l2j.gameserver.datatables.SkillTable;
 import net.sf.l2j.gameserver.model.actor.L2Character;
@@ -21,6 +24,9 @@ import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.model.item.instance.ItemInstance;
 import net.sf.l2j.gameserver.network.SystemMessageId;
 import net.sf.l2j.gameserver.network.serverpackets.SystemMessage;
+import net.sf.l2j.log.Log;
+
+import custom.events.EventManager;
 
 /**
  * Developers: Redist Team<br>
@@ -42,16 +48,13 @@ public class Buffer
 	{
 		return SingletonHolder._instance;
 	}
-	
-	/*
-	 * Format buff: 1068,3 Format set buffs: fbuff
-	 */
+	protected static final Logger _log = Logger.getLogger(Buffer.class.getName());
 	public Buffer()
 	{
 	}
 	
 	private final static int[] vipfbuff =
-	{		
+	{
 		4699,
 		1392,
 		1352,
@@ -62,7 +65,7 @@ public class Buffer
 	};
 	private final static int[] vipmbuff =
 	{
-		4703,		
+		4703,
 		1392,
 		1352,
 		1353,
@@ -157,6 +160,20 @@ public class Buffer
 		1363
 	};
 	
+	private static boolean isSkill(String string)
+	{
+		if (string == null || string.length() == 0)
+		{
+			return false;
+		}		
+		char c = string.charAt(0);
+		if (!(c >= '0' && c <= '9'))
+		{
+			return false;
+		}		
+		return true;
+	}
+	
 	public void getBuff(L2PcInstance activeChar, String action, boolean pet)
 	{
 		L2Character l2Character = null;
@@ -180,17 +197,25 @@ public class Buffer
 			activeChar.sendMessage("You can't use buffer in PvP, Duel, Olympiad or Siege mode.");
 		}
 		else
-		{
-			String regex = "\\d*";
-			if (action.matches(regex))
+		{		
+			if (isSkill(action))
 			{
-				if (AllowedBuffsSet.ALLOWED_PLAYER_BUFFS.contains(action))
+				Integer skillId=4342; // бафф по умолчанию Wind Walk
+				try
+				{
+				   skillId = Integer.parseInt(action);
+				}
+				catch (NumberFormatException numberFormatException)
 				{					
-					int skillId = Integer.parseInt(action);				
+					_log.log(Level.WARNING, "Buffer error: skillID must be a number.", numberFormatException);					
+				}
+				if (AllowedBuffsSet.ALLOWED_PLAYER_BUFFS.contains(skillId))
+				{					
 					SkillTable.getInstance().getInfo(skillId, SkillTable.getInstance().getMaxLevel(skillId)).getEffects(l2Character, l2Character);
 				}
 				else
 				{
+					_log.info("Buff is not allowed!");
 					// Punisher.getInstance().illegalAction(activeChar.getClient(), (byte) 0x11);
 					// Illegal action
 				}
