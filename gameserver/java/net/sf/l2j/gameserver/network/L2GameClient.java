@@ -236,6 +236,7 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>> i
 				con.close();
 		}
 	}
+	
 	public void storeData() {
 		try
 		{

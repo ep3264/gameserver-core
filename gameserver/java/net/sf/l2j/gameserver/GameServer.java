@@ -413,10 +413,7 @@ public class GameServer
 	{
 		final String LOG_FOLDER = "./log"; // Name of folder for log file
 		final String LOG_NAME = "config/log.cfg"; // Name of log file
-		if(!Redist.test())
-		{
-			return;
-		}
+		
 		// Create log folder
 		File logFolder = new File(LOG_FOLDER);
 		logFolder.mkdir();

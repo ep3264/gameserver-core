@@ -23,7 +23,6 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -247,7 +246,6 @@ import net.sf.l2j.gameserver.templates.skills.L2SkillType;
 import net.sf.l2j.gameserver.util.Broadcast;
 import net.sf.l2j.gameserver.util.Util;
 
-import custom.acp.AcpAllTask;
 import custom.acp.AcpTask;
 import custom.colors.ColorsManager;
 import custom.events.Event;
@@ -10859,13 +10857,7 @@ public final class L2PcInstance extends L2Playable
 	}
 
 	public void setPremiumService(long PS)
-	{
-		if(PS <= 0)
-		{
-			getAccountData().remove("premium");
-			return;
-		}
-
+	{	
 		getAccountData().set("premium", PS);
 	}
 }

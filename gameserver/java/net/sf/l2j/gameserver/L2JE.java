@@ -25,7 +25,7 @@ import java.sql.SQLException;
  * @author user
  *
  */
-public class Redist
+public class L2JE
 {
 	private static final String url = "jdbc:mysql://87.236.19.137:3306/tasotw9j_custom";
     private static final String user = "tasotw9j_custom";
