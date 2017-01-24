@@ -24,6 +24,7 @@ public class EventManager
 	protected static final Logger _log = Logger.getLogger(EventManager.class.getName());
 	
 	public static final String HTML_FILE_PATH = "data/html/event_manager/";
+	public static final String CONFIG_FILE_PATH = "./data/xml/events.xml";
 	
 	private class AutoEventScheduler implements Runnable
 	{
@@ -88,7 +89,7 @@ public class EventManager
 			HashSet<String> _names = new HashSet<>();
 			try
 			{
-				final File f = new File("./data/xml/Events.xml");
+				final File f = new File(CONFIG_FILE_PATH);
 				final Document doc = XMLDocumentFactory.getInstance().loadDocument(f);
 				final Node n = doc.getFirstChild();
 				
@@ -335,7 +336,7 @@ public class EventManager
 		
 		if (getCurrentEvent() != null)
 		{
-			_log.info("EventManager: Starting " + event.get("name") + " event.");
+			debug("Event has started.");
 			getCurrentEvent().setConfig(event);
 			getCurrentEvent().start();
 		}

@@ -14,6 +14,7 @@
  */
 package net.sf.l2j.log;
 
+import java.text.SimpleDateFormat;
 import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 
@@ -28,7 +29,7 @@ public class ConsoleLogFormatter extends Formatter
 	{
 		final StringBuilder sb = new StringBuilder(500);
 		
-		StringUtil.append(sb, record.getMessage(), CRLF);
+		StringUtil.append(sb,"[",new SimpleDateFormat("dd-MM-yy HH:mm:ss").format(record.getMillis()),"]: ", record.getMessage(), CRLF);
 		
 		if (record.getThrown() != null)
 		{
