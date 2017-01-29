@@ -59,7 +59,7 @@ public class GameCrypt
 		_inKey[10] = (byte) (old >> 0x10 & 0xff);
 		_inKey[11] = (byte) (old >> 0x18 & 0xff);
 		
-		if (protection.ProtectionProperties.RC5){
+		if (com.l2je.protection.ProtectionProperties.RC5){
 			if(index == MAX_SIZE_K-1)
 			{
 				index =0;

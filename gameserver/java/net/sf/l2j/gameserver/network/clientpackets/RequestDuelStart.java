@@ -14,6 +14,8 @@
  */
 package net.sf.l2j.gameserver.network.clientpackets;
 
+import com.l2je.custom.events.EventManager;
+
 import net.sf.l2j.gameserver.model.L2CommandChannel;
 import net.sf.l2j.gameserver.model.L2Party;
 import net.sf.l2j.gameserver.model.L2World;
@@ -21,8 +23,6 @@ import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.network.SystemMessageId;
 import net.sf.l2j.gameserver.network.serverpackets.ExDuelAskStart;
 import net.sf.l2j.gameserver.network.serverpackets.SystemMessage;
-
-import custom.events.EventManager;
 
 public final class RequestDuelStart extends L2GameClientPacket
 {

@@ -14,11 +14,11 @@
  */
 package net.sf.l2j.gameserver.handler.voicecommandhandlers;
 
+import com.l2je.custom.ghosts.GhostsPlayers;
+
 import net.sf.l2j.Config;
 import net.sf.l2j.gameserver.handler.IVoicedCommandHandler;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
-
-import custom.ghosts.GhostsPlayers;
 
 /**
  * @author user

@@ -14,13 +14,13 @@
  */
 package net.sf.l2j.gameserver.model.actor.instance;
 
+import com.l2je.custom.casino.Roulette;
+
 import java.util.StringTokenizer;
 
 import net.sf.l2j.gameserver.cache.HtmCache;
 import net.sf.l2j.gameserver.model.actor.template.NpcTemplate;
 import net.sf.l2j.gameserver.network.serverpackets.NpcHtmlMessage;
-
-import custom.casino.Roulette;
 
 /**
  * @author redist

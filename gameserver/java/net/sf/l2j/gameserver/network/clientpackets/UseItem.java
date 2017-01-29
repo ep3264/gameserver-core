@@ -14,6 +14,8 @@
  */
 package net.sf.l2j.gameserver.network.clientpackets;
 
+import com.l2je.custom.events.EventManager;
+
 import net.sf.l2j.Config;
 import net.sf.l2j.commons.concurrent.ThreadPool;
 import net.sf.l2j.gameserver.handler.IItemHandler;
@@ -35,8 +37,6 @@ import net.sf.l2j.gameserver.network.serverpackets.SystemMessage;
 import net.sf.l2j.gameserver.scripting.Quest;
 import net.sf.l2j.gameserver.scripting.QuestState;
 import net.sf.l2j.gameserver.templates.skills.L2SkillType;
-
-import custom.events.EventManager;
 
 public final class UseItem extends L2GameClientPacket
 {

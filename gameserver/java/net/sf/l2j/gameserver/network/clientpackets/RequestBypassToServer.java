@@ -14,6 +14,8 @@
  */
 package net.sf.l2j.gameserver.network.clientpackets;
 
+import com.l2je.custom.events.EventManager;
+
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 
@@ -34,9 +36,6 @@ import net.sf.l2j.gameserver.network.serverpackets.ActionFailed;
 import net.sf.l2j.gameserver.network.serverpackets.NpcHtmlMessage;
 import net.sf.l2j.gameserver.util.FloodProtectors;
 import net.sf.l2j.gameserver.util.FloodProtectors.Action;
-
-import custom.events.EventManager;
-
 import net.sf.l2j.gameserver.util.GMAudit;
 
 public final class RequestBypassToServer extends L2GameClientPacket

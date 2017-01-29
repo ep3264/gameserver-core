@@ -14,10 +14,10 @@
  */
 package net.sf.l2j.gameserver.network.clientpackets;
 
-import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
+import com.l2je.protection.ProtectionProperties;
+import com.l2je.protection.hwid.HWIDManager;
 
-import protection.ProtectionProperties;
-import protection.hwid.HWIDManager;
+import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 
 /**
  * @author zabbix

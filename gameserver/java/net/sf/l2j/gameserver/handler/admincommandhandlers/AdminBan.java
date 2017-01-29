@@ -14,6 +14,9 @@
  */
 package net.sf.l2j.gameserver.handler.admincommandhandlers;
 
+import com.l2je.protection.ProtectionProperties;
+import com.l2je.protection.hwid.HWIDManager;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -26,10 +29,6 @@ import net.sf.l2j.gameserver.handler.IAdminCommandHandler;
 import net.sf.l2j.gameserver.model.L2World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.network.SystemMessageId;
-
-
-import protection.ProtectionProperties;
-import protection.hwid.HWIDManager;
 
 /**
  * This class handles following admin commands:

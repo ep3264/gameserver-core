@@ -14,6 +14,9 @@
  */
 package net.sf.l2j.gameserver.model.actor;
 
+import com.l2je.custom.L2System;
+import com.l2je.custom.events.EventManager;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -116,9 +119,6 @@ import net.sf.l2j.gameserver.templates.skills.L2EffectType;
 import net.sf.l2j.gameserver.templates.skills.L2SkillType;
 import net.sf.l2j.gameserver.util.Broadcast;
 import net.sf.l2j.gameserver.util.Util;
-
-import custom.L2System;
-import custom.events.EventManager;
 
 /**
  * L2Character is the mother class of all character objects of the world (PC, NPC...) :

@@ -14,8 +14,8 @@
  */
 package net.sf.l2j.gameserver.network.clientpackets;
 
-import protection.ProtectionProperties;
-import protection.Punisher;
+import com.l2je.protection.ProtectionProperties;
+import com.l2je.protection.Punisher;
 
 /**
  * Developers: Redist Team<br>

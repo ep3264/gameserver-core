@@ -14,10 +14,10 @@
  */
 package net.sf.l2j.gameserver.handler.admincommandhandlers;
 
+import com.l2je.custom.PremiumAccount;
+
 import net.sf.l2j.gameserver.handler.IAdminCommandHandler;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
-
-import custom.PremiumAccount;
 
 /**
  * @author user

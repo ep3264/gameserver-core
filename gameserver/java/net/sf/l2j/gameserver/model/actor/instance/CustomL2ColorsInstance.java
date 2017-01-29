@@ -14,6 +14,8 @@
  */
 package net.sf.l2j.gameserver.model.actor.instance;
 
+import com.l2je.custom.ColorsManager;
+
 import java.util.Arrays;
 import java.util.HashSet;
 
@@ -25,8 +27,6 @@ import net.sf.l2j.gameserver.model.item.kind.Item;
 import net.sf.l2j.gameserver.network.SystemMessageId;
 import net.sf.l2j.gameserver.network.serverpackets.NpcHtmlMessage;
 import net.sf.l2j.gameserver.network.serverpackets.SystemMessage;
-
-import custom.ColorsManager;
 
 /**
  * @author Redist

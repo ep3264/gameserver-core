@@ -14,6 +14,8 @@
  */
 package net.sf.l2j.gameserver.model.actor.instance;
 
+import com.l2je.custom.PremiumAccount;
+
 import java.text.SimpleDateFormat;
 import java.util.StringTokenizer;
 
@@ -24,8 +26,6 @@ import net.sf.l2j.gameserver.model.item.instance.ItemInstance;
 import net.sf.l2j.gameserver.network.SystemMessageId;
 import net.sf.l2j.gameserver.network.serverpackets.NpcHtmlMessage;
 import net.sf.l2j.gameserver.network.serverpackets.SystemMessage;
-
-import custom.PremiumAccount;
 
 /**
  * @author user

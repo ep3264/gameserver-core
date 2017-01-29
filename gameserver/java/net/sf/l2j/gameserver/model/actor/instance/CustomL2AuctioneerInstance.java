@@ -1,18 +1,8 @@
-/*
- * This program is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
- * 
- * You should have received a copy of the GNU General Public License along with
- * this program. If not, see <http://www.gnu.org/licenses/>.
- */
 package net.sf.l2j.gameserver.model.actor.instance;
+
+import com.l2je.custom.auction.Auction;
+import com.l2je.custom.auction.AuctionConfig;
+import com.l2je.custom.auction.AuctionItem;
 
 import java.util.StringTokenizer;
 
@@ -21,12 +11,8 @@ import net.sf.l2j.gameserver.model.actor.template.NpcTemplate;
 import net.sf.l2j.gameserver.model.item.instance.ItemInstance;
 import net.sf.l2j.gameserver.network.serverpackets.NpcHtmlMessage;
 
-import custom.auction.Auction;
-import custom.auction.AuctionConfig;
-import custom.auction.AuctionItem;
-
 /**
- * @author user
+ * @author evgeny64 Official Website: http://l2je.com
  */
 public class CustomL2AuctioneerInstance extends L2NpcInstance
 {
@@ -37,8 +23,7 @@ public class CustomL2AuctioneerInstance extends L2NpcInstance
 	 */
 	public CustomL2AuctioneerInstance(int objectId, NpcTemplate template)
 	{
-		super(objectId, template);
-		// TODO Auto-generated constructor stub
+		super(objectId, template);		
 	}
 	
 	@Override
@@ -46,13 +31,13 @@ public class CustomL2AuctioneerInstance extends L2NpcInstance
 	{
 		if (AuctionConfig.AUCTION_ENABLE)
 		{
-			showWindow(player, Auction.getInstance().showHeadPage(player, 1, 0));
+			showWindow(player, Auction.getInstance().getMainPage(player, 1, 0));
 		}
 		else
 		{
 			String html = HtmCache.getInstance().getHtm("data/html/mods/auction/Disable.htm");
 			showWindow(player, html);
-		}			
+		}
 	}
 	
 	@Override
@@ -97,7 +82,7 @@ public class CustomL2AuctioneerInstance extends L2NpcInstance
 					{
 						e.printStackTrace();
 					}
-					showWindow(player, Auction.getInstance().showCreateProductPage(player, page));
+					showWindow(player, Auction.getInstance().getCreateProductPage(player, page));
 					
 				}
 				else if (currentCommand.startsWith("page"))
@@ -111,7 +96,7 @@ public class CustomL2AuctioneerInstance extends L2NpcInstance
 					{
 						e.printStackTrace();
 					}
-					showWindow(player, Auction.getInstance().showHeadPage(player, page, type));		
+					showWindow(player, Auction.getInstance().getMainPage(player, page, type));
 				}
 				else if (currentCommand.startsWith("show"))
 				{
@@ -124,15 +109,15 @@ public class CustomL2AuctioneerInstance extends L2NpcInstance
 					{
 						e.printStackTrace();
 					}
-					AuctionItem auctionItem = Auction.getInstance()._products.get(itemId);
+					AuctionItem auctionItem = Auction.getInstance().getItemById(itemId);
 					if (auctionItem != null)
 					{
-						showWindow(player, Auction.getInstance().showItem(player, auctionItem));
+						showWindow(player, Auction.getInstance().getItemInformationPage(player, auctionItem));
 					}
 					else
 					{
 						player.sendMessage("Такой предмет на аукционе отсутствует.");
-						showWindow(player, Auction.getInstance().showCreateProductPage(player, 1));
+						showWindow(player, Auction.getInstance().getCreateProductPage(player, 1));
 					}
 				}
 				else if (currentCommand.startsWith("accept_buy"))
@@ -146,30 +131,9 @@ public class CustomL2AuctioneerInstance extends L2NpcInstance
 					{
 						e.printStackTrace();
 					}
-					AuctionItem auctionItem = Auction.getInstance()._products.get(itemId);
-					if (auctionItem != null)
-					{
-						if (!auctionItem.alreadySell)
-						{
-							if (player.getObjectId() != auctionItem.trader_objId)
-							{
-								Auction.getInstance().buyItem(player, auctionItem);
-							}
-							else
-							{
-								Auction.getInstance().removeFromSale(player, auctionItem);
-							}
-						}
-						else
-						{
-							player.sendMessage("Предмет уже был продан.");
-						}
-					}
-					else
-					{
-						player.sendMessage("Такой предмет на аукционе отсутствует.");
-					}
-				}				
+					Auction.getInstance().acceptBuy(player, itemId);
+					
+				}
 				else if (currentCommand.equals("chose"))
 				{
 					int itemId = 0;
@@ -184,13 +148,13 @@ public class CustomL2AuctioneerInstance extends L2NpcInstance
 					ItemInstance itemInstance = player.getInventory().getItemByObjectId(itemId);
 					if (Auction.getInstance().allowedItem(itemInstance))
 					{
-						showWindow(player, Auction.getInstance().showChoseProductPage(player, itemInstance));
+						showWindow(player, Auction.getInstance().getChoseProductPage(player, itemInstance));
 						
 					}
 					else
 					{
 						player.sendMessage("В вашем инвентаре нет этого предмета.");
-						showWindow(player, Auction.getInstance().showCreateProductPage(player, 1));
+						showWindow(player, Auction.getInstance().getCreateProductPage(player, 1));
 					}
 				}
 				else if (currentCommand.equals("chose_accept"))
@@ -203,12 +167,12 @@ public class CustomL2AuctioneerInstance extends L2NpcInstance
 						itemId = Integer.parseInt(st.nextToken());
 						price = Integer.parseInt(st.nextToken());
 						StringBuffer str = new StringBuffer();
-						while(st.hasMoreTokens())
+						while (st.hasMoreTokens())
 						{
 							str.append(st.nextToken());
 							str.append(' ');
 						}
-						str.deleteCharAt(str.length()-1);
+						str.deleteCharAt(str.length() - 1);
 						priceItem = Auction.getInstance().getRewardId(str.toString());
 					}
 					catch (Exception e)
@@ -219,15 +183,15 @@ public class CustomL2AuctioneerInstance extends L2NpcInstance
 					if (!Auction.getInstance().allowedItem(itemInstance))
 					{
 						player.sendMessage("В вашем инвентаре нет этого предмета.");
-						showWindow(player, Auction.getInstance().showCreateProductPage(player, 1));
+						showWindow(player, Auction.getInstance().getCreateProductPage(player, 1));
 					}
 					if (price <= 0)
 					{
 						player.sendMessage("Цена должна быть больше нуля.");
-						showWindow(player, Auction.getInstance().showCreateProductPage(player, 1));
+						showWindow(player, Auction.getInstance().getCreateProductPage(player, 1));
 					}
 					Auction.getInstance().choseAccept(player, itemInstance, priceItem, price);
-					showWindow(player, Auction.getInstance().showHeadPage(player, page, type));		
+					showWindow(player, Auction.getInstance().getMainPage(player, page, type));
 				}
 			}
 		}

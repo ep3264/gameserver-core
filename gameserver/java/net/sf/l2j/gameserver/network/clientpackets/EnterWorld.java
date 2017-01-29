@@ -14,6 +14,10 @@
  */
 package net.sf.l2j.gameserver.network.clientpackets;
 
+import com.l2je.custom.auction.Auction;
+import com.l2je.custom.auction.AuctionConfig;
+import com.l2je.custom.events.EventManager;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -68,10 +72,6 @@ import net.sf.l2j.gameserver.scripting.Quest;
 import net.sf.l2j.gameserver.scripting.QuestState;
 import net.sf.l2j.gameserver.scripting.ScriptManager;
 import net.sf.l2j.gameserver.taskmanager.GameTimeTaskManager;
-
-import custom.auction.Auction;
-import custom.auction.AuctionConfig;
-import custom.events.EventManager;
 
 
 public class EnterWorld extends L2GameClientPacket

@@ -14,6 +14,8 @@
  */
 package net.sf.l2j.gameserver.scripting.scripts.ai.individual;
 
+import com.l2je.custom.L2System;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -47,9 +49,6 @@ import net.sf.l2j.gameserver.network.serverpackets.SpecialCamera;
 import net.sf.l2j.gameserver.network.serverpackets.SystemMessage;
 import net.sf.l2j.gameserver.skills.AbnormalEffect;
 import net.sf.l2j.gameserver.templates.StatsSet;
-
-import custom.L2System;
-
 import net.sf.l2j.commons.random.Rnd;
 import net.sf.l2j.gameserver.scripting.scripts.ai.AbstractNpcAI;
 

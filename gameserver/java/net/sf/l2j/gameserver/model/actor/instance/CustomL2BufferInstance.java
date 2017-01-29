@@ -14,6 +14,8 @@
  */
 package net.sf.l2j.gameserver.model.actor.instance;
 
+import com.l2je.custom.Buffer;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,8 +29,6 @@ import net.sf.l2j.gameserver.model.L2Effect;
 import net.sf.l2j.gameserver.model.actor.L2Character;
 import net.sf.l2j.gameserver.model.actor.template.NpcTemplate;
 import net.sf.l2j.gameserver.network.serverpackets.NpcHtmlMessage;
-
-import custom.Buffer;
 
 
 /**

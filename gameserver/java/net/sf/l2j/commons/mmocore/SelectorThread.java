@@ -17,6 +17,9 @@
  */
 package net.sf.l2j.commons.mmocore;
 
+import com.l2je.custom.L2System;
+import com.l2je.protection.ProtectionProperties;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -33,9 +36,6 @@ import java.util.logging.Logger;
 
 import net.sf.l2j.gameserver.network.L2GamePacketHandler;
 import net.sf.l2j.gameserver.network.clientpackets.RequestMagicSkillUse;
-
-import custom.L2System;
-import protection.ProtectionProperties;
 
 /**
  * Parts of design based on networkcore from WoodenGil

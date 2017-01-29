@@ -14,6 +14,9 @@
  */
 package net.sf.l2j.gameserver.network;
 
+import com.l2je.protection.ProtectionProperties;
+import com.l2je.protection.crypt.Blowfish;
+
 import java.net.InetAddress;
 import java.nio.ByteBuffer;
 import java.sql.Connection;
@@ -49,9 +52,6 @@ import net.sf.l2j.gameserver.network.serverpackets.GameGuardQuery;
 import net.sf.l2j.gameserver.network.serverpackets.L2GameServerPacket;
 import net.sf.l2j.gameserver.network.serverpackets.ServerClose;
 import net.sf.l2j.gameserver.util.FloodProtectors;
-
-import protection.ProtectionProperties;
-import protection.crypt.Blowfish;
 
 
 /**
@@ -115,7 +115,7 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>> i
 	{
 		byte[] key = BlowFishKeygen.getRandomKey();
 		_crypt.setKey(key);
-		if (protection.ProtectionProperties.BLOWFISH)
+		if (com.l2je.protection.ProtectionProperties.BLOWFISH)
 		{
 			key = Blowfish.getInstance().getKey(key);
 		}

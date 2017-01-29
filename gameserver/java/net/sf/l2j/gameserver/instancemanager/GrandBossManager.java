@@ -14,6 +14,8 @@
  */
 package net.sf.l2j.gameserver.instancemanager;
 
+import com.l2je.custom.RaidBossInfo;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -32,8 +34,6 @@ import net.sf.l2j.gameserver.model.actor.L2Character;
 import net.sf.l2j.gameserver.model.actor.instance.L2GrandBossInstance;
 import net.sf.l2j.gameserver.model.zone.type.L2BossZone;
 import net.sf.l2j.gameserver.templates.StatsSet;
-
-import custom.RaidBossInfo;
 
 /**
  * This class handles the status of all Grand Bosses, and manages L2BossZone zones.

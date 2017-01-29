@@ -14,10 +14,10 @@
  */
 package net.sf.l2j.gameserver.handler.voicecommandhandlers;
 
+import com.l2je.custom.events.EventManager;
+
 import net.sf.l2j.gameserver.handler.IVoicedCommandHandler;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
-
-import custom.events.EventManager;
 
 public class Event implements IVoicedCommandHandler
 {

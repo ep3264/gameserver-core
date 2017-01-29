@@ -14,6 +14,18 @@
  */
 package net.sf.l2j.gameserver;
 
+import com.l2je.custom.auction.Auction;
+import com.l2je.custom.auction.AuctionConfig;
+import com.l2je.custom.events.EW;
+import com.l2je.custom.events.EventManager;
+import com.l2je.custom.events.TVT;
+import com.l2je.custom.ghosts.GhostsPlayers;
+import com.l2je.custom.ghosts.GhostsShouts;
+import com.l2je.protection.Punisher;
+import com.l2je.protection.crypt.Blowfish;
+import com.l2je.protection.crypt.RC5;
+import com.l2je.protection.hwid.HWIDManager;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -127,18 +139,6 @@ import net.sf.l2j.gameserver.taskmanager.WaterTaskManager;
 import net.sf.l2j.gameserver.xmlfactory.XMLDocumentFactory;
 import net.sf.l2j.util.DeadLockDetector;
 import net.sf.l2j.util.IPv4Filter;
-
-import custom.auction.Auction;
-import custom.auction.AuctionConfig;
-import custom.events.EW;
-import custom.events.EventManager;
-import custom.events.TVT;
-import custom.ghosts.GhostsPlayers;
-import custom.ghosts.GhostsShouts;
-import protection.Punisher;
-import protection.crypt.Blowfish;
-import protection.crypt.RC5;
-import protection.hwid.HWIDManager;
 
 public class GameServer
 {
@@ -334,23 +334,23 @@ public class GameServer
 		}
 		
 		StringUtil.printSection("Protection System");
-		protection.ProtectionProperties.init();
-		if(protection.ProtectionProperties.HWID)
+		com.l2je.protection.ProtectionProperties.init();
+		if(com.l2je.protection.ProtectionProperties.HWID)
 		{
 			_log.info("HWIDManager: Enable.");
 			HWIDManager.getInstance();			
 		}
-		if (protection.ProtectionProperties.RC5)
+		if (com.l2je.protection.ProtectionProperties.RC5)
 		{	
 			_log.info("RC5: Enable.");       
 			RC5.getInstance();			
 		}
-		if (protection.ProtectionProperties.BLOWFISH)
+		if (com.l2je.protection.ProtectionProperties.BLOWFISH)
 		{
 			_log.info("BLOWFISH: Enable.");
 			Blowfish.getInstance();			
 		}
-		if (protection.ProtectionProperties.PUNISHER)
+		if (com.l2je.protection.ProtectionProperties.PUNISHER)
 		{
 			_log.info("PUNISHER: Enable.");
 			Punisher.getInstance();			

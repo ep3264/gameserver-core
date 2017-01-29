@@ -14,6 +14,8 @@
  */
 package net.sf.l2j.gameserver.network.clientpackets;
 
+import com.l2je.custom.events.EventManager;
+
 import java.nio.BufferUnderflowException;
 
 import net.sf.l2j.Config;
@@ -25,8 +27,6 @@ import net.sf.l2j.gameserver.network.serverpackets.ActionFailed;
 import net.sf.l2j.gameserver.network.serverpackets.EnchantResult;
 import net.sf.l2j.gameserver.network.serverpackets.StopMove;
 import net.sf.l2j.gameserver.util.Util;
-
-import custom.events.EventManager;
 
 public class MoveBackwardToLocation extends L2GameClientPacket
 {

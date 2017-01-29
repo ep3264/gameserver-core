@@ -14,6 +14,8 @@
  */
 package net.sf.l2j.gameserver.model.actor;
 
+import com.l2je.custom.events.EventManager;
+
 import java.util.Map;
 
 import net.sf.l2j.Config;
@@ -45,9 +47,6 @@ import net.sf.l2j.gameserver.model.itemcontainer.PetInventory;
 import net.sf.l2j.gameserver.model.olympiad.OlympiadGameManager;
 import net.sf.l2j.gameserver.network.SystemMessageId;
 import net.sf.l2j.gameserver.network.serverpackets.AbstractNpcInfo.SummonInfo;
-
-import custom.events.EventManager;
-
 import net.sf.l2j.gameserver.network.serverpackets.ActionFailed;
 import net.sf.l2j.gameserver.network.serverpackets.L2GameServerPacket;
 import net.sf.l2j.gameserver.network.serverpackets.MoveToPawn;

@@ -14,6 +14,8 @@
  */
 package net.sf.l2j.gameserver.model.actor.instance;
 
+import com.l2je.custom.RaidBossInfo;
+
 /**
  * @author user
  *
@@ -26,8 +28,6 @@ import net.sf.l2j.gameserver.model.actor.instance.L2NpcInstance;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.model.actor.template.NpcTemplate;
 import net.sf.l2j.gameserver.network.serverpackets.NpcHtmlMessage;
-
-import custom.RaidBossInfo;
 
 public class CustomRaidBossInfoInstance extends L2NpcInstance
 {

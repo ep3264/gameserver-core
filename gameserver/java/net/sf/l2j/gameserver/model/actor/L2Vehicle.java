@@ -14,6 +14,8 @@
  */
 package net.sf.l2j.gameserver.model.actor;
 
+import com.l2je.custom.L2System;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,8 +44,6 @@ import net.sf.l2j.gameserver.network.serverpackets.VehicleInfo;
 import net.sf.l2j.gameserver.network.serverpackets.VehicleStarted;
 import net.sf.l2j.gameserver.taskmanager.MovementTaskManager;
 import net.sf.l2j.gameserver.util.Util;
-
-import custom.L2System;
 
 public class L2Vehicle extends L2Character
 {
