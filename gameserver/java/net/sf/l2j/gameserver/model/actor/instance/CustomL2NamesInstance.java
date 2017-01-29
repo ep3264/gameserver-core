@@ -37,7 +37,7 @@ public class CustomL2NamesInstance extends L2NpcInstance
 	@Override
 	public void showChatWindow(L2PcInstance player, int val)
 	{
-		NpcHtmlMessage html = new NpcHtmlMessage(1);
+		NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
 		html.setFile(getHtmlPath(getNpcId(), val));
 		html.replace("%objectId%", getObjectId());
 		html.replace("%price%", Config.NAME_CHANGE_PRICE);

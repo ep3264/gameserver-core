@@ -246,8 +246,8 @@ import net.sf.l2j.gameserver.templates.skills.L2SkillType;
 import net.sf.l2j.gameserver.util.Broadcast;
 import net.sf.l2j.gameserver.util.Util;
 
+import custom.ColorsManager;
 import custom.acp.AcpTask;
-import custom.colors.ColorsManager;
 import custom.events.Event;
 import custom.events.EventManager;
 import custom.ghosts.GhostsPlayers;

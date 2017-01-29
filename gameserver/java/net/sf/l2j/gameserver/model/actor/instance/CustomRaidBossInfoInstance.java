@@ -27,7 +27,7 @@ import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.model.actor.template.NpcTemplate;
 import net.sf.l2j.gameserver.network.serverpackets.NpcHtmlMessage;
 
-import custom.raidboss.RaidBossInfo;
+import custom.RaidBossInfo;
 
 public class CustomRaidBossInfoInstance extends L2NpcInstance
 {

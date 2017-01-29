@@ -26,7 +26,7 @@ import net.sf.l2j.gameserver.network.SystemMessageId;
 import net.sf.l2j.gameserver.network.serverpackets.NpcHtmlMessage;
 import net.sf.l2j.gameserver.network.serverpackets.SystemMessage;
 
-import custom.colors.ColorsManager;
+import custom.ColorsManager;
 
 /**
  * @author Redist

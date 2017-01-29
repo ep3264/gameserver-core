@@ -37,7 +37,7 @@ import net.sf.l2j.gameserver.model.actor.instance.L2RaidBossInstance;
 import net.sf.l2j.gameserver.model.actor.template.NpcTemplate;
 import net.sf.l2j.gameserver.templates.StatsSet;
 
-import custom.raidboss.RaidBossInfo;
+import custom.RaidBossInfo;
 
 /**
  * @author godson

@@ -22,7 +22,7 @@ import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.scripting.Quest;
 import net.sf.l2j.gameserver.scripting.QuestState;
 
-import custom.buffer.Buffer;
+import custom.Buffer;
 
 /**
  * Developers: Redist Team<br>

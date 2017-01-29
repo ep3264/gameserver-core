@@ -69,6 +69,8 @@ import net.sf.l2j.gameserver.scripting.QuestState;
 import net.sf.l2j.gameserver.scripting.ScriptManager;
 import net.sf.l2j.gameserver.taskmanager.GameTimeTaskManager;
 
+import custom.auction.Auction;
+import custom.auction.AuctionConfig;
 import custom.events.EventManager;
 
 
@@ -332,6 +334,11 @@ public class EnterWorld extends L2GameClientPacket
 				}
 			}			
 		}
+		// Check auction
+		if (AuctionConfig.AUCTION_ENABLE)
+		{
+			Auction.getInstance().enterTheGame(activeChar);
+		}	
 		PetitionManager.getInstance().checkPetitionMessages(activeChar);
 		
 		// no broadcast needed since the player will already spawn dead to others

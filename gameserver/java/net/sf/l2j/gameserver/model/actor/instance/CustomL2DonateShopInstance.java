@@ -48,9 +48,9 @@ public class CustomL2DonateShopInstance extends L2NpcInstance
 	{
 		String filename;
 		if (val == 0)
-			filename = "data/html/mods/donateshop/" + npcId + ".htm";
+			filename = "data/html/mods/donate_shop/" + npcId + ".htm";
 		else
-			filename = "data/html/mods/donateshop/" + npcId + "-" + val + ".htm";
+			filename = "data/html/mods/donate_shop/" + npcId + "-" + val + ".htm";
 		
 		return filename;
 	}

@@ -17,6 +17,7 @@ package net.sf.l2j.gameserver.datatables;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
@@ -186,6 +187,14 @@ public class SpawnTable
 		fillSpawnTable();
 	}
 	
+	public ArrayList<L2Spawn> findAllNpc(int npcId) {
+		ArrayList<L2Spawn> l2Spawns = new ArrayList<>();
+		for (L2Spawn spawn : _spawntable){
+			if (spawn.getNpcId() == npcId )
+				l2Spawns.add(spawn);
+		}
+		return l2Spawns;	
+	}
 	private static class SingletonHolder
 	{
 		protected static final SpawnTable _instance = new SpawnTable();

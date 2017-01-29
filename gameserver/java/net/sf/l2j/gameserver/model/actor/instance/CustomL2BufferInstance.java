@@ -28,8 +28,8 @@ import net.sf.l2j.gameserver.model.actor.L2Character;
 import net.sf.l2j.gameserver.model.actor.template.NpcTemplate;
 import net.sf.l2j.gameserver.network.serverpackets.NpcHtmlMessage;
 
-import custom.buffer.AllowedBuffsSet;
-import custom.buffer.Buffer;
+import custom.Buffer;
+
 
 /**
  * @author user
@@ -209,9 +209,8 @@ public class CustomL2BufferInstance extends L2NpcInstance
 		final List<Integer> skills = BufferTable.getInstance().getScheme(player.getObjectId(), schemeName);
 		L2Effect l2Effects[] = player.getAllEffects();
 		for (L2Effect l2Effect : l2Effects)
-		{
-			String str = Integer.toString(l2Effect.getSkill().getId()) + "," + Integer.toString(l2Effect.getSkill().getLevel());
-			if (AllowedBuffsSet.ALLOWED_PLAYER_BUFFS.contains(str))
+		{	
+			if (Buffer.ALLOWED_PLAYER_BUFFS.contains(Integer.valueOf(l2Effect.getSkill().getId())))
 			{
 				if (skills.size() < Config.BUFFER_MAX_SKILLS)
 					skills.add(l2Effect.getSkill().getId());

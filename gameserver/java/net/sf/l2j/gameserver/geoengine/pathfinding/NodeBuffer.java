@@ -147,7 +147,7 @@ public class NodeBuffer
 			for (Node node : nodes)
 				if (node.getLoc() != null)
 					node.free();
-		
+				
 		_lock.unlock();
 		_lastElapsedTime = System.currentTimeMillis() - _timeStamp;
 	}

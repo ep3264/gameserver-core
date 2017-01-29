@@ -12,8 +12,10 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package custom.buffer;
+package custom;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,10 +29,10 @@ import net.sf.l2j.gameserver.network.serverpackets.SystemMessage;
 
 
 /**
- * Developers: Redist Team<br>
- * Official Website: <br>
+ * Developers: L2JE Team<br>
+ * Official Website: http://l2je.com <br>
  * <br>
- * Author: Redist<br>
+ * Author: evgeny64<br>
  * Date: 3 нояб. 2015 г.<br>
  * Time: 14:06:57<br>
  * <br>
@@ -50,6 +52,19 @@ public class Buffer
 	public Buffer()
 	{
 	}
+	public static final  HashSet <Integer> ALLOWED_PLAYER_BUFFS = new HashSet<>(
+		Arrays.asList(
+			365,307,276,309,274,275,272,277,311,
+			271,273,310,
+			364,264,268,306,269,270,265,363,349,
+			308,305,304,267,266,
+			4355,4352,1243,4347,4348,4351,1397,4360,
+			4356,4359,4358,4357,4342,1032,4349,4346,
+			1068,1303,4344,1087,4350,1304,1388,1389,
+			1007,1009,1006,1002,1391,1251,1252,1253,
+			1284,1310,1309,1308,1362,1363,1413,1390,
+			1355,1356,1357,1268	,4553,4554
+			));
 	
 	private final static int[] vipfbuff =
 	{
@@ -207,7 +222,7 @@ public class Buffer
 				{					
 					_log.log(Level.WARNING, "Buffer error: skillID must be a number.", numberFormatException);					
 				}
-				if (AllowedBuffsSet.ALLOWED_PLAYER_BUFFS.contains(skillId))
+				if (ALLOWED_PLAYER_BUFFS.contains(skillId))
 				{					
 					SkillTable.getInstance().getInfo(skillId, SkillTable.getInstance().getMaxLevel(skillId)).getEffects(l2Character, l2Character);
 				}

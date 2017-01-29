@@ -100,6 +100,7 @@ import net.sf.l2j.gameserver.instancemanager.games.MonsterRace;
 import net.sf.l2j.gameserver.model.L2Manor;
 import net.sf.l2j.gameserver.model.L2World;
 import net.sf.l2j.gameserver.model.entity.Hero;
+import net.sf.l2j.gameserver.model.item.instance.ItemIcons;
 import net.sf.l2j.gameserver.model.olympiad.Olympiad;
 import net.sf.l2j.gameserver.model.olympiad.OlympiadGameManager;
 import net.sf.l2j.gameserver.model.partymatching.PartyMatchRoomList;
@@ -127,6 +128,8 @@ import net.sf.l2j.gameserver.xmlfactory.XMLDocumentFactory;
 import net.sf.l2j.util.DeadLockDetector;
 import net.sf.l2j.util.IPv4Filter;
 
+import custom.auction.Auction;
+import custom.auction.AuctionConfig;
 import custom.events.EW;
 import custom.events.EventManager;
 import custom.events.TVT;
@@ -320,6 +323,14 @@ public class GameServer
 		if(Config.ENABLE_GHOSTS_SHOUTS){
 			_log.info("GhostsShouts: Activated.");
 		ThreadPool.scheduleAtFixedRate(GhostsShouts.getInstance(), GhostsShouts.getIntialDelay(), GhostsShouts.getShoutRndTime());
+		}		
+	
+		AuctionConfig.readConfig();
+		if (AuctionConfig.AUCTION_ENABLE)
+		{
+			ItemIcons.getInstance();
+			Auction.getInstance().init();
+			_log.info("Auction: Activated.");
 		}
 		
 		StringUtil.printSection("Protection System");

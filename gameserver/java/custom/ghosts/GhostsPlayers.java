@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.concurrent.ScheduledFuture;
 import java.util.logging.Logger;
@@ -88,20 +87,7 @@ public class GhostsPlayers
 	protected GhostsPlayers()
 	{		
 	}
-    /* 
-	private void spawnGhosts()
-	{
-		 //Collections.shuffle(locs);
-		 int i =0;
-		 if(ghosts.size()>1){
-		 ThreadPool.scheduleAtFixedRate(new GhostsResurrector(ghosts), 60000, 60000);
-		 }
-		 for(Location loc :locs)
-		 {
-			 ghosts.get(i).spawnMe(loc.getX(),loc.getY(),loc.getZ());
-			 i++;
-		 }
-	} */
+
 	public void addGhost(L2PcInstance player)
 	{
 		if(!_changeTable)
@@ -167,7 +153,6 @@ public class GhostsPlayers
 					client.setState(GameClientState.IN_GAME);
 					player.setOnlineStatus(true, false);
 					player.setClient(client);					
-					//locs.add(new Location(player.getX(), player.getY(), player.getZ()));
 					_ghosts.add(player);
 					player.spawnMe(player.getX(), player.getY(), player.getZ());
 					
@@ -182,8 +167,6 @@ public class GhostsPlayers
 							player.sitDown();
 						}
 					}
-					//player.setOnlineStatus(true);
-					//player.restoreEffects();
 					player.broadcastUserInfo();					
 				}
 				catch(Exception e)
@@ -197,8 +180,7 @@ public class GhostsPlayers
 				}
 			}
 			rs.close();
-			stm.close();
-			//spawnGhosts();			
+			stm.close();	
 			if(_ghosts.size()>1){
 				 ThreadPool.scheduleAtFixedRate(new GhostsResurrector(_ghosts), 60000, 60000);
 				 }
@@ -218,8 +200,7 @@ public class GhostsPlayers
 				}
 			}
 			catch (SQLException e)
-			{
-				// TODO Auto-generated catch block
+			{				
 				e.printStackTrace();
 			}
 		}
