@@ -11,6 +11,7 @@ import java.util.Random;
 import java.util.concurrent.ScheduledFuture;
 
 import net.sf.l2j.commons.concurrent.ThreadPool;
+import net.sf.l2j.commons.lang.StringUtil;
 import net.sf.l2j.gameserver.datatables.DoorTable;
 import net.sf.l2j.gameserver.datatables.FenceTable;
 import net.sf.l2j.gameserver.datatables.SkillTable;
@@ -97,7 +98,9 @@ public abstract class Event
 		public EventResurrector(L2PcInstance player, int delay)
 		{
 			_player = player;
-			_player.sendMessage("Вы будете воскрешенны через " + delay + " секунд(ы).");
+			StringBuffer stringBuffer = new StringBuffer();
+			StringUtil.append(stringBuffer, "Вы будете воскрешенны через ", delay , " секунд(ы).");
+			_player.sendMessage(stringBuffer.toString());
 			_task = ThreadPool.schedule(this, delay * 1000);
 		}
 		

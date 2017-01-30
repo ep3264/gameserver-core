@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Random;
 //import java.util.concurrent.ScheduledFuture;
 
+import net.sf.l2j.commons.lang.StringUtil;
 //import net.sf.l2j.gameserver.ThreadPoolManager;
 import net.sf.l2j.gameserver.datatables.MapRegionTable;
 import net.sf.l2j.gameserver.datatables.NpcTable;
@@ -476,6 +477,7 @@ public class EW extends CombatEvent
 	@Override
 	protected void handleCounter(int delay)
 	{
+		StringBuilder sb= new StringBuilder();
 		switch (_eventState)
 		{
 			case ACTIVE:
@@ -485,13 +487,15 @@ public class EW extends CombatEvent
 					case 600:
 					case 300:
 					case 60:
-						sendMessageToAllPlayers("Event закончится через " + (delay / 60) + " минут(у).");
+						StringUtil.append(sb, "Event закончится через ", (delay / 60), " минут(у).");
+						sendMessageToAllPlayers(sb.toString());
 						break;
 					case 30:
 					case 15:
 					case 10:
 					case 5:
-						sendMessageToAllPlayers("Event закончится через " + delay + " секунд(у).");
+						StringUtil.append(sb, "Event закончится через ", delay, " секунд(у).");
+						sendMessageToAllPlayers(sb.toString());
 						break;
 				}
 				break;

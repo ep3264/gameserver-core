@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import net.sf.l2j.commons.lang.StringUtil;
 import net.sf.l2j.gameserver.model.L2Effect;
 import net.sf.l2j.gameserver.model.L2Skill;
 import net.sf.l2j.gameserver.model.actor.L2Character;
@@ -18,10 +19,10 @@ import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.model.actor.instance.L2SummonInstance;
 
 /**
- * Developers: Redist Team<br>
+ * Developers: l2je Team<br>
  * <br>
  * <br>
- * Author: Redist<br>
+ * Author: evgeny<br>
  * Date: 24 февр. 2016 г.<br>
  * Time: 0:15:55<br>
  * <br>
@@ -458,7 +459,9 @@ public class TVT extends CombatEvent
 			}
 			else if (_1stPlace != null)
 			{
-				announce("1-е место заняла команда " + getString("team" + _1stPlace.getId() + "Name") + ". Сделав " + _1stPlace.getScore() + " убийств.");
+				StringBuilder sb = new StringBuilder();
+				StringUtil.append(sb, "1-е место заняла команда ", getString("team" + _1stPlace.getId()+ "Name") , ". Сделав ", _1stPlace.getScore(), " убийств.");
+				announce(sb.toString());
 				for (L2PcInstance member : _1stPlace.getMembers())
 				{
 					if (_scores.get(member) >= getInt("minKillsToGetReward"))

@@ -22,7 +22,8 @@ import com.l2je.custom.RaidBossInfo;
  */
 
 import java.util.Calendar;
-import net.sf.l2j.gameserver.cache.HtmCache;
+
+import net.sf.l2j.commons.lang.StringUtil;
 import net.sf.l2j.gameserver.datatables.NpcTable;
 import net.sf.l2j.gameserver.model.actor.instance.L2NpcInstance;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
@@ -88,19 +89,14 @@ public class CustomRaidBossInfoInstance extends L2NpcInstance
 			
 			long delay = RaidBossInfo.getInstance().getRespawnTime(rboss)- Calendar.getInstance().getTimeInMillis();
 			String name = NpcTable.getInstance().getTemplate(rboss).getName();
-			String level =Byte.toString(NpcTable.getInstance().getTemplate(rboss).getLevel());
-			
+			String level =Byte.toString(NpcTable.getInstance().getTemplate(rboss).getLevel());			
 			if (delay <= 0)
 			{
-				sb.append("<font color=\"FFFFFF\">" + name +" "+level+ "</font><font color=\"FFFF00\"> Жив!</font><br1>");
-			}/*
-			else if (delay < 0)
-			{
-				sb.append("<font color=\"FF0000\">&nbsp;" + name + "&nbsp; Мертв.</font><br1>");
-			} */
+				StringUtil.append(sb, "<font color=\"FFFFFF\">" , name ," ",level, "</font><font color=\"FFFF00\"> Жив!</font><br1>");				
+			}
 			else
-			{				
-				sb.append("<font color=\"FF0000\">" + name +" "+level+ "</font> " + ConverTime(delay) + "<br1>");
+			{	
+				StringUtil.append(sb,"<font color=\"FF0000\">", name ," ",level, "</font> " , ConverTime(delay) , "<br1>");				
 			}
 		}
 		return sb.toString();		
@@ -114,19 +110,14 @@ public class CustomRaidBossInfoInstance extends L2NpcInstance
 			
 			long delay = RaidBossInfo.getInstance().getEpicRespawnDate(rboss)- Calendar.getInstance().getTimeInMillis();
 			String name = NpcTable.getInstance().getTemplate(rboss).getName().toUpperCase();
-			String level =Byte.toString(NpcTable.getInstance().getTemplate(rboss).getLevel());
-			
+			String level =Byte.toString(NpcTable.getInstance().getTemplate(rboss).getLevel());			
 			if (delay <= 0)
 			{
-				sb.append("<font color=\"FFFFFF\">" + name +" "+level+ "</font><font color=\"FFFF00\"> Жив!</font><br1>");
-			}/*
-			else if (delay < 0)
-			{
-				sb.append("<font color=\"FF0000\">&nbsp;" + name + "&nbsp; Мертв.</font><br1>");
-			} */
+				StringUtil.append(sb, "<font color=\"FFFFFF\">" , name ," ",level, "</font><font color=\"FFFF00\"> Жив!</font><br1>");
+			}
 			else
 			{				
-				sb.append("<font color=\"FF0000\">" + name +" "+level+ "</font> " + ConverTime(delay) + "<br1>");
+				StringUtil.append(sb,"<font color=\"FF0000\">", name ," ",level, "</font> " , ConverTime(delay) , "<br1>");
 			}
 		}
 		return sb.toString();		
@@ -143,7 +134,9 @@ public class CustomRaidBossInfoInstance extends L2NpcInstance
 		
 		long seconds = (long) Math.ceil((remainder / 1000));
 		
-		return hours + ":" + minutes + ":" + seconds;
+		final StringBuilder sb = new StringBuilder();
+		StringUtil.append(sb,hours, ":", minutes, ":", seconds);
+		return sb.toString();
 	}
 	
 	@Override

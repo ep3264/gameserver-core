@@ -60,7 +60,16 @@ public final class StringUtil
 		for (Object obj : content)
 			sb.append((obj == null) ? null : obj.toString());
 	}
-	
+	/**
+	 * Appends objects to an existing StringBuilder.
+	 * @param sb : the StringBuffer to edit.
+	 * @param content : parameters to append.
+	 */
+	public static void append(StringBuffer sb, Object... content)
+	{
+		for (Object obj : content)
+			sb.append((obj == null) ? null : obj.toString());
+	}
 	/**
 	 * @param text : the String to check.
 	 * @return true if the String contains only numbers, false otherwise.
