@@ -11,6 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 import net.sf.l2j.L2DatabaseFactory;
+import net.sf.l2j.commons.lang.StringUtil;
 import net.sf.l2j.gameserver.cache.HtmCache;
 import net.sf.l2j.gameserver.datatables.ItemTable;
 import net.sf.l2j.gameserver.model.L2Object;
@@ -315,8 +316,8 @@ public class Auction
 		if(item.getEnchantLevel() > 0)
 		{
 			str.append("<font color=LEVEL> +");
-			str.append( item.getEnchantLevel());
-			str.append( "</font>") ;
+			str.append(item.getEnchantLevel());
+			str.append("</font>") ;
 		}
 		str.append("</td></tr>");
 		str.append( getAugment(item));
@@ -421,23 +422,23 @@ public class Auction
 	
 	private static String getAvailablePrice()
 	{
-		String rewards = "";
+		StringBuffer rewards = new StringBuffer();
 		int[] arr = AuctionConfig.AUCTION_ALLOWED_ITEM_ID;
 		
 		for (int i = 0; i < arr.length; ++i)
 		{
 			int id = arr[i];
-			if (rewards.isEmpty())
+			if (i == 0)
 			{
-				rewards = rewards + ItemTable.getInstance().getTemplate(id).getName();
+				rewards.append(ItemTable.getInstance().getTemplate(id).getName());
 			}
 			else
 			{
-				rewards = rewards + ";" + ItemTable.getInstance().getTemplate(id).getName();
+				StringUtil.append(rewards, ";", ItemTable.getInstance().getTemplate(id).getName());
 			}
 		}
 		
-		return rewards;
+		return rewards.toString();
 	}
 	
 	private static boolean checkItem(L2PcInstance player, AuctionItem item, int type)
@@ -583,20 +584,8 @@ public class Auction
 			ex.printStackTrace();
 		}
 	}
-	
-	public void choseAccept(L2PcInstance player, ItemInstance item, int id_price, int price)
+	private static boolean payAuctioneer(L2PcInstance player, ItemInstance item, int id_price, int price)
 	{
-		AuctionItem sellitem = new AuctionItem(player.getObjectId(), id_price, price, System.currentTimeMillis(), item);
-		transferItem(player.getInventory(), AuctionInventory.getInstance(), item.getObjectId(), player);
-		try
-		{
-			this.storeItem(sellitem, true);
-		}
-		catch (SQLException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		int auction_priceId;
 		int auction_priceCount;
 		if (AuctionConfig.AUCTION_PERCENTAGE)
@@ -608,13 +597,36 @@ public class Auction
 		{
 			auction_priceId = item.isAugmented() ? AuctionConfig.AUCTION_AUGMENT_PRICE[0] : AuctionConfig.AUCTION_PRICE[0];
 			auction_priceCount = item.isAugmented() ? AuctionConfig.AUCTION_AUGMENT_PRICE[1] : AuctionConfig.AUCTION_PRICE[1];
-		}		
-		player.destroyItemByItemId("Auction add product.", auction_priceId, auction_priceCount, (L2Object) null, true);
-		StringBuilder message = new StringBuilder();
-		message.append("Аукционер: ");
-		message.append(item.getName());
-		message.append(" выставлен на продажу!");
-		Broadcast.toAllOnlinePlayers(new CreatureSay(0, Say2.CRITICAL_ANNOUNCE, "", message.toString()));
+		}
+		if (!haveCountItem(player, auction_priceId, auction_priceCount))
+		{
+			player.sendMessage("У вас недостаточно средств для оплаты аукциона.");
+			return false;
+		}
+		if (player.destroyItemByItemId("Auction add product.", auction_priceId, auction_priceCount, (L2Object) null, true))
+		{
+			return true;
+		}
+		return false;
+	}
+	public void choseAccept(L2PcInstance player, ItemInstance item, int id_price, int price)
+	{
+		if(payAuctioneer(player,item,id_price,price))	
+		{		
+			AuctionItem sellitem = new AuctionItem(player.getObjectId(), id_price, price, System.currentTimeMillis(), item);
+			transferItem(player.getInventory(), AuctionInventory.getInstance(), item.getObjectId(), player);
+			try
+			{
+				storeItem(sellitem, true);
+			}
+			catch (SQLException e)
+			{				
+				e.printStackTrace();
+			}
+			StringBuffer message = new StringBuffer();
+			StringUtil.append(message, "Auctioneer: ",item.getName()," выставлен на продажу!");
+			Broadcast.toAllOnlinePlayers(new CreatureSay(0, Say2.CRITICAL_ANNOUNCE, "", message.toString()));
+		}
 	}
 	
 	private static ItemInstance transferItem(ItemContainer src, ItemContainer dst, int objId, L2PcInstance player)
@@ -732,7 +744,6 @@ public class Auction
 				}
 				catch (SQLException e)
 				{
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}

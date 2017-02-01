@@ -6,10 +6,13 @@ import com.l2je.custom.auction.AuctionItem;
 
 import java.util.StringTokenizer;
 
+import net.sf.l2j.Config;
 import net.sf.l2j.gameserver.cache.HtmCache;
 import net.sf.l2j.gameserver.model.actor.template.NpcTemplate;
 import net.sf.l2j.gameserver.model.item.instance.ItemInstance;
+import net.sf.l2j.gameserver.network.SystemMessageId;
 import net.sf.l2j.gameserver.network.serverpackets.NpcHtmlMessage;
+import net.sf.l2j.gameserver.network.serverpackets.SystemMessage;
 
 /**
  * @author evgeny64 Official Website: http://l2je.com
@@ -59,7 +62,6 @@ public class CustomL2AuctioneerInstance extends L2NpcInstance
 		html.replace("%objectId%", getObjectId());
 		player.sendPacket(html);
 	}
-	
 	@Override
 	public void onBypassFeedback(L2PcInstance player, String command)
 	{

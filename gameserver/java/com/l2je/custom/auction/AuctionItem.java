@@ -2,6 +2,7 @@ package com.l2je.custom.auction;
 
 import java.util.logging.Logger;
 
+import net.sf.l2j.commons.lang.StringUtil;
 import net.sf.l2j.gameserver.datatables.CharNameTable;
 import net.sf.l2j.gameserver.datatables.ItemTable;
 import net.sf.l2j.gameserver.model.item.instance.ItemIcons;
@@ -149,10 +150,9 @@ public class AuctionItem
 	
 	public String getPrice()
 	{
-		StringBuffer buffer = new StringBuffer(price);
-		buffer.append(" ");
-		buffer.append(ItemTable.getInstance().getTemplate(id_price).getName());
-		return buffer.toString();
+		StringBuffer stringBuffer = new StringBuffer();
+		StringUtil.append(stringBuffer, price," ",ItemTable.getInstance().getTemplate(id_price).getName());
+		return stringBuffer.toString();
 	}
 	
 	public int getId()

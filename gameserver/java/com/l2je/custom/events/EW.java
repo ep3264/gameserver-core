@@ -610,5 +610,4 @@ public class EW extends CombatEvent
 		}
 		return true;
 	}
-
 }
