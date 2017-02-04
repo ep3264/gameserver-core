@@ -1,4 +1,4 @@
-package com.l2je.custom.ghosts;
+package com.l2je.extensions.ghosts;
 
 import java.util.ArrayList;
 import java.util.List;

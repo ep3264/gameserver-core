@@ -14,7 +14,7 @@
  */
 package net.sf.l2j.gameserver;
 
-import com.l2je.custom.ghosts.GhostsPlayers;
+import com.l2je.extensions.ghosts.GhostsPlayers;
 import com.l2je.protection.ProtectionProperties;
 import com.l2je.protection.hwid.HWIDManager;
 

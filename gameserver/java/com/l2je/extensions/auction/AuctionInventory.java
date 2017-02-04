@@ -1,4 +1,4 @@
-package com.l2je.custom.auction;
+package com.l2je.extensions.auction;
 
 import net.sf.l2j.gameserver.model.actor.L2Character;
 import net.sf.l2j.gameserver.model.item.instance.ItemInstance.ItemLocation;

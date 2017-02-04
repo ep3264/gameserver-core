@@ -14,9 +14,9 @@
  */
 package net.sf.l2j.gameserver.network.clientpackets;
 
-import com.l2je.custom.auction.Auction;
-import com.l2je.custom.auction.AuctionConfig;
-import com.l2je.custom.events.EventManager;
+import com.l2je.extensions.auction.Auction;
+import com.l2je.extensions.auction.AuctionConfig;
+import com.l2je.extensions.events.EventManager;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

@@ -14,7 +14,7 @@
  */
 package net.sf.l2j.gameserver.handler.admincommandhandlers;
 
-import com.l2je.custom.PremiumAccount;
+import com.l2je.extensions.PremiumAccount;
 
 import net.sf.l2j.gameserver.handler.IAdminCommandHandler;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;

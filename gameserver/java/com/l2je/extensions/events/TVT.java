@@ -1,7 +1,7 @@
-package com.l2je.custom.events;
+package com.l2je.extensions.events;
 
-import com.l2je.custom.events.CustomUtil;
-import com.l2je.custom.events.EventManager;
+import com.l2je.extensions.events.CustomUtil;
+import com.l2je.extensions.events.EventManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -63,14 +63,19 @@ public class TVT extends CombatEvent
 		{
 			_score = score;
 			String pattern = "%score%";
-			if (getString("scoreInTitlePattern") != null)
+			if (EventConfig.TVT_SCORE_TITLE_PATTERN != null)
 			{
-				pattern = getString("scoreInTitlePattern");
+				pattern = EventConfig.TVT_SCORE_TITLE_PATTERN;
 			}
 			for (L2PcInstance member : _members)
 			{
 				member.setEventTitle(pattern.replaceAll("%score%", String.valueOf(score)));
 			}
+		}
+		
+		public String getName()
+		{
+			return (getId() == 1) ? "Blue" : "Red";
 		}
 		
 		public int getScore()
@@ -80,11 +85,12 @@ public class TVT extends CombatEvent
 		
 		public void addMember(L2PcInstance player)
 		{
-			debug("Added " + player.getName() + " to team " + getId() + ".");
+			if (EventConfig.EVENT_MANAGER_DEBUG)
+				debug("Added " + player.getName() + " to team " + getName() + ".");
 			_members.add(player);
-			player.setEventTitleColor(getString("team" + getId() + "TitleColor"));
-			player.setEventNameColor(getString("team" + getId() + "NameColor"));
-			player.setTeam(getInt("team" + getId() + "Color"));
+			player.setEventTitleColor((getId() == 1) ? EventConfig.TVT_TEAM1_TITLE_COLOR : EventConfig.TVT_TEAM2_TITLE_COLOR);
+			player.setEventNameColor((getId() == 1) ? EventConfig.TVT_TEAM1_NAME_COLOR : EventConfig.TVT_TEAM2_NAME_COLOR);
+			player.setTeam(getId());
 		}
 		
 		public boolean containsMember(L2PcInstance player)
@@ -109,7 +115,8 @@ public class TVT extends CombatEvent
 		
 		public void addSpawnLocation(int[] location)
 		{
-			debug("Adding spawn location to team " + getString("team" + getId() + "Name") + ": " + location[0] + "," + location[1] + "," + location[2]);
+			if (EventConfig.EVENT_MANAGER_DEBUG)
+				debug("Adding spawn location to team " + getId() + ": " + location[0] + "," + location[1] + "," + location[2]);
 			_spawnLocations.add(location);
 		}
 		
@@ -131,14 +138,14 @@ public class TVT extends CombatEvent
 	}
 	
 	// end class
-	private final int ID = 1;
-	private final String NAME = "TVT";
 	private EventState _eventState = EventState.IDLE;
 	private final List<EventTeam> _teams = new ArrayList<>();
 	
 	public TVT()
 	{
 		super();
+		setName("TVT");
+		setId(EventConfig.TVT_ID);
 	}
 	
 	/*
@@ -152,57 +159,56 @@ public class TVT extends CombatEvent
 		
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see com.l2je.extensions.events.Event#init()
+	 */
 	@Override
-	public void setConfig(Map<String, String> config)
+	protected void init()
 	{
-		super.setConfig(config);
+		initBlockItems();
+		initBlockSkills();
+		initTeams();
+	}
+	
+	private void initTeams()
+	{
+		initTeam(1);
+		initTeam(2);
+	}
+	
+	private void initTeam(int id)
+	{
 		String[] spawnLocation;
-		if (_teams.size() == 0)
+		if (_teams.size() < 2)
 		{
-			for (int i = 1; i <= getInt("numberOfTeams"); i++)
+			EventTeam team = new EventTeam();
+			team.setId(id);
+			if (EventConfig.EVENT_MANAGER_DEBUG)
+				debug("Creating team "+team.getName());			
+			String[] configs = (id == 1) ? EventConfig.TVT_TEAM1_SPAWN_LOCS : EventConfig.TVT_TEAM2_SPAWN_LOCS;
+			for (String rawSpawnLocation : configs)
 			{
-				EventTeam team = new EventTeam();
-				debug("Creating team " + getString("team" + i + "Name") + ".");
-				team.setId(i);
-				for (String rawSpawnLocation : getString("team" + i + "SpawnLocations").split(";"))
+				spawnLocation = rawSpawnLocation.split(",");
+				if (spawnLocation.length != 3)
 				{
-					spawnLocation = rawSpawnLocation.split(",");
-					if (spawnLocation.length != 3)
-					{
-						debug("Failed to load sub-value from \"team" + i + "SpawnLocations\".");
-						continue;
-					}
-					team.addSpawnLocation(new int[]
-					{
-						Integer.valueOf(spawnLocation[0]),
-						Integer.valueOf(spawnLocation[1]),
-						Integer.valueOf(spawnLocation[2])
-					});
-				}
-				if (team.countSpawnLocations() == 0)
-				{
-					debug("Failed to load value from \"team" + i + "SpawnLocations\".");
+					if (EventConfig.EVENT_MANAGER_DEBUG)
+						debug("Failed to load sub-value from \"team  1 SpawnLocations\".");
 					continue;
 				}
-				_teams.add(team);
-			}
-		}
-		else
-		{// reload config for teams.
-			for (EventTeam team : _teams)
-			{
-				team.clearSpawnLocations();
-				for (String rawSpawnLocation : getString("team" + team.getId() + "SpawnLocations").split(";"))
+				team.addSpawnLocation(new int[]
 				{
-					spawnLocation = rawSpawnLocation.split(",");
-					team.addSpawnLocation(new int[]
-					{
-						Integer.valueOf(spawnLocation[0]),
-						Integer.valueOf(spawnLocation[1]),
-						Integer.valueOf(spawnLocation[2])
-					});
-				}
+					Integer.valueOf(spawnLocation[0]),
+					Integer.valueOf(spawnLocation[1]),
+					Integer.valueOf(spawnLocation[2])
+				});
 			}
+			if (team.countSpawnLocations() == 0)
+			{
+				if (EventConfig.EVENT_MANAGER_DEBUG)
+					debug("Failed to load value from \"team "+team.getName()+" SpawnLocations\".");
+			}
+			_teams.add(team);
 		}
 	}
 	
@@ -242,33 +248,35 @@ public class TVT extends CombatEvent
 		switch (_eventState)
 		{
 			case IDLE:
+				init();
 				announce("TVT: Регистрация игроков открыта.");
 				announce("Команды: " + EVENT_COMMANDS);
 				_eventState = EventState.REGISTERING;
-				schedule(getInt("registrationTime"));
+				schedule(EventConfig.TVT_REG_TIME);
 				break;
 			case REGISTERING:
 				announce("TVT: Регистрация игроков закончена.");
-				if (_players.size() >= getInt("minPlayersRequired"))
+				if (_players.size() >= EventConfig.TVT_MIN_PLAYERS)
 				{
 					_eventState = EventState.PRE_ACTIVE;
-					schedule(getInt("teleportTime"));
+					schedule(EventConfig.TVT_TELEPORT_TIME);
 				}
 				else
 				{
 					announce("Event has been aborted because there was not enough participants.");
-					debug("Event has been aborted because there was not enough participants.");
+					if (EventConfig.EVENT_MANAGER_DEBUG)
+						debug("Event has been aborted because there was not enough participants.");
 					EventManager.getInstance().end(false);
 				}
 				break;
 			case PRE_ACTIVE:
 				_eventState = EventState.ACTIVE;
-				schedule(getInt("runningTime"));
+				schedule(EventConfig.TVT_RUNNING_TIME);
 				teleportPlayersToEvent();
 				break;
 			case ACTIVE:
 				_eventState = EventState.SUF_ACTIVE;
-				schedule(getInt("teleportTime"));
+				schedule(EventConfig.TVT_TELEPORT_TIME);
 				break;
 			case SUF_ACTIVE:
 				EventManager.getInstance().end(true);
@@ -278,22 +286,21 @@ public class TVT extends CombatEvent
 	
 	private void addPlayerToTeam(L2PcInstance player)
 	{
-		debug("Attmepting to add " + player.getName() + " to a team.");
-		EventTeam teamToBe = null;
-		for (EventTeam team : _teams)
+		EventTeam eventTeam = null;
+		if (_teams.get(0).countMemebers() > _teams.get(1).countMemebers())
 		{
-			if (teamToBe == null)
-			{
-				teamToBe = team;
-			}
-			else if (team.countMemebers() < teamToBe.countMemebers())
-			{
-				teamToBe = team;
-			}
+			eventTeam = _teams.get(1);
 		}
-		if (teamToBe != null)
+		else
 		{
-			teamToBe.addMember(player);
+			eventTeam = _teams.get(0);
+		}
+		eventTeam.addMember(player);
+		if (EventConfig.EVENT_MANAGER_DEBUG)
+		{
+			StringBuffer sb = new StringBuffer();
+			StringUtil.append(sb, "Attmepting to add ", player.getName(), " to a team ", eventTeam.getName());
+			debug(sb.toString());
 		}
 	}
 	
@@ -313,9 +320,8 @@ public class TVT extends CombatEvent
 	protected void teleportPlayersToEvent()
 	{
 		spawnFences();
-		doorsToCloseOnStart();
-		clearZones();
-		debug("Teleporting " + _players.size() + " to the event.");
+		if (EventConfig.EVENT_MANAGER_DEBUG)
+			debug("Teleporting " + _players.size() + " to the event.");
 		_locations.clear();
 		for (L2PcInstance player : _players)
 		{
@@ -354,9 +360,9 @@ public class TVT extends CombatEvent
 	protected void teleportPlayersFromEvent()
 	{
 		deleteFences();
-		doorsToOpenOnEnd();
 		rewardPlayers();
-		debug("Teleporting " + _players.size() + " participants from the event.");
+		if (EventConfig.EVENT_MANAGER_DEBUG)
+			debug("Teleporting " + _players.size() + " participants from the event.");
 		super.teleportPlayersFromEvent();
 	}
 	
@@ -444,31 +450,43 @@ public class TVT extends CombatEvent
 				isTie = false;
 			}
 		}
-		if (getString("reward") != null)
+		if (EventConfig.TVT_REWARD != null)
 		{
-			if (isTie && getBoolean("rewardTie"))
+			if (isTie && EventConfig.TVT_REWARD_TIE)
 			{
 				announce("Ничья!");
 				for (L2PcInstance player : _players)
 				{
-					if (_scores.get(player) >= getInt("minKillsToGetReward"))
-					{
-						rewardPlayer(player, "reward");
-					}
+					rewardPlayer(player);
 				}
 			}
 			else if (_1stPlace != null)
 			{
 				StringBuilder sb = new StringBuilder();
-				StringUtil.append(sb, "1-е место заняла команда ", getString("team" + _1stPlace.getId()+ "Name") , ". Сделав ", _1stPlace.getScore(), " убийств.");
+				StringUtil.append(sb, "1-е место заняла команда ", _1stPlace.getName(), ". Сделав ", _1stPlace.getScore(), " убийств.");
 				announce(sb.toString());
 				for (L2PcInstance member : _1stPlace.getMembers())
 				{
-					if (_scores.get(member) >= getInt("minKillsToGetReward"))
-					{
-						rewardPlayer(member, "reward");
-					}
+					rewardPlayer(member);
+					
 				}
+			}
+		}
+	}
+	
+	public void rewardPlayer(L2PcInstance player)
+	{
+		String[] rewards = EventConfig.TVT_REWARD;
+		for (String reward : rewards)
+		{
+			int[] rewardItem = EventConfig.stringToIntArr(reward);
+			if (rewardItem.length == 2)
+			{
+				player.addItem("EventReward", rewardItem[0], rewardItem[1], player, true);
+			}
+			else if (EventConfig.EVENT_MANAGER_DEBUG)
+			{
+				debug("Error reward per kill player in EW!");
 			}
 		}
 	}
@@ -514,16 +532,14 @@ public class TVT extends CombatEvent
 		{
 			return;
 		}
-		debug(killerPc.getName() + (killer instanceof L2SummonInstance ? "'s Summon" : "") + " has killed " + killedPc.getName() + (killed instanceof L2SummonInstance ? "'s Summon" : "") + ".");
+		if (EventConfig.EVENT_MANAGER_DEBUG)
+			debug(killerPc.getName() + (killer instanceof L2SummonInstance ? "'s Summon" : "") + " has killed " + killedPc.getName() + (killed instanceof L2SummonInstance ? "'s Summon" : "") + ".");
 		setScore(killerPc, _scores.get(killerPc) + 1);
 		try
 		{
 			if (killed instanceof L2PcInstance)
 			{
-				if (!getBoolean("allowFixedResurrection"))
-				{
-					addResurrector(killedPc);
-				}
+				addResurrector(killedPc);
 			}
 			EventTeam killerTeam = getTeam(killerPc);
 			EventTeam killedTeam = getTeam(killedPc);
@@ -536,17 +552,10 @@ public class TVT extends CombatEvent
 		catch (NullPointerException e)
 		{
 		}
-		if (getBoolean("rewardPvpOnKill"))
+		if (EventConfig.TVT_PVP_ON_KILL)
 		{
 			killerPc.setPvpKills(killerPc.getPvpKills() + 1);
 		}
-		if (getString("rewardPerKill") != null)
-		{
-			rewardPlayer(killerPc, "rewardPerKill");
-		}
-		
-		// if(getBoolean("decreaseScoreOnDeath"))
-		// setScore(killedPc,_scores.get(killedPc)-1);
 	}
 	
 	@Override
@@ -658,8 +667,8 @@ public class TVT extends CombatEvent
 	public void showInfo(L2PcInstance player)
 	{
 		Map<String, String> variables = new HashMap<>();
-		variables.put("%name%", getString("name"));
-		variables.put("%engine%", getString("engine"));
+		variables.put("%name%", getName());
+		variables.put("%engine%", getName());
 		variables.put("%state%", eventStateToString(_eventState));
 		int seconds = _eventScheduler.getDelay();
 		int mins = seconds / 60;
@@ -667,9 +676,9 @@ public class TVT extends CombatEvent
 		variables.put("%mins%", String.valueOf(mins));
 		variables.put("%secs%", (secs < 10 ? "0" + secs : String.valueOf(secs)));
 		variables.put("%players%", String.valueOf(_players.size()));
-		variables.put("%minPlayers%", getString("minPlayersRequired"));
-		variables.put("%maxPlayers%", getString("maxPlayersAllowed"));
-		variables.put("%description%", (getString("description") != null) ? getString("description").replace("[br1]", "<br1>").replace("[br]", "<br>") : "n/a");
+		variables.put("%minPlayers%", String.valueOf(EventConfig.TVT_MIN_PLAYERS));
+		variables.put("%maxPlayers%", String.valueOf(EventConfig.TVT_MAX_PLAYERS));
+		variables.put("%description%", (EventConfig.TVT_DESCR != null) ? EventConfig.TVT_DESCR : "n/a");
 		String userCommands = "";
 		if (containsPlayer(player))
 		{
@@ -728,28 +737,58 @@ public class TVT extends CombatEvent
 		if (!containsPlayer(attackerInstance) || !containsPlayer(targetInstance))
 		{
 			return false;
-		} 
-		return true;		
+		}
+		return true;
 	}
 	
+	@Override
+	protected void initBlockItems()
+	{
+		for (Integer itemId : EventConfig.TVT_BLOCKED_ITEMS)
+			_blockedItems.add(itemId);
+	}	
 	/*
 	 * (non-Javadoc)
-	 * @see net.sf.l2j.gameserver.events.events.EventBase#getName()
+	 * @see com.l2je.extensions.events.Event#initBlockSkills()
 	 */
 	@Override
-	public String getName()
+	protected void initBlockSkills()
 	{
-		return NAME;
-	}
-	
+		for (Integer skillId : EventConfig.TVT_BLOCKED_SKILLS)
+			_blockedSkills.add(skillId);
+		
+	}	
 	/*
 	 * (non-Javadoc)
-	 * @see net.sf.l2j.gameserver.events.events.EventBase#getEventId()
+	 * @see com.l2je.extensions.events.Event#getRunningTime()
 	 */
 	@Override
-	public int getEventId()
+	public int getRunningTime()
 	{
-		return ID;
+		return EventConfig.TVT_RUNNING_TIME;
 	}
-	
+	@Override
+	public boolean removePlayer(L2PcInstance player)
+	{
+		if (!super.removePlayer(player))
+		{
+			return false;
+		}
+		if (_players.size() < EventConfig.EW_MIN_PLAYERS)
+		{
+			announce("Слишком много игроков покинуло event.");
+			announce("Event отменен.");
+			EventManager.getInstance().end(true);
+		}
+		return true;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.l2je.extensions.events.Event#getResTime()
+	 */
+	@Override
+	protected int getResTime()
+	{		
+		return EventConfig.TVT_RES_TIME;
+	}
 }

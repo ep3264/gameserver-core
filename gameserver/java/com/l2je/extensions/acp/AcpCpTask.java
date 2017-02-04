@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.l2je.custom.acp;
+package com.l2je.extensions.acp;
 
 import net.sf.l2j.gameserver.handler.IItemHandler;
 import net.sf.l2j.gameserver.handler.ItemHandler;
@@ -23,9 +23,13 @@ import net.sf.l2j.gameserver.model.item.instance.ItemInstance;
  * @author user
  *
  */
-public class AcpMpTask extends AcpTask
+public class AcpCpTask extends AcpTask
 {
-	public AcpMpTask(L2PcInstance activeChar)
+	
+	/**
+	 * @param activeChar
+	 */
+	public AcpCpTask(L2PcInstance activeChar)
 	{
 		super(activeChar);
 		// TODO Auto-generated constructor stub
@@ -39,17 +43,19 @@ public class AcpMpTask extends AcpTask
 	{
 		if (!activeChar.isDead() && !activeChar.isInOlympiadMode())
 		{
-			if (activeChar.getCurrentMp() < activeChar.getMaxMp() * 0.20)
+			if (activeChar.getCurrentCp() < activeChar.getMaxCp()-200)
 			{
-				int mpId = 728;
-				final ItemInstance manaPotion = activeChar.getInventory().getItemByItemId(mpId);
-				if (manaPotion != null)
+				int cpId = 5592;
+				final ItemInstance cpPotion = activeChar.getInventory().getItemByItemId(cpId);
+				if (cpPotion != null)
 				{
-					final IItemHandler handler = ItemHandler.getInstance().getItemHandler(manaPotion.getEtcItem());
+					final IItemHandler handler = ItemHandler.getInstance().getItemHandler(cpPotion.getEtcItem());
 					if (handler != null)
-						handler.useItem(activeChar, manaPotion, false);
+						handler.useItem(activeChar, cpPotion, false);
 				}
 			}
 		}
+		
 	}
+	
 }

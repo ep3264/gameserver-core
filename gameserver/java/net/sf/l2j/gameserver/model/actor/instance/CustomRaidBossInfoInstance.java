@@ -14,7 +14,7 @@
  */
 package net.sf.l2j.gameserver.model.actor.instance;
 
-import com.l2je.custom.RaidBossInfo;
+import com.l2je.extensions.RaidBossInfo;
 
 /**
  * @author user

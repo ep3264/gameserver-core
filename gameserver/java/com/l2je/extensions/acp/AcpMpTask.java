@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.l2je.custom.acp;
+package com.l2je.extensions.acp;
 
 import net.sf.l2j.gameserver.handler.IItemHandler;
 import net.sf.l2j.gameserver.handler.ItemHandler;
@@ -23,9 +23,9 @@ import net.sf.l2j.gameserver.model.item.instance.ItemInstance;
  * @author user
  *
  */
-public class AcpHpTask extends AcpTask
+public class AcpMpTask extends AcpTask
 {
-	public AcpHpTask(L2PcInstance activeChar)
+	public AcpMpTask(L2PcInstance activeChar)
 	{
 		super(activeChar);
 		// TODO Auto-generated constructor stub
@@ -37,21 +37,19 @@ public class AcpHpTask extends AcpTask
 	@Override
 	public void run()
 	{
-		// TODO Auto-generated method stub
-		if(!activeChar.isDead() && !activeChar.isInOlympiadMode()){
-			//1539 healing potion, 5592 CP, 728 MP
-					if (activeChar.getCurrentHp() < activeChar.getMaxHp()*0.95)
-					{
-						int hpId = 1539;
-						final ItemInstance healingPotion = activeChar.getInventory().getItemByItemId(hpId);
-						if (healingPotion != null)
-						{
-							final IItemHandler handler = ItemHandler.getInstance().getItemHandler(healingPotion.getEtcItem());
-							if (handler != null)
-								handler.useItem(activeChar, healingPotion, false);
-						}
-					}
+		if (!activeChar.isDead() && !activeChar.isInOlympiadMode())
+		{
+			if (activeChar.getCurrentMp() < activeChar.getMaxMp() * 0.20)
+			{
+				int mpId = 728;
+				final ItemInstance manaPotion = activeChar.getInventory().getItemByItemId(mpId);
+				if (manaPotion != null)
+				{
+					final IItemHandler handler = ItemHandler.getInstance().getItemHandler(manaPotion.getEtcItem());
+					if (handler != null)
+						handler.useItem(activeChar, manaPotion, false);
+				}
+			}
 		}
 	}
-
 }

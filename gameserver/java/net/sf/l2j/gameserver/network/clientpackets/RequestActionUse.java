@@ -14,7 +14,7 @@
  */
 package net.sf.l2j.gameserver.network.clientpackets;
 
-import com.l2je.custom.events.EventManager;
+import com.l2je.extensions.events.EventManager;
 
 import net.sf.l2j.commons.random.Rnd;
 import net.sf.l2j.commons.util.ArraysUtil;

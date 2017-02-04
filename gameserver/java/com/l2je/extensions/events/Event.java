@@ -1,5 +1,4 @@
-package com.l2je.custom.events;
-
+package com.l2je.extensions.events;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,23 +11,20 @@ import java.util.concurrent.ScheduledFuture;
 
 import net.sf.l2j.commons.concurrent.ThreadPool;
 import net.sf.l2j.commons.lang.StringUtil;
-import net.sf.l2j.gameserver.datatables.DoorTable;
 import net.sf.l2j.gameserver.datatables.FenceTable;
-import net.sf.l2j.gameserver.datatables.SkillTable;
-import net.sf.l2j.gameserver.instancemanager.ZoneManager;
+
 import net.sf.l2j.gameserver.model.L2Effect;
 
 import net.sf.l2j.gameserver.model.L2Skill;
 import net.sf.l2j.gameserver.model.L2World;
 import net.sf.l2j.gameserver.model.L2WorldRegion;
 import net.sf.l2j.gameserver.model.actor.L2Character;
-import net.sf.l2j.gameserver.model.actor.L2Summon;
 import net.sf.l2j.gameserver.model.actor.instance.L2FenceInstance;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.model.actor.instance.L2PetInstance;
-import net.sf.l2j.gameserver.model.actor.instance.L2SummonInstance;
+
 import net.sf.l2j.gameserver.model.item.instance.ItemInstance;
-import net.sf.l2j.gameserver.model.zone.L2ZoneType;
+
 import net.sf.l2j.gameserver.network.clientpackets.Say2;
 import net.sf.l2j.gameserver.network.serverpackets.CreatureSay;
 import net.sf.l2j.gameserver.network.serverpackets.ExShowScreenMessage;
@@ -133,18 +129,40 @@ public abstract class Event
 	protected HashSet<Integer> _blockedItems = new HashSet<>();
 	protected List<L2FenceInstance> _fences = new LinkedList<>();
 	protected ArrayList<int[]> _spawnLocations = new ArrayList<>();
+	protected int _id;
+	protected String _name;
 	public Event()
 	{		
 		EventManager.getInstance().addEvent(this);
+		
 	}
 	
 	public abstract void start();	
 	public abstract void trigger();
-	public abstract String getName();
-	public abstract int getEventId();
 	public abstract boolean isRunning();
 	public abstract void onKill(L2Character killer, L2Character killed);	
 	protected abstract void teleportPlayerFromEvent(L2PcInstance player);
+	protected abstract void init();
+	protected abstract void initBlockItems();
+	protected abstract void initBlockSkills();
+	public abstract int getRunningTime();
+	protected abstract int getResTime();
+	public String getName()
+	{
+		return _name;
+	}
+	protected void setName(String name)
+	{
+		_name = name;
+	}
+	public int getId()
+	{
+		return _id;
+	}
+	protected void setId(int id)
+	{
+		_id = id;
+	}	
 	
 	public boolean isRegistering()
 	{
@@ -178,48 +196,8 @@ public abstract class Event
 		{			
 			announce("Event закончился.");
 		}		
-	}
-	
-	public void setConfig(Map<String, String> config)
-	{		
-		_config = config;
-		if (getString("blockedSkills") != null)
-		{
-			_blockedSkills.clear();
-			for (String skill : getString("blockedSkills").split(","))
-			{
-				_blockedSkills.add(Integer.valueOf(skill.trim()));
-			}
-		}
-		if (getString("blockedItems") != null)
-		{
-			_blockedItems.clear();
-			for (String item : getString("blockedItems").split(","))
-			{
-				_blockedItems.add(Integer.valueOf(item.trim()));
-			}
-		}
-	}
-	
-	public String getString(String key)
-	{
-		if (_config.containsKey(key))
-		{
-			return _config.get(key);
-		}
-		return null;
-	}
-	
-	public int getInt(String key)
-	{
-		return Integer.valueOf(getString(key));
-	}
-	
-	public boolean getBoolean(String key)
-	{
-		return Boolean.valueOf(getString(key));
-	}
-	
+	}	
+
 	public void debug(String message)
 	{
 		EventManager.getInstance().debug(message);
@@ -232,13 +210,15 @@ public abstract class Event
 	
 	public void skip(L2PcInstance player)
 	{
-		debug(player.getName() + " skipped the event.");
+		if (EventConfig.EVENT_MANAGER_DEBUG)
+			debug(player.getName() + " skipped the event.");
 		schedule(1);
 	}
 	
 	public boolean addPlayer(L2PcInstance player)
 	{
-		debug(player.getName() + " has joined the event.");
+		if (EventConfig.EVENT_MANAGER_DEBUG)
+			debug(player.getName() + " has joined the event.");
 		for(L2PcInstance p : _players )
 		{
 			if(!p.isOnline())
@@ -255,22 +235,13 @@ public abstract class Event
 	
 	public boolean removePlayer(L2PcInstance player)
 	{
-		debug(player.getName() + " has left the event.");
+		if (EventConfig.EVENT_MANAGER_DEBUG)
+			debug(player.getName() + " has left the event.");
 		_players.remove(player);
 		player.setEvent(null);
-		//_scores.remove(player);
 		if (isRunning())
 		{
-			teleportPlayerFromEvent(player);			
-			if (getString("minPlayersRequired") != null)
-			{
-				if (_players.size() < getInt("minPlayersRequired"))
-				{
-					announce("Слишком много игроков покинуло event.");
-					announce("Event отменен.");
-					EventManager.getInstance().end(true);
-				}
-			}
+			teleportPlayerFromEvent(player);
 		}
 		return true;
 	}
@@ -283,9 +254,9 @@ public abstract class Event
 	protected void setScore(L2PcInstance player, int score)
 	{
 		String pattern = "%score%";
-		if (getString("scoreInTitlePattern") != null)
+		if (EventConfig.EW_SCORE_TITLE_PATTERN != null)
 		{
-			pattern = getString("scoreInTitlePattern");
+			pattern = EventConfig.EW_SCORE_TITLE_PATTERN;
 		}
 		player.setEventTitle(pattern.replaceAll("%score%", String.valueOf(score)));
 		_scores.put(player, score);
@@ -303,36 +274,8 @@ public abstract class Event
 	{
 		if (isRegistering())
 		{
-			EventManager.getInstance().userByPass(player, "info");
-		}
-		if (!(player.getEvent()==this) && isRunning())
-		{
-			if (getString("zoneId") != null)
-			{
-				debug("Clearing defined zones.");
-				try
-				{
-					L2ZoneType zone;
-					for (String zoneId : getString("zoneId").split(","))
-					{
-						zone = ZoneManager.getInstance().getZoneById(Integer.valueOf(zoneId));
-						if (zone == null)
-						{
-							debug("Failed to load zone \"" + zoneId + "\".");
-							continue;
-						}
-						if (zone.isInsideZone(player))
-						{
-							player.sendMessage("Event: You can not be here right now.");
-							player.teleToLocation(FAIL_SAFE_LOCATION[0], FAIL_SAFE_LOCATION[1], FAIL_SAFE_LOCATION[2], 0);
-						}
-					}
-				}
-				catch (NullPointerException e)
-				{
-				}
-			}
-		}
+			EventManager.getInstance().getInfo(player);
+		}	
 	}
 	
 	public void onLogOut(L2PcInstance player)
@@ -353,11 +296,7 @@ public abstract class Event
 			player.getPet().unSummon(player);
 		}
 		if (player.getPet() != null)
-		{
-			if (getBoolean("removeBuffs"))
-			{
-				player.getPet().stopAllEffects();
-			}
+		{			
 			player.getPet().setCurrentCp(player.getMaxCp());
 			player.getPet().setCurrentHp(player.getMaxHp());
 			player.getPet().setCurrentMp(player.getMaxMp());
@@ -366,42 +305,6 @@ public abstract class Event
 		player.setIsInvul(false);
 		player.getAppearance().setVisible();
 		player.broadcastUserInfo();
-		if (getBoolean("removeBuffs"))
-		{
-			player.stopAllEffects();
-			player.stopAllToggles();
-			player.stopCubics();
-		}
-		if (getBoolean("giveBuffs"))
-		{
-			String buffType = "fighterBuffs";
-			if (player.isMageClass() || (player.getClassId().getId() == 49) || //Orc Mystic
-			(player.getClassId().getId() == 50) || //Orc Shaman
-			(player.getClassId().getId() == 51) || //Overlord
-			(player.getClassId().getId() == 52) || //Warcryer
-			(player.getClassId().getId() == 115) || //Dominator
-			(player.getClassId().getId() == 116//Doom Cryer
-			))
-			{
-				buffType = "mageBuffs";
-			}
-			String[] buff;
-			L2Skill skill;
-			for (String rawBuff : getString(buffType).split(";"))
-			{
-				buff = rawBuff.split(",");
-				if (buff.length != 2)
-				{
-					debug("Failed to load sub-value from \"" + buffType + "\".");
-					continue;
-				}
-				skill = SkillTable.getInstance().getInfo(Integer.valueOf(buff[0].trim()), Integer.valueOf(buff[1].trim()));
-				if (skill != null)
-				{
-					skill.getEffects(player, player);
-				}
-			}
-		}
 		returnBuffs(player);
 		//==
 		player.setCurrentCp(player.getMaxCp());
@@ -427,7 +330,7 @@ public abstract class Event
 	{
 		int mins = seconds / 60;
 		int secs = seconds - (mins * 60);
-		String message = getString("scoreBoardPattern");
+		String message = EventConfig.EW_BOARD_PATTERN;
 		message = message.replaceAll("%mins%", String.valueOf(mins));
 		message = message.replaceAll("%secs%", (secs < 10 ? "0" + secs : String.valueOf(secs)));
 		int position = 8;//3
@@ -540,12 +443,12 @@ public abstract class Event
 	
 	protected void addResurrector(L2PcInstance player)
 	{
-		_resurrectors.add(new EventResurrector(player, getInt("resurrectorTime")));
+		_resurrectors.add(new EventResurrector(player, getResTime()));
 	}
 	
 	protected void spawnFences()
 	{
-		String fences = getString("fences");
+		String [] fences = EventConfig.TVT_FENCES;
 		if (fences == null)
 		{
 			return;
@@ -553,12 +456,13 @@ public abstract class Event
 		int x, y, z, type, width, length, height;
 		L2FenceInstance fence;
 		String[] raw;
-		for (String rawFence : fences.split(";"))
+		for (String rawFence :fences)
 		{
 			raw = rawFence.split(",");
 			if (raw.length != 7)
 			{
-				debug("Failed to load sub-value from \"fences\".");
+				if (EventConfig.EVENT_MANAGER_DEBUG)
+					debug("Failed to load sub-value from \"fences\".");
 				continue;
 			}
 			x = Integer.valueOf(raw[0]);
@@ -593,98 +497,8 @@ public abstract class Event
 			L2World.getInstance().removeObject(fence);
 			FenceTable.getInstance().removeFence(fence);
 		}
-	}
-	
-	protected void doorsToCloseOnStart()
-	{
-		if (getString("doorsToCloseOnStart") != null)
-		{
-			debug("Opening defined doors.");
-			try
-			{
-				for (String door : getString("doorsToCloseOnStart").split(","))
-				{
-					DoorTable.getInstance().getDoor(Integer.valueOf(door.trim())).closeMe();
-				}
-			}
-			catch (NullPointerException e)
-			{
-				debug("Failed to open door " + e);
-			}
-		}
-	}
-	
-	protected void doorsToOpenOnEnd()
-	{
-		if (getString("doorsToOpenOnEnd") != null)
-		{
-			debug("Closing defined doors.");
-			try
-			{
-				for (String door : getString("doorsToOpenOnEnd").split(","))
-				{
-					DoorTable.getInstance().getDoor(Integer.valueOf(door.trim())).openMe();
-				}
-			}
-			catch (NullPointerException e)
-			{
-				debug("Failed to close door " + e);
-			}
-		}
-	}
-	
-	protected void clearZones()
-	{
-		if (getString("zoneId") != null)
-		{
-			debug("Clearing defined zones.");
-			try
-			{
-				L2ZoneType zone;
-				for (String zoneId : getString("zoneId").split(","))
-				{
-					zone = ZoneManager.getInstance().getZoneById(Integer.valueOf(zoneId));
-					if (zone == null)
-					{
-						debug("Failed to load zone \"" + zoneId + "\".");
-						continue;
-					}
-					for (L2Character character : zone.getCharactersInside())
-					{
-						if (character instanceof L2PcInstance)
-						{
-							character.sendMessage("Event: You can not be here right now.");
-							character.teleToLocation(FAIL_SAFE_LOCATION[0], FAIL_SAFE_LOCATION[1], FAIL_SAFE_LOCATION[2], 0);
-						}
-						else if ((character instanceof L2SummonInstance) || (character instanceof L2PetInstance))
-						{
-							character.sendMessage("Event: Your summon has been moved.");
-							character.teleToLocation(((L2Summon) character).getX(), ((L2Summon) character).getY(), ((L2Summon) character).getZ(), 0);
-						}
-					}
-				}
-			}
-			catch (NullPointerException e)
-			{
-			}
-		}
-	}
-	
-	protected void rewardPlayer(L2PcInstance player, String type)
-	{
-		if (getString(type) != null)
-		{
-			String[] reward;
-			for (String rawReward : getString(type).split(";"))
-			{
-				reward = rawReward.split(",");
-				if (reward.length == 2)
-				{
-					player.addItem("EventReward[" + getString("name") + "]", Integer.valueOf(reward[0].trim()), Integer.valueOf(reward[1].trim()), player, true);
-				}
-			}
-		}
-	}	
+	}		
+
 	public boolean playersAutoAttackable(L2Character target, L2Character attacker)
 	{
 		return false;

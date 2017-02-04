@@ -14,7 +14,7 @@
  */
 package net.sf.l2j.gameserver.scripting.scripts.ai.individual;
 
-import com.l2je.custom.L2System;
+import com.l2je.extensions.L2System;
 
 import java.util.ArrayList;
 import java.util.Iterator;

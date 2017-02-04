@@ -14,8 +14,8 @@
  */
 package net.sf.l2j.gameserver.model.actor;
 
-import com.l2je.custom.L2System;
-import com.l2je.custom.events.EventManager;
+import com.l2je.extensions.L2System;
+import com.l2je.extensions.events.EventManager;
 
 import java.util.ArrayList;
 import java.util.Collections;

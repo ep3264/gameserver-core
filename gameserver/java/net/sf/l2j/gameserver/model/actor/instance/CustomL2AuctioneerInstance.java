@@ -1,8 +1,8 @@
 package net.sf.l2j.gameserver.model.actor.instance;
 
-import com.l2je.custom.auction.Auction;
-import com.l2je.custom.auction.AuctionConfig;
-import com.l2je.custom.auction.AuctionItem;
+import com.l2je.extensions.auction.Auction;
+import com.l2je.extensions.auction.AuctionConfig;
+import com.l2je.extensions.auction.AuctionItem;
 
 import java.util.StringTokenizer;
 

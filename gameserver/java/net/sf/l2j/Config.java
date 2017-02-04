@@ -51,7 +51,7 @@ public final class Config
 	public static final String PLAYERS_FILE = "./config/players.properties";
 	public static final String SERVER_FILE = "./config/server.properties";
 	public static final String SIEGE_FILE = "./config/siege.properties";
-	public static final String CUSTOM_FILE = "./config/custom.properties";
+	public static final String CUSTOM_FILE = "./config/extensions/other.ini";
 	// --------------------------------------------------
 	// Clans settings
 	// --------------------------------------------------
@@ -502,8 +502,6 @@ public final class Config
 	// --------------------------------------------------
 	// Custom
 	// --------------------------------------------------
-	// events
-	public static boolean AUTO_EVENT_SCHEDULER;
 	// shots
 	public static boolean CONSUME_SHOTS_CHAR;
 	public static boolean CONSUME_SHOTS_PET;
@@ -571,6 +569,7 @@ public final class Config
 	public static boolean		SHOW_PREMIUM_STATE_ON_ENTER;
 	public static int PREMIUM_ITEM;
 	public static int PREMIUM_PRICE;
+	
 	// --------------------------------------------------
 	// Server
 	// --------------------------------------------------
@@ -1502,7 +1501,6 @@ public final class Config
 	private static final void loadCustom()
 	{
 		final ExProperties custom = initProperties(CUSTOM_FILE);
-		AUTO_EVENT_SCHEDULER = custom.getProperty("AutoEventScheduler", false);
 		CONSUME_SHOTS_CHAR = Boolean.parseBoolean(custom.getProperty("ConsumeShotsChar", "True"));
 		CONSUME_SHOTS_PET = Boolean.parseBoolean(custom.getProperty("ConsumeShotsPet", "True"));
 		CONSUME_ARROWS = Boolean.parseBoolean(custom.getProperty("ConsumeArrows", "True"));

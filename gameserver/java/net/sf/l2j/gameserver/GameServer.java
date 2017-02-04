@@ -14,13 +14,14 @@
  */
 package net.sf.l2j.gameserver;
 
-import com.l2je.custom.auction.Auction;
-import com.l2je.custom.auction.AuctionConfig;
-import com.l2je.custom.events.EW;
-import com.l2je.custom.events.EventManager;
-import com.l2je.custom.events.TVT;
-import com.l2je.custom.ghosts.GhostsPlayers;
-import com.l2je.custom.ghosts.GhostsShouts;
+import com.l2je.extensions.auction.Auction;
+import com.l2je.extensions.auction.AuctionConfig;
+import com.l2je.extensions.events.EW;
+import com.l2je.extensions.events.EventConfig;
+import com.l2je.extensions.events.EventManager;
+import com.l2je.extensions.events.TVT;
+import com.l2je.extensions.ghosts.GhostsPlayers;
+import com.l2je.extensions.ghosts.GhostsShouts;
 import com.l2je.protection.Punisher;
 import com.l2je.protection.crypt.Blowfish;
 import com.l2je.protection.crypt.RC5;
@@ -281,6 +282,7 @@ public class GameServer
 		FourSepulchersManager.getInstance().init();
 		
 		StringUtil.printSection("Events");
+		EventConfig.init();
 		EventManager.getInstance();
 		new TVT();
 		new EW();
@@ -296,7 +298,9 @@ public class GameServer
 			BoatRunePrimeval.load();
 			BoatTalkingGludin.load();
 		}
-		if(Config.AUTO_EVENT_SCHEDULER)
+		
+		
+		if(EventConfig.AUTO_EVENT_SCHEDULER)
 		{
 			EventManager.getInstance().startAutoEventScheduler();
 		}

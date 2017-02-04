@@ -1,4 +1,4 @@
-package com.l2je.custom.auction;
+package com.l2je.extensions.auction;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,7 +24,7 @@ public class AuctionConfig {
 	   public static int AUCTION_COUNT_DAY_FOR_DELETE_ITEM;
 	   public static int AUCTION_SEE_COUNT_PRODUCTS_ON_PAGE;
 	   
-	   private final static String FILE = "./config/custom/auction.properties"; 
+	   private final static String FILE = "./config/extensions/auction.ini"; 
 
 	   public static void readConfig() {
 			try (InputStream is = new FileInputStream(new File(FILE)))

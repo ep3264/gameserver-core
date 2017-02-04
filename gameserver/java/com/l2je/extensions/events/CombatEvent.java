@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.l2je.custom.events;
+package com.l2je.extensions.events;
 
 import net.sf.l2j.gameserver.model.actor.L2Character;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;

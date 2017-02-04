@@ -14,7 +14,7 @@
  */
 package net.sf.l2j.gameserver.model.actor.instance;
 
-import com.l2je.custom.Buffer;
+import com.l2je.extensions.Buffer;
 
 import java.util.ArrayList;
 import java.util.List;

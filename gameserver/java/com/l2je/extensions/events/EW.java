@@ -1,9 +1,8 @@
-package com.l2je.custom.events;
+package com.l2je.extensions.events;
 
-import com.l2je.custom.events.CustomUtil;
-import com.l2je.custom.events.EventManager;
+import com.l2je.extensions.events.CustomUtil;
+import com.l2je.extensions.events.EventManager;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -16,13 +15,10 @@ import java.util.HashMap;
  * <br>
  */
 
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
-//import java.util.concurrent.ScheduledFuture;
-
 import net.sf.l2j.commons.lang.StringUtil;
-//import net.sf.l2j.gameserver.ThreadPoolManager;
+
 import net.sf.l2j.gameserver.datatables.MapRegionTable;
 import net.sf.l2j.gameserver.datatables.NpcTable;
 import net.sf.l2j.gameserver.datatables.SpawnTable;
@@ -38,9 +34,8 @@ import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.model.actor.instance.L2SummonInstance;
 import net.sf.l2j.gameserver.model.actor.template.NpcTemplate;
 import net.sf.l2j.gameserver.model.zone.ZoneId;
-//import net.sf.l2j.gameserver.network.serverpackets.MagicSkillCanceld;
-//import net.sf.l2j.gameserver.network.serverpackets.MagicSkillUse;
-//import net.sf.l2j.gameserver.network.serverpackets.SetupGauge;
+
+
 
 public class EW extends CombatEvent
 {
@@ -48,46 +43,40 @@ public class EW extends CombatEvent
 	{
 		IDLE,
 		ACTIVE
-	}
-	
+	}	
 	private EventState _eventState = EventState.IDLE;
-	
-	private final int ID = 2;
-	private final String NAME = "EW";
 	private final int NPC_ID = 40005;
-	private int _townId;
-	private int _minPlayersRequiredForNpc = 5;
-	private int _maxPlayersAllowed = 75;
+	private int _currentTownId;	
 	private L2Spawn spawn = null;
 	
 	public EW()
 	{
 		super();
-	}
+		setName("EW");
+		setId(EventConfig.EW_ID);
+	}	
 	
 	@Override
-	public void setConfig(Map<String, String> config)
+	public void init()
+	{	
+		initBlockItems();
+		initBlockSkills();
+		getTownId();
+		spawnNpc();
+	}
+	private void getTownId()
 	{
-		super.setConfig(config);
-		String townIds = getString("townIds");
+		int [] townIds = EventConfig.TOWN_IDS;
 		if (townIds != null)
-		{
-			List<Integer> possibleTownIds = new ArrayList<>();
-			for (String townId : townIds.split(","))
-			{
-				possibleTownIds.add(Integer.valueOf(townId.trim()));
-			}
+		{			
 			Random rnd = new Random();
-			_townId = possibleTownIds.get(rnd.nextInt(possibleTownIds.size()));
+			_currentTownId = townIds[rnd.nextInt(townIds.length)];
 		}
 		else
 		{
-			_townId = 1;// Dark Elven Village
-		}
-		_minPlayersRequiredForNpc = getInt("minPlayersRequiredForNpc");
-		_maxPlayersAllowed = getInt("maxPlayersAllowed");
+			_currentTownId = 1;// Dark Elven Village
+		}		
 	}
-	
 	@Override
 	public boolean isRegistering()
 	{
@@ -124,12 +113,13 @@ public class EW extends CombatEvent
 		switch (_eventState)
 		{
 			case IDLE:
+				init();
 				announce("Хочешь заточиться участвуй в эвенте Enchant War!");
 				announce("Event Enchant War начался.");
 				announce("Команды: " + EVENT_COMMANDS);
-				announce("Город: " + MapRegionTable.getInstance().getClosestTownName(_townId));
+				announce("Город: " + MapRegionTable.getInstance().getClosestTownName(_currentTownId));
 				_eventState = EventState.ACTIVE;
-				schedule(getInt("runningTime"));
+				schedule(EventConfig.EW_RUNNING_TIME);
 				break;
 			case ACTIVE:
 				_eventState = EventState.IDLE;
@@ -145,8 +135,7 @@ public class EW extends CombatEvent
 		{
 			player.doRevive();
 		}
-		if (getBoolean("removeBuffs"))
-		{
+		
 			player.stopAllEffects();
 			player.stopAllToggles();
 			player.stopCubics();
@@ -162,7 +151,7 @@ public class EW extends CombatEvent
 					}
 				}
 			}
-		}
+		
 		player.setCurrentCp(player.getMaxCp());
 		player.setCurrentHp(player.getMaxHp());
 		player.setCurrentMp(player.getMaxMp());
@@ -170,7 +159,6 @@ public class EW extends CombatEvent
 		if (_locations.containsKey(player))
 		{
 			location = _locations.get(player);
-			// _locations.remove(player);
 		}
 		player.setEventTitle(null);
 		player.setEventTitleColor(null);
@@ -222,7 +210,7 @@ public class EW extends CombatEvent
 		{
 			return false;
 		}
-		if (MapRegionTable.getClosestTown(attackerInstance.getX(), attackerInstance.getY()) == MapRegionTable.getTown(_townId))
+		if (MapRegionTable.getClosestTown(attackerInstance.getX(), attackerInstance.getY()) == MapRegionTable.getTown(_currentTownId))
 		{
 			return true;
 		}
@@ -240,7 +228,7 @@ public class EW extends CombatEvent
 		{
 			return;
 		}
-		if (MapRegionTable.getClosestTown(player.getX(), player.getY()) == MapRegionTable.getTown(_townId))
+		if (MapRegionTable.getClosestTown(player.getX(), player.getY()) == MapRegionTable.getTown(_currentTownId))
 		{
 			if (!player.isInsideZone(ZoneId.PEACE))
 			{
@@ -255,7 +243,8 @@ public class EW extends CombatEvent
 	
 	private void playerLeftTown(L2PcInstance player)
 	{
-		debug(player.getName() + " has left the event town.");
+		if (EventConfig.EVENT_MANAGER_DEBUG)
+			debug(player.getName() + " has left the event town.");
 		teleportPlayerToEvent(player);
 	}
 	
@@ -300,54 +289,64 @@ public class EW extends CombatEvent
 		{
 			return;
 		}
-		if (MapRegionTable.getClosestTown(killerPc.getX(), killerPc.getY()) != MapRegionTable.getTown(_townId) || MapRegionTable.getClosestTown(killedPc.getX(), killedPc.getY()) != MapRegionTable.getTown(_townId))
+		if (MapRegionTable.getClosestTown(killerPc.getX(), killerPc.getY()) != MapRegionTable.getTown(_currentTownId) || MapRegionTable.getClosestTown(killedPc.getX(), killedPc.getY()) != MapRegionTable.getTown(_currentTownId))
 		{
 			return;
 		}
-		debug(killerPc.getName() + (killer instanceof L2SummonInstance ? "'s Summon" : "") + " has killed " + killedPc.getName() + (killed instanceof L2SummonInstance ? "'s Summon" : "") + ".");
+		if (EventConfig.EVENT_MANAGER_DEBUG)
+			debug(killerPc.getName() + (killer instanceof L2SummonInstance ? "'s Summon" : "") + " has killed " + killedPc.getName() + (killed instanceof L2SummonInstance ? "'s Summon" : "") + ".");
 		setScore(killerPc, _scores.get(killerPc) + 1);
 		if (killed instanceof L2PcInstance)
 		{
-			if (!getBoolean("allowFixedResurrection"))
-			{
-				addResurrector(killedPc);
-			}
+			addResurrector(killedPc);
+			
 		}
-		if (getBoolean("rewardPvpOnKill"))
+		if (EventConfig.EW_PVP_ON_KILL)
 		{
 			killerPc.setPvpKills(killerPc.getPvpKills() + 1);
 		}
-		if (getBoolean("decreaseScoreOnDeath"))
+		
+		if (EventConfig.REWARD_PER_KILL.length > 0)
 		{
-			setScore(killedPc, _scores.get(killedPc) - 1);
-		}
-		if (getString("rewardPerKill") != null)
-		{
-			rewardPlayer(killerPc, "rewardPerKill");
+			rewardPlayer(killerPc);
 		}
 	}
-	
+	public void rewardPlayer(L2PcInstance player)
+	{
+		String[] rewards = EventConfig.REWARD_PER_KILL;
+		for (String reward : rewards)
+		{
+			int[] rewardItem = EventConfig.stringToIntArr(reward);
+			if (rewardItem.length == 2)
+			{
+				player.addItem("EventReward", rewardItem[0], rewardItem[1], player, true);
+			}
+			else if (EventConfig.EVENT_MANAGER_DEBUG)
+			{
+				debug("Error reward per kill player in EW!");
+			}
+		}
+	}
 	@Override
 	public boolean addPlayer(L2PcInstance player)
 	{
-		if (_maxPlayersAllowed == _players.size())
+		if (EventConfig.EW_MAX_PLAYERS == _players.size())
 		{
 			return false;
 		}
 		if (!super.addPlayer(player))
 		{
 			return false;
-		}
-		
+		}		
 		_locations.put(player, new int[]
 		{
 			player.getX(),
 			player.getY(),
 			player.getZ()
 		});
-		player.setEventTitleColor(getString("titleColor"));
-		player.setEventNameColor(getString("nameColor"));
-		player.setTeam(getInt("team"));
+		player.setEventTitleColor(EventConfig.EW_TITLE_COLOR);
+		player.setEventNameColor(EventConfig.EW_NAME_COLOR);
+		player.setTeam(1);
 		if (_scores.containsKey(player))
 		{
 			setScore(player, _scores.get(player));
@@ -355,24 +354,24 @@ public class EW extends CombatEvent
 		else
 		{
 			setScore(player, 0);
-		}
-		if (getBoolean("removeBuffs"))
-		{
-			_effects.put(player, player.getAllEffects());
-		}
-		_effects.put(player, player.getAllEffects());
-		// _eventTeleporters.put(player, new EventTeleporter(player, getInt("teleportTime"), true));
+		}	
+		_effects.put(player, player.getAllEffects());		
 		teleportPlayerToEvent(player);
-		if (_players.size() >= _minPlayersRequiredForNpc && spawn == null)
+		spawnNpc();
+		return true;
+	}
+	private void spawnNpc()
+	{
+		if (_players.size() >= EventConfig.EW_MIN_PLAYERS && spawn == null)
 		{
 			Location loc = null;
-			if (_townId == 13)
+			if (_currentTownId == 13)
 			{
 				loc = new Location(147576, -55992, -2776); // static spawn in Goddard
 			}
 			else
 			{
-				loc = MapRegionTable.getTown(_townId).getSpawnLoc();
+				loc = MapRegionTable.getTown(_currentTownId).getSpawnLoc();
 			}
 			if (!spawnNpc(NPC_ID, 10, false, new int[]
 			{
@@ -381,12 +380,11 @@ public class EW extends CombatEvent
 				loc.getZ()
 			}))
 			{
-				debug("Failed spawn enchant npc");
+				if (EventConfig.EVENT_MANAGER_DEBUG)
+					debug("Failed spawn enchant npc");
 			}
 		}
-		return true;
 	}
-	
 	@Override
 	public boolean canRequestToNpc(L2PcInstance player, L2Character npc)
 	{
@@ -404,14 +402,14 @@ public class EW extends CombatEvent
 	protected void teleportPlayerToEvent(L2PcInstance player)
 	{
 		onFixedRes(player);
-		player.teleToLocation(MapRegionTable.getTown(_townId).getSpawnLoc(), 5);
+		player.teleToLocation(MapRegionTable.getTown(_currentTownId).getSpawnLoc(), 5);
 	}
 	
 	@Override
 	public void showInfo(L2PcInstance player)
 	{
 		Map<String, String> variables = new HashMap<>();
-		variables.put("%name%", getString("name"));
+		variables.put("%name%", getName());
 		variables.put("%state%", eventStateToString(_eventState));
 		int seconds = _eventScheduler.getDelay();
 		int mins = seconds / 60;
@@ -419,9 +417,17 @@ public class EW extends CombatEvent
 		variables.put("%mins%", String.valueOf(mins));
 		variables.put("%secs%", (secs < 10 ? "0" + secs : String.valueOf(secs)));
 		variables.put("%players%", String.valueOf(_players.size()));
-		variables.put("%minPlayers%", getString("minPlayersRequiredForNpc"));// "~.~"
-		variables.put("%maxPlayers%", getString("maxPlayersAllowed"));
-		variables.put("%description%", (getString("description") != null) ? MapRegionTable.getInstance().getClosestTownName(_townId) + " " + getString("description").replace("[br1]", "<br1>").replace("[br]", "<br>") : "n/a");
+		variables.put("%minPlayers%", String.valueOf(EventConfig.EW_MIN_PLAYERS));// "~.~"
+		variables.put("%maxPlayers%", String.valueOf(EventConfig.EW_MAX_PLAYERS));
+		StringBuffer sb = new StringBuffer();
+		if(EventConfig.EW_DESCR != null)
+		{
+			StringUtil.append(sb, MapRegionTable.getInstance().getClosestTownName(_currentTownId), " ",  EventConfig.EW_DESCR );
+		}
+		else {
+			StringUtil.append(sb, "n/a");
+		}		
+		variables.put("%description%", sb.toString());
 		String userCommands = "";
 		if (containsPlayer(player))
 		{
@@ -460,11 +466,8 @@ public class EW extends CombatEvent
 		if (!super.removePlayer(player))
 		{
 			return false;
-		}
-		/*
-		 * if (isRunning()) { //_eventTeleporters.put(player.new EventTeleporter(player,getInt("teleportTime"),false)); if (_eventTeleporters.containsKey(player)) { _eventTeleporters.get(player).cancel(); } }
-		 */
-		if (_players.size() < _minPlayersRequiredForNpc)
+		}	
+		if (_players.size() < EventConfig.EW_MIN_PLAYERS)
 		{
 			if (spawn != null)
 			{
@@ -542,28 +545,7 @@ public class EW extends CombatEvent
 		l2Npc.deleteMe();
 		SpawnTable.getInstance().deleteSpawn(spawn, updateDb);
 		spawn = null;
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see net.sf.l2j.gameserver.events.events.EventBase#getName()
-	 */
-	@Override
-	public String getName()
-	{
-		return NAME;
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see net.sf.l2j.gameserver.events.events.EventBase#getEventId()
-	 */
-	@Override
-	public int getEventId()
-	{
-		return ID;
-	}
-	
+	}	
 	@Override
 	public boolean canUseMagic(L2Character attacker, L2Character target)
 	{
@@ -609,5 +591,44 @@ public class EW extends CombatEvent
 			return false;
 		}
 		return true;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.l2je.extensions.events.Event#initBlockItems()
+	 */
+	@Override
+	protected void initBlockItems()
+	{
+		for (Integer itemId : EventConfig.EW_BLOCKED_ITEMS)
+			_blockedItems.add(itemId);		
+	}
+
+	/* (non-Javadoc)
+	 * @see com.l2je.extensions.events.Event#initBlockSkills()
+	 */
+	@Override
+	protected void initBlockSkills()
+	{
+		for (Integer skillId : EventConfig.EW_BLOCKED_SKILLS)
+			_blockedSkills.add(skillId);		
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see com.l2je.extensions.events.Event#getRunningTime()
+	 */
+	@Override
+	public int getRunningTime()
+	{
+		return EventConfig.EW_RUNNING_TIME;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.l2je.extensions.events.Event#getResTime()
+	 */
+	@Override
+	protected int getResTime()
+	{		
+		return EventConfig.EW_RES_TIME;
 	}
 }

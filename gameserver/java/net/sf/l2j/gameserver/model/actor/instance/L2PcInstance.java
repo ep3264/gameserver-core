@@ -14,11 +14,11 @@
  */
 package net.sf.l2j.gameserver.model.actor.instance;
 
-import com.l2je.custom.ColorsManager;
-import com.l2je.custom.acp.AcpTask;
-import com.l2je.custom.events.Event;
-import com.l2je.custom.events.EventManager;
-import com.l2je.custom.ghosts.GhostsPlayers;
+import com.l2je.extensions.ColorsManager;
+import com.l2je.extensions.acp.AcpTask;
+import com.l2je.extensions.events.Event;
+import com.l2je.extensions.events.EventManager;
+import com.l2je.extensions.ghosts.GhostsPlayers;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -2977,14 +2977,7 @@ public final class L2PcInstance extends L2Playable
 	public void setSpawnProtection(boolean protect)
 	{
 		if (protect)
-		{
-			if (EventManager.getInstance().getCurrentEvent() != null)
-			{
-				if (EventManager.getInstance().getCurrentEvent().getBoolean("disableSpawnProtection"))
-				{
-					return;
-				}
-			}
+		{		
 			if (_protectTask == null)
 				_protectTask = ThreadPool.schedule(new Runnable()
 				{

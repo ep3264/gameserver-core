@@ -14,7 +14,7 @@
  */
 package net.sf.l2j.gameserver.network.clientpackets;
 
-import com.l2je.custom.events.EventManager;
+import com.l2je.extensions.events.EventManager;
 
 import net.sf.l2j.commons.concurrent.ThreadPool;
 
@@ -57,14 +57,7 @@ public final class RequestRestartPoint extends L2GameClientPacket
 			if (EventManager.getInstance().getCurrentEvent() != null)
 			{
 				if (activeChar.getEvent()!=null && activeChar.isDead())
-				{
-					if (EventManager.getInstance().getCurrentEvent().getBoolean("allowFixedResurrection"))
-					{
-						loc = new Location(activeChar.getX(), activeChar.getY(), activeChar.getZ());//fixed
-						activeChar.setIsIn7sDungeon(false);						
-						activeChar.teleToLocation(loc, 20);
-						EventManager.getInstance().getCurrentEvent().onFixedRes(activeChar);
-					}
+				{				
 					return;
 				}
 			}

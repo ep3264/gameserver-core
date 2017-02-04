@@ -14,12 +14,12 @@
  */
 package net.sf.l2j.gameserver.handler.voicecommandhandlers;
 
-import com.l2je.custom.events.EventManager;
+import com.l2je.extensions.events.EventManager;
 
 import net.sf.l2j.gameserver.handler.IVoicedCommandHandler;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 
-public class Event implements IVoicedCommandHandler
+public class Events implements IVoicedCommandHandler
 {
 	private final String[] _voicedCommands =
 	{
@@ -38,9 +38,19 @@ public class Event implements IVoicedCommandHandler
 	@Override
 	public boolean useVoicedCommand(String command, L2PcInstance activeChar, String params)
 	{
-		// TODO Auto-generated method stub
-		EventManager.getInstance().userByPass(activeChar,command);
+		if (command.equalsIgnoreCase("join"))
+		{
+			EventManager.getInstance().joinToEvent(activeChar);
+		}
+		else if (command.equalsIgnoreCase("info"))
+		{
+			EventManager.getInstance().getInfo(activeChar);
+		}
+		else if (command.equalsIgnoreCase("leave"))
+		{
+			EventManager.getInstance().leaveFromEvent(activeChar);
+		
+		}
 		return true;
-	}
-	
+	}	
 }

@@ -17,7 +17,7 @@
  */
 package net.sf.l2j.commons.mmocore;
 
-import com.l2je.custom.L2System;
+import com.l2je.extensions.L2System;
 import com.l2je.protection.ProtectionProperties;
 
 import java.io.IOException;

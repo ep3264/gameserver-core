@@ -14,7 +14,7 @@
  */
 package net.sf.l2j.gameserver.instancemanager;
 
-import com.l2je.custom.RaidBossInfo;
+import com.l2je.extensions.RaidBossInfo;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

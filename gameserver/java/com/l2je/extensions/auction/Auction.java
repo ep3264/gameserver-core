@@ -1,4 +1,4 @@
-package com.l2je.custom.auction;
+package com.l2je.extensions.auction;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

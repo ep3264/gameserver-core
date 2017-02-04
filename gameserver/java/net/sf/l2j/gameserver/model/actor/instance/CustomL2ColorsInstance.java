@@ -14,7 +14,7 @@
  */
 package net.sf.l2j.gameserver.model.actor.instance;
 
-import com.l2je.custom.ColorsManager;
+import com.l2je.extensions.ColorsManager;
 
 import java.util.Arrays;
 import java.util.HashSet;

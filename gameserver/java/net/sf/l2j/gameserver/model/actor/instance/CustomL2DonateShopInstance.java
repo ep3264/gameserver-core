@@ -14,7 +14,7 @@
  */
 package net.sf.l2j.gameserver.model.actor.instance;
 
-import com.l2je.custom.PremiumAccount;
+import com.l2je.extensions.PremiumAccount;
 
 import java.text.SimpleDateFormat;
 import java.util.StringTokenizer;

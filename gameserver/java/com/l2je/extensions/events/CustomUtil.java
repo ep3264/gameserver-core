@@ -1,4 +1,4 @@
-package com.l2je.custom.events;
+package com.l2je.extensions.events;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -14,7 +14,7 @@
  */
 package net.sf.l2j.gameserver.network.clientpackets;
 
-import com.l2je.custom.events.EventManager;
+import com.l2je.extensions.events.EventManager;
 
 import java.util.StringTokenizer;
 import java.util.logging.Level;
@@ -102,7 +102,19 @@ public final class RequestBypassToServer extends L2GameClientPacket
 			}
 			else if (_command.startsWith("event_"))
 			{
-				EventManager.getInstance().userByPass(activeChar, _command.substring(6).trim());
+				String command =_command.substring(6).trim();
+				if(command.equals("info"))
+				{
+					EventManager.getInstance().getInfo(activeChar);
+				}
+				else if(command.equals("join"))
+				{
+					EventManager.getInstance().joinToEvent(activeChar);
+				}
+				else if(command.equals("leave"))
+				{
+					EventManager.getInstance().leaveFromEvent(activeChar);
+				}
 			}		
 			else if (_command.startsWith("npc_"))
 			{
