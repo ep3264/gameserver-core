@@ -14,8 +14,6 @@
  */
 package net.sf.l2j.gameserver.network;
 
-
-
 /**
  * @author KenM
  */

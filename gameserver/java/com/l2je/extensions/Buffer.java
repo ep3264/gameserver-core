@@ -66,27 +66,31 @@ public class Buffer
 			1355,1356,1357,1268	,4553,4554
 			));
 	
-	private final static int[] vipfbuff =
+	private final static int[] VIP_FBUFF =
 	{
 		4699,
 		1392,
+		1393,
 		1352,
 		1353,
 		1182,
 		1189,
-		1191
+		1191,
+		1323 // nooble
 	};
-	private final static int[] vipmbuff =
+	private final static int[] VIP_MBUFF =
 	{
 		4703,
 		1392,
+		1393,
 		1352,
 		1353,
 		1182,
 		1189,
-		1191
+		1191,
+		1323 // nooble
 	};
-	private final static int[] mbuff =
+	private final static int[] MBUFF =
 	{
 		1397,
 		4342,
@@ -113,7 +117,7 @@ public class Buffer
 		1413
 	};
 	
-	private final static int[] fbuff =
+	private final static int[] FBUFF =
 	{
 		4344,
 		4346,
@@ -235,11 +239,11 @@ public class Buffer
 			}
 			else if (action.equalsIgnoreCase("mbuff"))
 			{
-				getBuffSet(l2Character, mbuff);
+				getBuffSet(l2Character, MBUFF);
 			}
 			else if (action.equalsIgnoreCase("fbuff"))
 			{
-				getBuffSet(l2Character, fbuff);
+				getBuffSet(l2Character, FBUFF);
 			}
 			else if (action.equalsIgnoreCase("dbuff"))
 			{
@@ -253,22 +257,22 @@ public class Buffer
 			{
 				if (activeChar.getPremiumService() > 0)
 				{
-					getBuffSet(l2Character, vipfbuff);
+					getBuffSet(l2Character, VIP_FBUFF);
 				}
 				else if (pay(activeChar))
 				{
-					getBuffSet(l2Character, vipfbuff);
+					getBuffSet(l2Character, VIP_FBUFF);
 				}
 			}
 			else if (action.equalsIgnoreCase("vipmbuff"))
 			{
 				if (activeChar.getPremiumService() > 0)
 				{
-					getBuffSet(l2Character, vipmbuff);
+					getBuffSet(l2Character, VIP_MBUFF);
 				}
 				else if (pay(activeChar))
 				{
-					getBuffSet(l2Character, vipmbuff);
+					getBuffSet(l2Character, VIP_MBUFF);
 				}
 			}
 			else if (action.equalsIgnoreCase("heal"))

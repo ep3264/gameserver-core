@@ -915,13 +915,17 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>> i
 	
 	public boolean checkOnline()
 	{
-		if (_activeChar == null || !_activeChar.isEnteredWorld())
+		if (_activeChar == null)
+		{
+			_log.info(_activeChar + " attempt! Protect system compromised activeChar == null!");
+			return false;
+		}
+		if(!_activeChar.isEnteredWorld())
 		{
 			_log.info(_activeChar + " attempt! Protect system compromised! Tried to use fixed bug. His disconected.");
 			_activeChar.kick();
 			return false;
-		}
-		
+		}		
 		return true;
 	}
 	

@@ -1,9 +1,8 @@
 package com.l2je.extensions.auction;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.util.Properties;
+
+import net.sf.l2j.Config;
+import net.sf.l2j.commons.config.ExProperties;
 
 /**
  * @className:AuctionConfig.AuctionConfig.java 
@@ -22,45 +21,38 @@ public class AuctionConfig {
 	   public static int[] AUCTION_AUGMENT_PRICE;
 	   public static int[] AUCTION_ALLOWED_ITEM_ID;
 	   public static int AUCTION_COUNT_DAY_FOR_DELETE_ITEM;
-	   public static int AUCTION_SEE_COUNT_PRODUCTS_ON_PAGE;
-	   
+	   public static int AUCTION_SEE_COUNT_PRODUCTS_ON_PAGE;	   
 	   private final static String FILE = "./config/extensions/auction.ini"; 
 
-	   public static void readConfig() {
-			try (InputStream is = new FileInputStream(new File(FILE)))
+	public static void init()
+	{		
+		    final ExProperties auctionPropeties = Config.initProperties(FILE);		
+			AUCTION_ENABLE = Boolean.parseBoolean(auctionPropeties.getProperty("AuctionEnable", "true"));
+			if (!AUCTION_ENABLE)
 			{
-			Properties properties = new Properties();
-			properties.load(is);	         
-	         AUCTION_ENABLE = Boolean.parseBoolean(properties.getProperty("AuctionEnable", "true"));
-	         if(!AUCTION_ENABLE) {
-	            return;
-	         }
-
-	         ALLOW_AUGMENT_ITEMS = Boolean.parseBoolean(properties.getProperty("AllowAugmentItems", "true"));
-	         AUCTION_LOG = Boolean.parseBoolean(properties.getProperty("AuctionLogEnable", "false"));
-	         AUCTION_NPC_ID = Integer.parseInt(properties.getProperty("AuctionNpcId", "50018"));
-	         AUCTION_PERCENTAGE = Boolean.parseBoolean(properties.getProperty("AuctionPercentage", "false"));
-	         AUCTION_GET_PERCENT = Integer.parseInt(properties.getProperty("AuctionGetPercent", "10"));
-	         String[] temp = properties.getProperty("AuctionPrice", "57 1000").split(" ");
-	         AUCTION_PRICE = new int[2];
-	         AUCTION_PRICE[0] = Integer.parseInt(temp[0]);
-	         AUCTION_PRICE[1] = Integer.parseInt(temp[1]);
-	         temp = properties.getProperty("AuctionAugmentPrice", "4037 5").split(" ");
-	         AUCTION_AUGMENT_PRICE = new int[2];
-	         AUCTION_AUGMENT_PRICE[0] = Integer.parseInt(temp[0]);
-	         AUCTION_AUGMENT_PRICE[1] = Integer.parseInt(temp[1]);
-	         temp = properties.getProperty("AuctionAllowedItemId", "57 4037").split(" ");
-	         AUCTION_ALLOWED_ITEM_ID = new int[temp.length];
-
-	         for(int i = 0; i <= temp.length - 1; ++i) {
-	            AUCTION_ALLOWED_ITEM_ID[i] = Integer.parseInt(temp[i]);
-	         }
-
-	         AUCTION_COUNT_DAY_FOR_DELETE_ITEM = Integer.parseInt(properties.getProperty("AuctionCountDayForDeleteItem", "7"));
-	         AUCTION_SEE_COUNT_PRODUCTS_ON_PAGE = Integer.parseInt(properties.getProperty("AuctionSeeCountProductsOnPage", "5"));
-	      } catch (Exception var3) {
-	         System.out.println("Auction: Error reading config " + var3);
-	      }
-
-	   }
+				return;
+			}
+			ALLOW_AUGMENT_ITEMS = Boolean.parseBoolean(auctionPropeties.getProperty("AllowAugmentItems", "true"));
+			AUCTION_LOG = Boolean.parseBoolean(auctionPropeties.getProperty("AuctionLogEnable", "false"));
+			AUCTION_NPC_ID = Integer.parseInt(auctionPropeties.getProperty("AuctionNpcId", "50018"));
+			AUCTION_PERCENTAGE = Boolean.parseBoolean(auctionPropeties.getProperty("AuctionPercentage", "false"));
+			AUCTION_GET_PERCENT = Integer.parseInt(auctionPropeties.getProperty("AuctionGetPercent", "10"));
+			String[] temp = auctionPropeties.getProperty("AuctionPrice", "57 1000").split(";");
+			AUCTION_PRICE = new int[2];
+			AUCTION_PRICE[0] = Integer.parseInt(temp[0]);
+			AUCTION_PRICE[1] = Integer.parseInt(temp[1]);
+			temp = auctionPropeties.getProperty("AuctionAugmentPrice", "4358 5").split(";");
+			AUCTION_AUGMENT_PRICE = new int[2];
+			AUCTION_AUGMENT_PRICE[0] = Integer.parseInt(temp[0]);
+			AUCTION_AUGMENT_PRICE[1] = Integer.parseInt(temp[1]);
+			temp = auctionPropeties.getProperty("AuctionAllowedItemId", "57 4358").split(";");
+			AUCTION_ALLOWED_ITEM_ID = new int[temp.length];
+			
+			for (int i = 0; i <= temp.length - 1; ++i)
+			{
+				AUCTION_ALLOWED_ITEM_ID[i] = Integer.parseInt(temp[i]);
+			}
+			AUCTION_COUNT_DAY_FOR_DELETE_ITEM = Integer.parseInt(auctionPropeties.getProperty("AuctionCountDayForDeleteItem", "7"));
+			AUCTION_SEE_COUNT_PRODUCTS_ON_PAGE = Integer.parseInt(auctionPropeties.getProperty("AuctionSeeCountProductsOnPage", "5"));		
 	}
+}

@@ -4,7 +4,7 @@
 		        <property name="work_dir" location="D:/ServerRealese/gameserver/libs"/>	
 	    		<property name="output" location="../bin"/>	
 	    		<property name="output_lib" location="../build"/>		
-	    		<property name="lib_name" value="l2jserver"/>	    	
+	    		<property name="lib_name" value="server"/>	    	
 	    	</ant>	
     </target>	
 </project>

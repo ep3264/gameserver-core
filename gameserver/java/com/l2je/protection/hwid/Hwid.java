@@ -1,20 +1,20 @@
 package com.l2je.protection.hwid;
 
-public class HWID {
+public class Hwid {
 	private String _login;
-	private String _HWID;
+	private String _hwidHdd;
 	private String _ip;
 
-	public HWID(String login,String HWID,String ip)
+	public Hwid(String login,String HWID,String ip)
 	{
 		_login=login;
-		_HWID=HWID;
+		_hwidHdd=HWID;
 		_ip=ip;
 		
 	}
 
 	public String getHwid() {
-		return _HWID;
+		return _hwidHdd;
 	}
 
 	public String getLogin() {
@@ -28,7 +28,7 @@ public class HWID {
 	{
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((_HWID == null) ? 0 : _HWID.hashCode());
+		result = prime * result + ((_hwidHdd == null) ? 0 : _hwidHdd.hashCode());
 		result = prime * result + ((_ip == null) ? 0 : _ip.hashCode());
 		result = prime * result + ((_login == null) ? 0 : _login.hashCode());
 		return result;
@@ -42,13 +42,13 @@ public class HWID {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		HWID other = (HWID) obj;
-		if (_HWID == null)
+		Hwid other = (Hwid) obj;
+		if (_hwidHdd == null)
 		{
-			if (other._HWID != null)
+			if (other._hwidHdd != null)
 				return false;
 		}
-		else if (!_HWID.equals(other._HWID))
+		else if (!_hwidHdd.equals(other._hwidHdd))
 			return false;
 		if (_ip == null)
 		{

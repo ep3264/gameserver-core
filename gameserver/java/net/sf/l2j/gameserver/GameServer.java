@@ -22,6 +22,7 @@ import com.l2je.extensions.events.EventManager;
 import com.l2je.extensions.events.TVT;
 import com.l2je.extensions.ghosts.GhostsPlayers;
 import com.l2je.extensions.ghosts.GhostsShouts;
+import com.l2je.protection.ProtectionProperties;
 import com.l2je.protection.Punisher;
 import com.l2je.protection.crypt.Blowfish;
 import com.l2je.protection.crypt.RC5;
@@ -297,9 +298,7 @@ public class GameServer
 			BoatInnadrilTour.load();
 			BoatRunePrimeval.load();
 			BoatTalkingGludin.load();
-		}
-		
-		
+		}		
 		if(EventConfig.AUTO_EVENT_SCHEDULER)
 		{
 			EventManager.getInstance().startAutoEventScheduler();
@@ -320,16 +319,18 @@ public class GameServer
 		
 		if (Config.ALT_FISH_CHAMPIONSHIP_ENABLED)
 			FishingChampionshipManager.getInstance();
+		
+		StringUtil.printSection("Extensions");
 		if(Config.ENABLE_GHOSTS_PLAYERS)
 		{			
 			GhostsPlayers.getInstance().loadGhosts();
-		}
+		}		
 		if(Config.ENABLE_GHOSTS_SHOUTS){
 			_log.info("GhostsShouts: Activated.");
 		ThreadPool.scheduleAtFixedRate(GhostsShouts.getInstance(), GhostsShouts.getIntialDelay(), GhostsShouts.getShoutRndTime());
 		}		
 	
-		AuctionConfig.readConfig();
+		AuctionConfig.init();
 		if (AuctionConfig.AUCTION_ENABLE)
 		{
 			ItemIcons.getInstance();
@@ -338,23 +339,23 @@ public class GameServer
 		}
 		
 		StringUtil.printSection("Protection System");
-		com.l2je.protection.ProtectionProperties.init();
-		if(com.l2je.protection.ProtectionProperties.HWID)
+		ProtectionProperties.init();
+		if(ProtectionProperties.HWID)
 		{
 			_log.info("HWIDManager: Enable.");
 			HWIDManager.getInstance();			
 		}
-		if (com.l2je.protection.ProtectionProperties.RC5)
+		if (ProtectionProperties.RC5)
 		{	
 			_log.info("RC5: Enable.");       
 			RC5.getInstance();			
 		}
-		if (com.l2je.protection.ProtectionProperties.BLOWFISH)
+		if (ProtectionProperties.BLOWFISH)
 		{
 			_log.info("BLOWFISH: Enable.");
 			Blowfish.getInstance();			
 		}
-		if (com.l2je.protection.ProtectionProperties.PUNISHER)
+		if (ProtectionProperties.PUNISHER)
 		{
 			_log.info("PUNISHER: Enable.");
 			Punisher.getInstance();			

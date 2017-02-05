@@ -20,6 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.StringTokenizer;
 
 import net.sf.l2j.Config;
+import net.sf.l2j.commons.lang.StringUtil;
 import net.sf.l2j.gameserver.datatables.ItemTable;
 import net.sf.l2j.gameserver.model.actor.template.NpcTemplate;
 import net.sf.l2j.gameserver.model.item.instance.ItemInstance;
@@ -90,7 +91,9 @@ public class CustomL2DonateShopInstance extends L2NpcInstance
 			if (player.getPremiumService() > 0)
 			{
 				SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-				player.sendMessage("Премиум уже активирован до: " + String.valueOf(format.format(player.getPremiumService())));
+				StringBuffer sb = new StringBuffer();
+				StringUtil.append(sb, "Премиум уже активирован до: " , String.valueOf(format.format(player.getPremiumService())));
+				player.sendMessage(sb.toString());
 				return;
 			}
 			if (st.hasMoreTokens())
@@ -102,7 +105,9 @@ public class CustomL2DonateShopInstance extends L2NpcInstance
 					if (pay(player, days))
 					{
 						PremiumAccount.addPremiumServices(player, player.getAccountName(), days);
-						player.sendMessage("Вы активировали премиум аккаунт на " + days + " дней.");
+						StringBuffer sb = new StringBuffer();
+						StringUtil.append(sb, "Вы активировали премиум аккаунт на ", days, " дней.");
+						player.sendMessage(sb.toString());
 					}
 					
 				}
