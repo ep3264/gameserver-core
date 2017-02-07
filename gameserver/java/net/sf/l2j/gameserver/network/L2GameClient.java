@@ -14,7 +14,7 @@
  */
 package net.sf.l2j.gameserver.network;
 
-import com.l2je.protection.ProtectionProperties;
+import com.l2je.protection.ProtectionConfig;
 import com.l2je.protection.crypt.Blowfish;
 
 import java.net.InetAddress;
@@ -115,7 +115,7 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>> i
 	{
 		byte[] key = BlowFishKeygen.getRandomKey();
 		_crypt.setKey(key);
-		if (com.l2je.protection.ProtectionProperties.BLOWFISH)
+		if (com.l2je.protection.ProtectionConfig.BLOWFISH)
 		{
 			key = Blowfish.getInstance().getKey(key);
 		}
@@ -201,7 +201,7 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>> i
 	public void setAccountName(String pAccountName) throws SQLException
 	{
 		_accountName = pAccountName;
-		if (_preAuth && ProtectionProperties.HWID)
+		if (_preAuth && ProtectionConfig.HWID)
 		{
 			sendPacket(new GameGuardQuery());
 			_preAuth = false;

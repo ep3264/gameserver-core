@@ -2977,7 +2977,7 @@ public final class L2PcInstance extends L2Playable
 	public void setSpawnProtection(boolean protect)
 	{
 		if (protect)
-		{		
+		{
 			if (_protectTask == null)
 				_protectTask = ThreadPool.schedule(new Runnable()
 				{
@@ -3273,7 +3273,7 @@ public final class L2PcInstance extends L2Playable
 	 */
 	@Override
 	public void broadcastStatusUpdate()
-	{		
+	{
 		// Send StatusUpdate with current HP, MP and CP to this L2PcInstance
 		StatusUpdate su = new StatusUpdate(this);
 		su.addAttribute(StatusUpdate.CUR_HP, (int) getCurrentHp());
@@ -6746,7 +6746,7 @@ public final class L2PcInstance extends L2Playable
 		
 		switch (sklTargetType)
 		{
-			// Target the player if skill type is AURA, PARTY, CLAN or SELF
+		// Target the player if skill type is AURA, PARTY, CLAN or SELF
 			case TARGET_AURA:
 			case TARGET_FRONT_AURA:
 			case TARGET_BEHIND_AURA:
@@ -7080,7 +7080,7 @@ public final class L2PcInstance extends L2Playable
 			sm = SystemMessage.getSystemMessage(SystemMessageId.S1_CANNOT_BE_USED).addSkillName(skill);
 		else
 			return true;
-			
+		
 		sendPacket(sm);
 		return false;
 	}

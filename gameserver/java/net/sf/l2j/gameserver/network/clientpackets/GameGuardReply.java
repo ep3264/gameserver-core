@@ -14,7 +14,7 @@
  */
 package net.sf.l2j.gameserver.network.clientpackets;
 
-import com.l2je.protection.ProtectionProperties;
+import com.l2je.protection.ProtectionConfig;
 import com.l2je.protection.hwid.HWIDManager;
 
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
@@ -35,7 +35,7 @@ public class GameGuardReply extends L2GameClientPacket
 	@Override
 	protected void runImpl()
 	{
-		if(ProtectionProperties.HWID && getClient().getHWid() == null)
+		if(ProtectionConfig.HWID && getClient().getHWid() == null)
 		{
 		  HWIDManager.getInstance().initSession(getClient(), b);			
 		}

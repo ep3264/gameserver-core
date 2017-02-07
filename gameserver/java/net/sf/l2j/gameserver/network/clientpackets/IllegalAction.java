@@ -14,7 +14,7 @@
  */
 package net.sf.l2j.gameserver.network.clientpackets;
 
-import com.l2je.protection.ProtectionProperties;
+import com.l2je.protection.ProtectionConfig;
 import com.l2je.protection.Punisher;
 
 /**
@@ -48,7 +48,7 @@ public class IllegalAction extends L2GameClientPacket
 	protected void runImpl()
 	{
 		// TODO Auto-generated method stub
-		if(ProtectionProperties.PUNISHER)
+		if(ProtectionConfig.PUNISHER)
 		{
 			Punisher.getInstance().illegalAction(getClient(), b[0]);
 		}

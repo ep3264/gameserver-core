@@ -14,7 +14,7 @@
  */
 package net.sf.l2j.gameserver.handler.admincommandhandlers;
 
-import com.l2je.protection.ProtectionProperties;
+import com.l2je.protection.ProtectionConfig;
 import com.l2je.protection.hwid.HWIDManager;
 
 import java.sql.Connection;
@@ -167,7 +167,7 @@ public class AdminBan implements IAdminCommandHandler
 			else
 				banChatOfflinePlayer(activeChar, player, duration, true);
 		}
-		else if(command.startsWith("admin_ban_hwid") && ProtectionProperties.HWID)
+		else if(command.startsWith("admin_ban_hwid") && ProtectionConfig.HWID)
 		{
 			if ((targetPlayer == null) && player.equals(""))
 			{
@@ -185,7 +185,7 @@ public class AdminBan implements IAdminCommandHandler
 				activeChar.sendMessage( targetPlayer.getAccountName() + " account is now banned.");					
 			}
 		}
-		else if(command.startsWith("admin_ban_reloadhwids")&& ProtectionProperties.HWID)
+		else if(command.startsWith("admin_ban_reloadhwids")&& ProtectionConfig.HWID)
 		{
 			HWIDManager.getInstance().reloadBannedHwids();			
 			activeChar.sendMessage( "Banned hwids has been reloaded.");

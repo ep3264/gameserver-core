@@ -21,11 +21,12 @@ import net.sf.l2j.commons.concurrent.ThreadPool;
 
 import net.sf.l2j.gameserver.model.actor.L2Npc;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
+import net.sf.l2j.gameserver.scripting.scripts.ai.individual.Frintezza;
 
 public class QuestTimer
 {
 	protected static final Logger _log = Logger.getLogger(QuestTimer.class.getName());
-	
+	private boolean				_isActive	= true;
 	protected final Quest _quest;
 	protected final String _name;
 	protected final L2Npc _npc;
@@ -47,7 +48,11 @@ public class QuestTimer
 		else
 			_schedular = ThreadPool.schedule(new ScheduleTimerTask(), time);
 	}
-	
+	public final boolean getIsActive()
+	{
+		return _isActive;
+	}
+
 	@Override
 	public final String toString()
 	{
@@ -55,22 +60,38 @@ public class QuestTimer
 	}
 	
 	protected final class ScheduleTimerTask implements Runnable
-	{
+	{		
 		@Override
 		public void run()
-		{
-			if (_schedular == null)
+		{			
+			if (_schedular == null){
+				_log.info(_quest.getName()+ "_schedular == null "+_name);				
+			}
+			if (!getIsActive()){
+				_log.info(_quest.getName()+ "!getIsActive() "+_name);
 				return;
-			
-			if (!_isRepeating)
-				cancel();
-			
-			_quest.notifyEvent(_name, _npc, _player);
+			}
+			try
+			{				
+				if (!_isRepeating)
+					cancel();
+				
+				_quest.notifyEvent(_name, _npc, _player);
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
 		}
 	}
 	
 	public final void cancel()
 	{
+		if (_quest instanceof Frintezza)
+		{
+			_log.info("Cancel Frintezza task questtimer: "  + _name);
+					
+		}
 		if (_schedular != null)
 		{
 			_schedular.cancel(false);

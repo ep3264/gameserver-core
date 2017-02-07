@@ -17,7 +17,6 @@ package net.sf.l2j.gameserver.scripting.scripts.ai.individual;
 import com.l2je.extensions.L2System;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import net.sf.l2j.Config;
@@ -1163,7 +1162,7 @@ public class Frintezza extends AbstractNpcAI
 		}
 		else if (status != DORMANT)
 			GrandBossManager.getInstance().setBossStatus(FRINTEZZA, DORMANT);
-			
+		
 	}
 	
 	@Override
@@ -1269,7 +1268,7 @@ public class Frintezza extends AbstractNpcAI
 				weakScarlet.deleteMe();
 			if (strongScarlet != null)
 				strongScarlet.deleteMe();
-				
+			
 			demon1 = null;
 			demon2 = null;
 			demon3 = null;
@@ -1304,7 +1303,7 @@ public class Frintezza extends AbstractNpcAI
 				DoorTable.getInstance().getDoor(i).closeMe();
 			for (int i = 25150061; i <= 25150070; i++)
 				DoorTable.getInstance().getDoor(i).closeMe();
-				
+			
 			DoorTable.getInstance().getDoor(25150042).closeMe();
 			DoorTable.getInstance().getDoor(25150043).closeMe();
 			DoorTable.getInstance().getDoor(25150045).closeMe();
@@ -1341,17 +1340,17 @@ public class Frintezza extends AbstractNpcAI
 			_scarletDummy.setIsInvul(false);
 			_scarletDummy.setIsImmobilized(false);
 			startQuestTimer("stop_pc", 0L, npc, null, false);
-			startQuestTimer("camera_2", 1000L, _overheadDummy, null, false);
+			startQuestTimer("camera_2", 1000, _overheadDummy, null, false);
 		}
 		else if (event.equalsIgnoreCase("camera_2"))
 		{
 			_Zone.broadcastPacket(new SpecialCamera(_overheadDummy.getObjectId(), 0, 75, -89, 0, 100, 0, 0, 1, 0));
-			startQuestTimer("camera_2b", 1L, _overheadDummy, null, false);
+			startQuestTimer("camera_2b", 0, _overheadDummy, null, false);
 		}
 		else if (event.equalsIgnoreCase("camera_2b"))
 		{
 			_Zone.broadcastPacket(new SpecialCamera(_overheadDummy.getObjectId(), 0, 75, -89, 0, 100, 0, 0, 1, 0));
-			startQuestTimer("camera_3", 1L, _overheadDummy, null, false);
+			startQuestTimer("camera_3", 0, _overheadDummy, null, false);
 		}
 		else if (event.equalsIgnoreCase("camera_3"))
 		{
@@ -1378,36 +1377,36 @@ public class Frintezza extends AbstractNpcAI
 			demon4.setIsImmobilized(true);
 			demon4.disableAllSkills();
 			_Zone.updateKnownList(demon4);
-			startQuestTimer("camera_4", 6500L, _overheadDummy, null, false);
+			startQuestTimer("camera_4", 6500, _overheadDummy, null, false);
 		}
 		else if (event.equalsIgnoreCase("camera_4"))
 		{
 			_Zone.broadcastPacket(new SpecialCamera(_frintezzaDummy.getObjectId(), 1800, 90, 8, 6500, 7000, 0, 0, 1, 0));
-			startQuestTimer("camera_5", 900L, _frintezzaDummy, null, false);
+			startQuestTimer("camera_5", 900, _frintezzaDummy, null, false);
 		}
 		else if (event.equalsIgnoreCase("camera_5"))
 		{
 			_Zone.broadcastPacket(new SpecialCamera(_frintezzaDummy.getObjectId(), 140, 90, 10, 2500, 4500, 0, 0, 1, 0));
-			startQuestTimer("camera_5b", 4000L, _frintezzaDummy, null, false);
+			startQuestTimer("camera_5b", 4000, _frintezzaDummy, null, false);
 		}
 		else if (event.equalsIgnoreCase("camera_5b"))
 		{
 			_Zone.broadcastPacket(new SpecialCamera(frintezza.getObjectId(), 40, 75, -10, 0, 1000, 0, 0, 1, 0));
-			startQuestTimer("camera_6", 1L, frintezza, null, false);
+			startQuestTimer("camera_6", 0, frintezza, null, false);
 		}
 		else if (event.equalsIgnoreCase("camera_6"))
 		{
 			_Zone.broadcastPacket(new SpecialCamera(frintezza.getObjectId(), 40, 75, -10, 0, 12000, 0, 0, 1, 0));
-			startQuestTimer("camera_7", 1350L, frintezza, null, false);
+			startQuestTimer("camera_7", 1350, frintezza, null, false);
 		}
 		else if (event.equalsIgnoreCase("camera_7"))
 		{
 			_Zone.broadcastPacket(new SocialAction(frintezza, 2));
-			startQuestTimer("camera_8", 7000L, frintezza, null, false);
+			startQuestTimer("camera_8", 7000, frintezza, null, false);
 		}
 		else if (event.equalsIgnoreCase("camera_8"))
 		{
-			startQuestTimer("camera_9", 1000L, frintezza, null, false);
+			startQuestTimer("camera_9", 1000, frintezza, null, false);
 			_frintezzaDummy.deleteMe();
 			_frintezzaDummy = null;
 		}
@@ -1415,75 +1414,77 @@ public class Frintezza extends AbstractNpcAI
 		{
 			_Zone.broadcastPacket(new SocialAction(demon2, 1));
 			_Zone.broadcastPacket(new SocialAction(demon3, 1));
-			startQuestTimer("camera_9b", 400L, frintezza, null, false);
+			startQuestTimer("camera_9b", 400, frintezza, null, false);
 		}
 		else if (event.equalsIgnoreCase("camera_9b"))
 		{
 			_Zone.broadcastPacket(new SocialAction(demon1, 1));
 			_Zone.broadcastPacket(new SocialAction(demon4, 1));
-			Iterator<L2Character> i$ = _Zone.getCharactersInside().iterator();
-			do
+			
+			for (L2Character pc : _Zone.getCharactersInside())
 			{
-				if (!i$.hasNext())
-					break;
-				@SuppressWarnings("cast")
-				L2Character pc = (L2Character) i$.next();
 				if (pc instanceof L2PcInstance)
-					if (pc.getX() < 0x2a898)
+				{
+					if (pc.getX() < 174232)
+					{
 						pc.broadcastPacket(new SpecialCamera(_portraitDummy1.getObjectId(), 1000, 118, 0, 0, 1000, 0, 0, 1, 0));
+					}
 					else
+					{
 						pc.broadcastPacket(new SpecialCamera(_portraitDummy3.getObjectId(), 1000, 62, 0, 0, 1000, 0, 0, 1, 0));
+					}
+				}
 			}
-			while (true);
-			startQuestTimer("camera_9c", 0L, frintezza, null, false);
+			startQuestTimer("camera_9c", 0, frintezza, null, false);
 		}
 		else if (event.equalsIgnoreCase("camera_9c"))
 		{
-			Iterator<L2Character> i$ = _Zone.getCharactersInside().iterator();
-			do
+			for (L2Character pc : _Zone.getCharactersInside())
 			{
-				if (!i$.hasNext())
-					break;
-				@SuppressWarnings("cast")
-				L2Character pc = (L2Character) i$.next();
 				if (pc instanceof L2PcInstance)
-					if (pc.getX() < 0x2a898)
+				{
+					if (pc.getX() < 174232)
+					{
 						pc.broadcastPacket(new SpecialCamera(_portraitDummy1.getObjectId(), 1000, 118, 0, 0, 10000, 0, 0, 1, 0));
+					}
 					else
+					{
 						pc.broadcastPacket(new SpecialCamera(_portraitDummy3.getObjectId(), 1000, 62, 0, 0, 10000, 0, 0, 1, 0));
+					}
+				}
 			}
-			while (true);
-			startQuestTimer("camera_10", 2000L, frintezza, null, false);
+			startQuestTimer("camera_10", 2000, frintezza, null, false);
 		}
 		else if (event.equalsIgnoreCase("camera_10"))
 		{
-			_Zone.broadcastPacket(new SpecialCamera(frintezza.getObjectId(), 240, 90, 0, 0, 1000, 0, 0, 1, 0));
-			startQuestTimer("camera_11", 1000L, frintezza, null, false);
+			_Zone.broadcastPacket(new SpecialCamera(frintezza.getObjectId(), 100, 195, 35, 0, 10000, 0, 0, 1, 0));
+			startQuestTimer("camera_11", 700L, frintezza, null, false);
 		}
 		else if (event.equalsIgnoreCase("camera_11"))
 		{
-			_Zone.broadcastPacket(new SpecialCamera(frintezza.getObjectId(), 240, 90, 25, 5500, 10000, 0, 0, 1, 0));
-			_Zone.broadcastPacket(new SocialAction(frintezza, 3));
+			_Zone.broadcastPacket(new SpecialCamera(frintezza.getObjectId(), 100, 195, 35, 0, 10000, 0, 0, 1, 0));
+			startQuestTimer("camera_12", 1300L, frintezza, null, false);
+		}
+		else if (event.equalsIgnoreCase("camera_12"))
+		{
+			
+			_Zone.broadcastPacket(new SpecialCamera(frintezza.getObjectId(), 240, 90, 0, 0, 1000, 0, 0, 1, 0));
+			startQuestTimer("camera_13", 0, frintezza, null, false);
+		}		
+		else if (event.equalsIgnoreCase("camera_13"))
+		{
+			
+			_Zone.broadcastPacket(new SpecialCamera(frintezza.getObjectId(), 240, 90, 25, 5500, 10000, 0, 0, 1, 0));		
 			_portraitDummy1.deleteMe();
 			_portraitDummy3.deleteMe();
 			_portraitDummy1 = null;
 			_portraitDummy3 = null;
-			startQuestTimer("camera_12", 4500L, frintezza, null, false);
-		}
-		else if (event.equalsIgnoreCase("camera_12"))
-		{
-			_Zone.broadcastPacket(new SpecialCamera(frintezza.getObjectId(), 100, 195, 35, 0, 10000, 0, 0, 1, 0));
-			startQuestTimer("camera_13", 700L, frintezza, null, false);
-		}
-		else if (event.equalsIgnoreCase("camera_13"))
-		{
-			_Zone.broadcastPacket(new SpecialCamera(frintezza.getObjectId(), 100, 195, 35, 0, 10000, 0, 0, 1, 0));
-			startQuestTimer("camera_14", 1300L, frintezza, null, false);
+			startQuestTimer("camera_14", 4500L, frintezza, null, false);
 		}
 		else if (event.equalsIgnoreCase("camera_14"))
 		{
-			_Zone.broadcastPacket(new SpecialCamera(frintezza.getObjectId(), 120, 180, 45, 1500, 10000, 0, 0, 1, 0));
 			_Zone.broadcastPacket(new MagicSkillUse(frintezza, frintezza, 5006, 1, 34000, 0));
+			_Zone.broadcastPacket(new SpecialCamera(frintezza.getObjectId(), 120, 180, 45, 1500, 10000, 0, 0, 1, 0));			
 			startQuestTimer("camera_16", 1500L, frintezza, null, false);
 		}
 		else if (event.equalsIgnoreCase("camera_16"))
@@ -1499,23 +1500,27 @@ public class Frintezza extends AbstractNpcAI
 		else if (event.equalsIgnoreCase("camera_18"))
 		{
 			_Zone.broadcastPacket(new SpecialCamera(_overheadDummy.getObjectId(), 930, 160, -20, 0, 1000, 0, 0, 1, 0));
-			startQuestTimer("camera_18b", 1L, _overheadDummy, null, false);
+			startQuestTimer("camera_18b", 0, _overheadDummy, null, false);
 		}
 		else if (event.equalsIgnoreCase("camera_18b"))
 		{
 			_Zone.broadcastPacket(new SpecialCamera(_overheadDummy.getObjectId(), 600, 180, -25, 0, 10000, 0, 0, 1, 0));
 			_Zone.broadcastPacket(new MagicSkillUse(_scarletDummy, _overheadDummy, 5004, 1, 5800, 0));
-			weakScarlet = (L2GrandBossInstance) addSpawn(29046, 0x2a898, 0xfffea82c, -5110, 16384, false, 0L, true);
+			
+			weakScarlet = (L2GrandBossInstance) addSpawn(29046, 174232, -88020, -5110, 16384, false, 0, true);
 			weakScarlet.setIsInvul(true);
 			weakScarlet.setIsImmobilized(true);
 			weakScarlet.disableAllSkills();
 			_Zone.updateKnownList(weakScarlet);
 			activeScarlet = weakScarlet;
-			startQuestTimer("camera_19", 2400L, _scarletDummy, null, false);
-			startQuestTimer("camera_19b", 5000L, _scarletDummy, null, false);
+			
+			startQuestTimer("camera_19", 2400, _scarletDummy, null, false);
+			startQuestTimer("camera_19b", 5000, _scarletDummy, null, false);
 		}
 		else if (event.equalsIgnoreCase("camera_19"))
-			weakScarlet.teleToLocation(0x2a898, 0xfffea82c, -5110, 0);
+		{
+			weakScarlet.teleToLocation(174232, -88020, -5110, 0);//wtf?
+		}
 		else if (event.equalsIgnoreCase("camera_19b"))
 		{
 			_Zone.broadcastPacket(new SpecialCamera(_scarletDummy.getObjectId(), 800, 180, 10, 1000, 10000, 0, 0, 1, 0));
@@ -1648,7 +1653,7 @@ public class Frintezza extends AbstractNpcAI
 			L2Skill skill = SkillTable.getInstance().getInfo(5017, 1);
 			if (skill != null)
 				skill.getEffects(weakScarlet, weakScarlet);
-				
+			
 			startQuestTimer("morph_end", 6000, weakScarlet, null, false);
 			startQuestTimer("start_pc", 3000, weakScarlet, null, false);
 			startQuestTimer("start_npc", 3000, weakScarlet, null, false);
@@ -1741,10 +1746,10 @@ public class Frintezza extends AbstractNpcAI
 		else if (event.equalsIgnoreCase("morph_15"))
 		{
 			_Zone.broadcastPacket(new SocialAction(strongScarlet, 2));
-			L2Skill skill = SkillTable.getInstance().getInfo(0, 1);
+			L2Skill skill = SkillTable.getInstance().getInfo(5017, 1);
 			if (skill != null)
 				skill.getEffects(strongScarlet, strongScarlet);
-				
+			
 			startQuestTimer("morph_end", 9000, strongScarlet, null, false);
 			startQuestTimer("start_pc", 6000, strongScarlet, null, false);
 			startQuestTimer("start_npc", 6000, strongScarlet, null, false);
@@ -1821,7 +1826,7 @@ public class Frintezza extends AbstractNpcAI
 			L2Skill skill = SkillTable.getInstance().getInfo(5008, _OnSong);
 			if (skill == null)
 				return null;
-				
+			
 			if (_OnSong == 1 || _OnSong == 2 || _OnSong == 3)
 			{
 				if (frintezza != null && !frintezza.isDead() && activeScarlet != null && !activeScarlet.isDead())
@@ -1932,7 +1937,7 @@ public class Frintezza extends AbstractNpcAI
 					i = Rnd.get(2, 5);
 				else
 					i = Rnd.get(2, 4);
-					
+				
 				L2Skill skill = SkillTable.getInstance().getInfo(_skill[i][0], _skill[i][1]);
 				if (skill != null)
 				{
@@ -1958,7 +1963,7 @@ public class Frintezza extends AbstractNpcAI
 					i = Rnd.get(6, 10);
 				else
 					i = Rnd.get(6, 9);
-					
+				
 				L2Skill skill = SkillTable.getInstance().getInfo(_skill[i][0], _skill[i][1]);
 				if (skill != null)
 				{
@@ -2030,6 +2035,14 @@ public class Frintezza extends AbstractNpcAI
 			temp = (L2System.milliTime() - _LastAction);
 			if (temp > Config.DESPAWN_TIME_FRINTEZZA)
 			{
+				for (L2Character cha : _Zone.getCharactersInside())
+				{
+					if (cha != frintezza)
+					{
+						cha.enableAllSkills();
+						cha.setIsImmobilized(false);
+					}
+				}
 				_Zone.oustAllPlayers();
 				
 				cancelQuestTimers("waiting");
@@ -2159,7 +2172,7 @@ public class Frintezza extends AbstractNpcAI
 								{
 									if (party == null)
 										continue;
-										
+									
 									synchronized (_PlayersInside)
 									{
 										
@@ -2180,7 +2193,7 @@ public class Frintezza extends AbstractNpcAI
 										}
 										if (_PlayersInside.size() > 45)
 											break;
-											
+										
 									}
 									
 									_LocCycle++;
@@ -2200,7 +2213,7 @@ public class Frintezza extends AbstractNpcAI
 										continue;
 									if (!member.isInsideRadius(npc, 700, false, false))
 										continue;
-										
+									
 									synchronized (_PlayersInside)
 									{
 										if (_PlayersInside.size() > 45)
@@ -2218,7 +2231,7 @@ public class Frintezza extends AbstractNpcAI
 								_LocCycle++;
 								if (_LocCycle >= 6)
 									_LocCycle = 1;
-									
+								
 							}
 							
 						}
@@ -2249,7 +2262,7 @@ public class Frintezza extends AbstractNpcAI
 						{
 							if (party == null)
 								continue;
-								
+							
 							synchronized (_PlayersInside)
 							{
 								for (L2PcInstance member : party.getPartyMembers())
@@ -2269,7 +2282,7 @@ public class Frintezza extends AbstractNpcAI
 								}
 								if (_PlayersInside.size() > 45)
 									break;
-									
+								
 							}
 							
 							_LocCycle++;
@@ -2286,7 +2299,7 @@ public class Frintezza extends AbstractNpcAI
 		}
 		else
 			htmltext = "<html><body>Someone else is already inside the Magic Force Field. Try again later.</body></html>";
-			
+		
 		return htmltext;
 	}
 	
@@ -2401,7 +2414,7 @@ public class Frintezza extends AbstractNpcAI
 				
 				for (int i = 25150061; i <= 25150070; i++)
 					DoorTable.getInstance().getDoor(i).openMe();
-					
+				
 				startQuestTimer("room2_spawn2", 1000, npc, null, false);
 			}
 		}

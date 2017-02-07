@@ -18,7 +18,7 @@
 package net.sf.l2j.commons.mmocore;
 
 import com.l2je.extensions.L2System;
-import com.l2je.protection.ProtectionProperties;
+import com.l2je.protection.ProtectionConfig;
 
 import java.io.IOException;
 import java.net.InetAddress;

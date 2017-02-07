@@ -22,7 +22,7 @@ import com.l2je.extensions.events.EventManager;
 import com.l2je.extensions.events.TVT;
 import com.l2je.extensions.ghosts.GhostsPlayers;
 import com.l2je.extensions.ghosts.GhostsShouts;
-import com.l2je.protection.ProtectionProperties;
+import com.l2je.protection.ProtectionConfig;
 import com.l2je.protection.Punisher;
 import com.l2je.protection.crypt.Blowfish;
 import com.l2je.protection.crypt.RC5;
@@ -339,23 +339,23 @@ public class GameServer
 		}
 		
 		StringUtil.printSection("Protection System");
-		ProtectionProperties.init();
-		if(ProtectionProperties.HWID)
+		ProtectionConfig.init();
+		if(ProtectionConfig.HWID)
 		{
 			_log.info("HWIDManager: Enable.");
 			HWIDManager.getInstance();			
 		}
-		if (ProtectionProperties.RC5)
+		if (ProtectionConfig.RC5)
 		{	
 			_log.info("RC5: Enable.");       
 			RC5.getInstance();			
 		}
-		if (ProtectionProperties.BLOWFISH)
+		if (ProtectionConfig.BLOWFISH)
 		{
 			_log.info("BLOWFISH: Enable.");
 			Blowfish.getInstance();			
 		}
-		if (ProtectionProperties.PUNISHER)
+		if (ProtectionConfig.PUNISHER)
 		{
 			_log.info("PUNISHER: Enable.");
 			Punisher.getInstance();			

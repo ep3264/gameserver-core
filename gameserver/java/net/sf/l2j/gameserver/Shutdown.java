@@ -15,7 +15,7 @@
 package net.sf.l2j.gameserver;
 
 import com.l2je.extensions.ghosts.GhostsPlayers;
-import com.l2je.protection.ProtectionProperties;
+import com.l2je.protection.ProtectionConfig;
 import com.l2je.protection.hwid.HWIDManager;
 
 import java.util.logging.Level;
@@ -147,7 +147,7 @@ public class Shutdown extends Thread
 			{
 			}
 			//Save new HWIDs
-			if(ProtectionProperties.HWID){
+			if(ProtectionConfig.HWID){
 			HWIDManager.getInstance().saveHwidsToDB();
 			_log.info("New HWIDs have been saved.");
 			}

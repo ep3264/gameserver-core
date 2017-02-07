@@ -84,8 +84,6 @@ import net.sf.l2j.gameserver.taskmanager.RandomAnimationTaskManager;
 import net.sf.l2j.gameserver.templates.skills.L2SkillType;
 import net.sf.l2j.gameserver.util.Broadcast;
 
-
-
 /**
  * This class represents a Non-Player-Character in the world. They are split in :
  * <ul>
@@ -602,7 +600,7 @@ public class L2Npc extends L2Character
 					player.setLoto(i, 0);
 			}
 			showLotoWindow(player, val);
-		}	
+		}
 		else if (command.startsWith("CPRecovery"))
 		{
 			makeCPRecovery(player);
@@ -1277,7 +1275,7 @@ public class L2Npc extends L2Character
 	{
 		return (int) (getTemplate().getRewardExp() * Config.RATE_XP);
 	}
-
+	
 	/**
 	 * @return the SP Reward of this L2Npc contained in the L2NpcTemplate (modified by RATE_SP).
 	 */
@@ -1285,7 +1283,7 @@ public class L2Npc extends L2Character
 	{
 		return (int) (getTemplate().getRewardSp() * Config.RATE_SP);
 	}
-
+	
 	/**
 	 * Kill the L2Npc (the corpse disappeared after 7 seconds).<BR>
 	 * <BR>

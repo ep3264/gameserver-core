@@ -1,6 +1,6 @@
 package com.l2je.protection.hwid;
 
-import com.l2je.protection.ProtectionProperties;
+import com.l2je.protection.ProtectionConfig;
 
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
@@ -41,7 +41,7 @@ public class HWIDManager
 	
 	public void initSession(L2GameClient client, byte[] data)
 	{
-		if (ProtectionProperties.HWID)
+		if (ProtectionConfig.HWID)
 		{
 			if (data.length > 17)
 			{

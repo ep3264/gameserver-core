@@ -2,7 +2,7 @@ package com.l2je.protection;
 
 
 
-import com.l2je.protection.ProtectionProperties;
+import com.l2je.protection.ProtectionConfig;
 import com.l2je.protection.hwid.HWIDManager;
 
 import java.sql.Connection;
@@ -91,19 +91,19 @@ public class Punisher
 		}
 		else
 		{
-			if (ProtectionProperties.ON_HACK_ATTEMP.equals("hwidban") && client.getHWid() != null)
+			if (ProtectionConfig.ON_HACK_ATTEMP.equals("hwidban") && client.getHWid() != null)
 			{
 				HWIDManager.getInstance().banHwid(client);
 			}
-			else if (ProtectionProperties.ON_HACK_ATTEMP.equals("jail") && client.getActiveChar() != null)
+			else if (ProtectionConfig.ON_HACK_ATTEMP.equals("jail") && client.getActiveChar() != null)
 			{
 				client.getActiveChar().setPunishLevel(L2PcInstance.PunishLevel.JAIL, PUNISH_DURATION);
 			}
-			else if (ProtectionProperties.ON_HACK_ATTEMP.equals("acc") && client.getActiveChar() != null)
+			else if (ProtectionConfig.ON_HACK_ATTEMP.equals("acc") && client.getActiveChar() != null)
 			{
 				client.getActiveChar().setPunishLevel(L2PcInstance.PunishLevel.ACC, 0);
 			}
-			_log.warning("Punisher: Client " + client.toString() + " send bad packets and will " + ProtectionProperties.ON_HACK_ATTEMP + "ed. Reason: " + Byte.toString(reason));
+			_log.warning("Punisher: Client " + client.toString() + " send bad packets and will " + ProtectionConfig.ON_HACK_ATTEMP + "ed. Reason: " + Byte.toString(reason));
 			
 		}
 	}

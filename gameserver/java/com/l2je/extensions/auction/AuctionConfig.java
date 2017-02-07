@@ -25,7 +25,8 @@ public class AuctionConfig {
 	   private final static String FILE = "./config/extensions/auction.ini"; 
 
 	public static void init()
-	{		
+	{	
+		try{
 		    final ExProperties auctionPropeties = Config.initProperties(FILE);		
 			AUCTION_ENABLE = Boolean.parseBoolean(auctionPropeties.getProperty("AuctionEnable", "true"));
 			if (!AUCTION_ENABLE)
@@ -53,6 +54,12 @@ public class AuctionConfig {
 				AUCTION_ALLOWED_ITEM_ID[i] = Integer.parseInt(temp[i]);
 			}
 			AUCTION_COUNT_DAY_FOR_DELETE_ITEM = Integer.parseInt(auctionPropeties.getProperty("AuctionCountDayForDeleteItem", "7"));
-			AUCTION_SEE_COUNT_PRODUCTS_ON_PAGE = Integer.parseInt(auctionPropeties.getProperty("AuctionSeeCountProductsOnPage", "5"));		
+			AUCTION_SEE_COUNT_PRODUCTS_ON_PAGE = Integer.parseInt(auctionPropeties.getProperty("AuctionSeeCountProductsOnPage", "5"));
+		}
+		catch(NumberFormatException e)
+		{
+			e.printStackTrace();
+		}
 	}
+			
 }

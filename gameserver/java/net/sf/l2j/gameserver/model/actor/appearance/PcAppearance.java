@@ -14,13 +14,6 @@
  */
 package net.sf.l2j.gameserver.model.actor.appearance;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import net.sf.l2j.L2DatabaseFactory;
-import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.model.base.Sex;
 
 public final class PcAppearance

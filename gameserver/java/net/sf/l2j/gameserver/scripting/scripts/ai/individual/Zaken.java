@@ -306,7 +306,7 @@ public class Zaken extends AbstractNpcAI
 				npc.doCast(SkillTable.getInstance().getInfo(SELF_TELEPORT, 1));
 			}
 			
-			startQuestTimer("timer", 30000, npc, null, true);
+			startQuestTimer("timer", 30000, npc, null, false); // TODO:
 		}
 		
 		if (event.equalsIgnoreCase("minion_cycle"))
