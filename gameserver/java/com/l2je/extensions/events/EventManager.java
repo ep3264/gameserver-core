@@ -1,5 +1,7 @@
 package com.l2je.extensions.events;
 
+import com.l2je.extensions.events.commons.Util;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +17,7 @@ public final class EventManager
 {
 	private class AutoEventScheduler implements Runnable
 	{
-		@SuppressWarnings("unused")
+		
 		private ScheduledFuture<?> _task = null;
 		
 		public AutoEventScheduler()
@@ -35,6 +37,10 @@ public final class EventManager
 			if (getCurrentEvent() == null)
 			{
 				startEvent(getRandomEvent());
+			}
+			if(_task!=null)
+			{
+				_task.cancel(false);
 			}
 			int delayBetweenEvents = 0;
 			delayBetweenEvents = EventConfig.EVENT_MANAGER_EVENTS_DELAY + getCurrentEvent().getRunningTime();
@@ -64,6 +70,7 @@ public final class EventManager
 	
 	public EventManager()
 	{
+		_log.info("EventManager was created.");
 	}
 	
 	public void startAutoEventScheduler()
@@ -75,17 +82,19 @@ public final class EventManager
 	}
 	
 	public Event getCurrentEvent()
-	{
+	{	
 		return _currentEvent;
 	}
 	
 	public void onShutDown()
 	{
+		_log.info("EventManager shuts down.");
+		endCurrentEvent(true);
 	}
 	
 	public final void addEvent(Event event)
 	{
-		// Quest does not exist, return.
+		// Event does not exist, return.
 		if (event == null)
 		{
 			return;
@@ -149,7 +158,7 @@ public final class EventManager
 		}
 	}
 	
-	public void end(boolean inform)
+	public void endCurrentEvent(boolean inform)
 	{
 		if (getCurrentEvent() != null)
 		{
@@ -214,6 +223,10 @@ public final class EventManager
 			{
 				player.sendMessage("Вы уже зарегистрированы.");
 				getInfo(player);
+			}
+			else if(!getCurrentEvent().isRegistering())
+			{
+				player.sendMessage("Регистрация закончена.");
 			}
 			else if (getCurrentEvent().addPlayer(player))
 			{
@@ -299,7 +312,7 @@ public final class EventManager
 				{
 					if (getCurrentEvent() != null)
 					{
-						end(true);
+						endCurrentEvent(true);
 					}
 				}
 				Map<String, String> variables = new HashMap<>();
@@ -309,7 +322,7 @@ public final class EventManager
 					StringUtil.append(sb, event.getId(), "_", event.getName(), ";");
 				}
 				variables.put("%eventsList%", sb.toString());
-				CustomUtil.sendHtml(player, HTML_FILE_PATH + "index.htm", variables);
+				Util.sendHtml(player, HTML_FILE_PATH + "index.htm", variables);
 				
 			}
 		}, 0);

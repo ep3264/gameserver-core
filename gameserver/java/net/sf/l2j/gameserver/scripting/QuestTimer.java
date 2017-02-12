@@ -87,15 +87,10 @@ public class QuestTimer
 	
 	public final void cancel()
 	{
-		if (_quest instanceof Frintezza)
-		{
-			_log.info("Cancel Frintezza task questtimer: "  + _name);
-					
-		}
+		_isActive = false;
 		if (_schedular != null)
 		{
 			_schedular.cancel(false);
-			_schedular = null;
 		}
 		
 		_quest.removeQuestTimer(this);

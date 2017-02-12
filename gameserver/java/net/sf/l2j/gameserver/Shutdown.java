@@ -14,6 +14,7 @@
  */
 package net.sf.l2j.gameserver;
 
+import com.l2je.extensions.events.EventManager;
 import com.l2je.extensions.ghosts.GhostsPlayers;
 import com.l2je.protection.ProtectionConfig;
 import com.l2je.protection.hwid.HWIDManager;
@@ -116,7 +117,8 @@ public class Shutdown extends Thread
 		if (this == SingletonHolder._instance)
 		{
 			StringUtil.printSection("Under " + MODE_TEXT[_shutdownMode] + " process");
-			
+			//End events
+			EventManager.getInstance().onShutDown();
 			// disconnect players
 			try
 			{
@@ -146,11 +148,12 @@ public class Shutdown extends Thread
 			catch (Throwable t)
 			{
 			}
-			//Save new HWIDs
-			if(ProtectionConfig.HWID){
-			HWIDManager.getInstance().saveHwidsToDB();
-			_log.info("New HWIDs have been saved.");
-			}
+			// Save new HWIDs
+			if (ProtectionConfig.HWID)
+			{
+				HWIDManager.getInstance().saveHwidsToDB();
+				_log.info("New HWIDs have been saved.");
+			}			
 			// Seven Signs data is now saved along with Festival data.
 			if (!SevenSigns.getInstance().isSealValidationPeriod())
 				SevenSignsFestival.getInstance().saveFestivalData(false);

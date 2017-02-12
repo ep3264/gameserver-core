@@ -70,13 +70,16 @@ public class Auction
 			while (iterator.hasNext())
 			{
 				AuctionItem aItem = iterator.next();
-				if (aItem.trader_objId == player.getObjectId() && aItem.alreadySell)
+				if (aItem.trader_objId == player.getObjectId())
 				{
-					sendPayment(player, aItem);
-				}
-				else if (aItem.isOverdue())
-				{
-					refundItem(player, aItem);
+					if (aItem.alreadySell)
+					{
+						sendPayment(player, aItem);
+					}
+					else if (aItem.isOverdue())
+					{
+						refundItem(player, aItem);
+					}
 				}
 			}
 			return;
@@ -92,7 +95,7 @@ public class Auction
 		player.sendMessage("Один из ваших товаров на Аукционе не был продан за выделенный срок.");
 		if (AuctionConfig.AUCTION_LOG)
 		{
-			_log.info("Auction: Item refund: " + item.trader_objId);
+			_log.info("Auction: Item refund: Item objId: "+item.getObjectId() +" Owner objId:"+ player.getObjectId());
 		}
 		transferItem(AuctionInventory.getInstance(), player.getInventory(), item.getObjectId(), player);
 		this.removeItem(item);
@@ -234,30 +237,24 @@ public class Auction
 	
 	private static String getPagesNum(L2PcInstance player, int page, int type, int countItems)
 	{
-		StringBuffer stringBuffer = new StringBuffer("<table width=270><tr><td align=center><table><tr>");
+		StringBuffer sb = new StringBuffer();
+		sb.append("<table width=270><tr><td align=center><table><tr>");
 		int countPages = (int) Math.ceil((double) countItems / (double) AuctionConfig.AUCTION_SEE_COUNT_PRODUCTS_ON_PAGE);
 		
 		for (int i = 1; i <= countPages; ++i)
 		{
 			if (i != page)
 			{
-				stringBuffer.append("<td width=15 align=center><a action=\"bypass -h npc_%objectId%_auction page ");
-				stringBuffer.append(i);
-				stringBuffer.append(" ");
-				stringBuffer.append(type);
-				stringBuffer.append("\">");
-				stringBuffer.append(i);
-				stringBuffer.append("</a></td>");
+				StringUtil.append(sb, "<td width=15 align=center><a action=\"bypass -h npc_%objectId%_auction page ",
+					i, " ", type, "\">", i, "</a></td>" );
 			}
 			else
 			{
-				stringBuffer.append("<td width=15 align=center>");
-				stringBuffer.append(i);
-				stringBuffer.append("</td>");
+				StringUtil.append(sb, "<td width=15 align=center>", i, "</td>");
 			}
 		}
-		stringBuffer.append("</tr></table></td></tr></table>");
-		return stringBuffer.toString();
+		sb.append("</tr></table></td></tr></table>");
+		return sb.toString();
 	}
 	
 	private String getPageAddProduct(L2PcInstance player, int page)
@@ -305,36 +302,27 @@ public class Auction
 	
 	private static String getItemInfoForAddProduct(ItemInstance item, boolean urlSell)
 	{
-		StringBuffer str = new StringBuffer("<table width=300><tr>");
-		str.append("<td width=32><img src=\"");
-		str.append(ItemIcons.getInstance().getIcon(item.getItemId()));
-		str.append("\" width=32 height=32 align=left></td>");
-		str.append( "<td width=250><table width=250>");
-		str.append("<tr><td> ");
-		str.append(item.getName());
-		str.append(" "); 
+		StringBuffer sb = new StringBuffer();
+		StringUtil.append(sb, "<table width=300><tr>","<td width=32><img src=\"",
+			ItemIcons.getInstance().getIcon(item.getItemId()),
+			"\" width=32 height=32 align=left></td><td width=250><table width=250><tr><td> ",item.getName()," ");
 		if(item.getEnchantLevel() > 0)
 		{
-			str.append("<font color=LEVEL> +");
-			str.append(item.getEnchantLevel());
-			str.append("</font>") ;
+			StringUtil.append(sb,"<font color=LEVEL> +",item.getEnchantLevel(),"</font>");
 		}
-		str.append("</td></tr>");
-		str.append( getAugment(item));
+		StringUtil.append(sb, "</td></tr>", getAugment(item));
 		if (urlSell)
 		{
-			str.append("<tr><td><a action=\"bypass -h npc_%objectId%_auction chose ");
-			str.append( item.getObjectId());
-			str.append("\">Продать</a></td></tr>");
-		}
-		
-		str.append("</table></td></tr></table>");
-		return str.toString();
+			StringUtil.append(sb,"<tr><td><a action=\"bypass -h npc_%objectId%_auction chose ",
+				item.getObjectId(),"\">Продать</a></td></tr>");
+		}		
+		sb.append("</table></td></tr></table>");
+		return sb.toString();
 	}
 	
 	static String getAugment(ItemInstance item)
 	{
-		StringBuffer augmentInfo = new StringBuffer();
+		StringBuffer sb = new StringBuffer();
 		if (AuctionConfig.ALLOW_AUGMENT_ITEMS)
 		{
 			if (item.getAugmentation() != null && item.getAugmentation().getSkill() != null)
@@ -352,72 +340,56 @@ public class Auction
 				else
 				{
 					type = "Passive";
-				}				
-				augmentInfo.append("<tr><td><font color=603ca9>Аугмент:</font> <font color=3caa3c>");
-				augmentInfo.append(skill.getName());
-				augmentInfo.append(" - ");
-				augmentInfo.append(skill.getLevel());
-				augmentInfo.append(" level</font> <font color=00ff00>[");
-				augmentInfo.append(type);
-				augmentInfo.append( "]</font></td></tr>");
+				}
+				StringUtil.append(sb, "<tr><td><font color=603ca9>Аугмент:</font> <font color=3caa3c>",
+					skill.getName(), " - ", skill.getLevel()," level</font> <font color=00ff00>[",
+					type, "]</font></td></tr>");
 			}
 			else
 			{
-				augmentInfo.append("<tr><td><font color=603ca9>Аугмент:</font> <font color=3caa3c>нет</font></td></tr>");
+				sb.append("<tr><td><font color=603ca9>Аугмент:</font> <font color=3caa3c>нет</font></td></tr>");
 			}
 		}
 		
-		return augmentInfo.toString();
+		return sb.toString();
 	}
 	
 	private static String getPagesForAddProduct(int size, int page)
 	{
-		StringBuffer str =  new StringBuffer("<table width=270><tr><td align=center><table><tr>");
+		StringBuffer sb =  new StringBuffer("<table width=270><tr><td align=center><table><tr>");
 		
 		for (int i = 1; i <= Math.ceil((double) size / (double) AuctionConfig.AUCTION_SEE_COUNT_PRODUCTS_ON_PAGE); ++i)
 		{
 			if (i != page)
 			{
-				str.append( "<td width=12 align=center><a action=\"bypass -h npc_%objectId%_auction create_product ");
-				str.append( i);
-				str.append("\">");
-				str.append(i);
-				str.append("</a></td>");
+				StringUtil.append(sb,"<td width=12 align=center><a action=\"bypass -h npc_%objectId%_auction create_product ",
+					i, "\">", i, "</a></td>" );
 			}
 			else
 			{
-				str.append("<td width=12 align=center>");
-				str.append(i );
-				str.append("</td>");
+				StringUtil.append(sb, "<td width=12 align=center>",i, "</td>");
 			}
 		}
-		str.append( "</tr></table></td></tr></table>");
-		return str.toString();
+		sb.append( "</tr></table></td></tr></table>");
+		return sb.toString();
 	}	
 
 	private static String getChoseAddProduct(ItemInstance item)
 	{
-		StringBuffer str = new StringBuffer();
-		str.append("<table width=250><tr><td width=40 align=right><img src=\"");		
-		str.append( ItemIcons.getInstance().getIcon(item.getItemId()));
-		str.append("\" width=32 height=32 align=right></td><td width=230><table width=230><tr><td> ");
-		str.append(item.getName());
-		str.append(" ");
+		StringBuffer sb = new StringBuffer();
+		StringUtil.append(sb, "<table width=250><tr><td width=40 align=right><img src=\"",
+			ItemIcons.getInstance().getIcon(item.getItemId()),"\" width=32 height=32 align=right></td><td width=230><table width=230><tr><td> ",
+			item.getName(), " ");
 		if(item.getEnchantLevel() > 0)
 		{
-			str.append("<font color=LEVEL> +");
-			str.append( item.getEnchantLevel());
-			str.append("</font>"); 		
+			StringUtil.append(sb,"<font color=LEVEL> +",item.getEnchantLevel(),"</font>");		
 		}
-		str.append( "</td></tr>");
-		str.append(getAugment(item));
-		str.append( "</table></td></tr></table><br><table width=300><tr><tr><td align=\"right\">Валюта: </td><td align=\"left\"><combobox width=100 var=\"reward\" list=\"");
-		str.append(getAvailablePrice());
-		str.append("\"></td></tr><tr><td align=\"right\">Цена: </td><td align=\"left\"><edit var=\"count\" width=100 height=10></td></tr></tr></table><br><table width=300><tr><td align=center width=132><button value=\"Выставить на продажу\" action=\"bypass -h npc_%objectId%_auction chose_accept ");
-		str.append(item.getObjectId());
-		str.append(" $count $reward\" width=135 height=24 back=\"L2UI_CH3.bigbutton3_down\" fore=\"L2UI_CH3.bigbutton3\"></td>");
-		str.append("<td align=center width=132><button value=\"Отказаться\" action=\"bypass -h npc_%objectId%_auction page 1 0\" width=135 height=24 back=\"L2UI_CH3.bigbutton3_down\" fore=\"L2UI_CH3.bigbutton3\"></td></tr></table>");
-		return str.toString();
+		StringUtil.append(sb, "</td></tr>",getAugment(item),
+			"</table></td></tr></table><br><table width=300><tr><tr><td align=\"right\">Валюта: </td><td align=\"left\"><combobox width=100 var=\"reward\" list=\"",
+			getAvailablePrice(), "\"></td></tr><tr><td align=\"right\">Цена: </td><td align=\"left\"><edit var=\"count\" width=100 height=10></td></tr></tr></table><br><table width=300><tr><td align=center width=132><button value=\"Выставить на продажу\" action=\"bypass -h npc_%objectId%_auction chose_accept ",
+			item.getObjectId(),
+			" $count $reward\" width=135 height=24 back=\"L2UI_CH3.bigbutton3_down\" fore=\"L2UI_CH3.bigbutton3\"></td><td align=center width=132><button value=\"Отказаться\" action=\"bypass -h npc_%objectId%_auction page 1 0\" width=135 height=24 back=\"L2UI_CH3.bigbutton3_down\" fore=\"L2UI_CH3.bigbutton3\"></td></tr></table>");
+		return sb.toString();
 	}
 	
 	private static String getAvailablePrice()
@@ -609,6 +581,13 @@ public class Auction
 		}
 		return false;
 	}
+	/**
+	 * Выставить айтем на продажу
+	 * @param player
+	 * @param item
+	 * @param id_price
+	 * @param price
+	 */
 	public void choseAccept(L2PcInstance player, ItemInstance item, int id_price, int price)
 	{
 		if(payAuctioneer(player,item,id_price,price))	
@@ -628,7 +607,14 @@ public class Auction
 			Broadcast.toAllOnlinePlayers(new CreatureSay(0, Say2.CRITICAL_ANNOUNCE, "", message.toString()));
 		}
 	}
-	
+	/**
+	 * Перенести айтем с инвентаря продавца в инветарь аукциона
+	 * @param src
+	 * @param dst
+	 * @param objId
+	 * @param player
+	 * @return
+	 */
 	private static ItemInstance transferItem(ItemContainer src, ItemContainer dst, int objId, L2PcInstance player)
 	{
 		ItemInstance item = src.getItemByObjectId(objId);
@@ -664,7 +650,11 @@ public class Auction
 	{
 		return player.getInventory().getItemByItemId(item_id) != null ? player.getInventory().getItemByItemId(item_id).getCount() : 0;
 	}
-	
+	/**
+	 * Оплатить айтем
+	 * @param player покупайтель
+	 * @param item айтем
+	 */
 	private void buyItem(L2PcInstance player, AuctionItem item)
 	{
 		if (!haveCountItem(player, item.id_price, item.price))
@@ -678,27 +668,18 @@ public class Auction
 				player.destroyItemByItemId("Auction buy item.", item.id_price, item.price, (L2Object) null, true);
 				transferItem(AuctionInventory.getInstance(), player.getInventory(), item.getObjectId(), player);
 				sendPayment(item);
+				if (AuctionConfig.AUCTION_LOG)
+				{
+					_log.info("Auction: Item buy: Item objId: "+item.getObjectId() +" Buyer objId:"+ player.getObjectId());
+				}
 			}
 			catch (Exception ex)
 			{
 				ex.printStackTrace();
-			}
-			
+			}			
 		}
-	}
-	
-	private void sendPayment(L2PcInstance player, AuctionItem item)
-	{
-		player.sendMessage("Один из ваших товаров на Аукционе был продан.");
-		if (AuctionConfig.AUCTION_LOG)
-		{
-			_log.info("Auction: Item sold: " + item.trader_objId);
-		}
-		
-		player.addItem("Auction payment.", item.id_price, item.price, (L2Object) null, true);
-		this.removeItem(item);
-	}
-	
+	}	
+
 	private void sendPayment(AuctionItem item)
 	{
 		L2PcInstance player = L2World.getInstance().getPlayer(item.trader_objId);
@@ -712,7 +693,31 @@ public class Auction
 		}
 		
 	}
+	/**
+	 * Продавец онлайн, отправить оплату
+	 * @param player
+	 * @param item
+	 */
+	private void sendPayment(L2PcInstance player, AuctionItem item)
+	{
+		ItemInstance itemInstance =player.addItem("Auction payment.", item.id_price, item.price, (L2Object) null, true);
+		if(itemInstance==null)
+		{
+			_log.info("Auction Item sold error: Item objId: "+item.getObjectId() +" Trader objId:"+ item.trader_objId);
+		}
+		this.removeItem(item);
+		player.sendMessage("Один из ваших товаров на Аукционе был продан.");
+		if (AuctionConfig.AUCTION_LOG)
+		{
+			_log.info("Auction Item sold: Item objId: "+item.getObjectId() +" Trader objId:"+ item.trader_objId);
+		}		
+	}
 	
+	/**
+	 * Продавец оффлайн, установить, что айтем продан и отправить продавцу оплату при заходе в игру
+	 * @param item
+	 * @param insertToBD
+	 */
 	private static void setSendPayment(AuctionItem item, boolean insertToBD)
 	{
 		Connection con = null;
@@ -751,9 +756,7 @@ public class Auction
 		
 		item.alreadySell = true;
 	}
-	
-
-	
+		
 	private void removeFromSale(L2PcInstance player, AuctionItem item)
 	{
 		transferItem(AuctionInventory.getInstance(), player.getInventory(), item.getObjectId(), player);

@@ -16,10 +16,10 @@ package net.sf.l2j.gameserver;
 
 import com.l2je.extensions.auction.Auction;
 import com.l2je.extensions.auction.AuctionConfig;
-import com.l2je.extensions.events.EW;
 import com.l2je.extensions.events.EventConfig;
 import com.l2je.extensions.events.EventManager;
-import com.l2je.extensions.events.TVT;
+import com.l2je.extensions.events.ew.EnchantWar;
+import com.l2je.extensions.events.tvt.TvT;
 import com.l2je.extensions.ghosts.GhostsPlayers;
 import com.l2je.extensions.ghosts.GhostsShouts;
 import com.l2je.protection.ProtectionConfig;
@@ -285,8 +285,8 @@ public class GameServer
 		StringUtil.printSection("Events");
 		EventConfig.init();
 		EventManager.getInstance();
-		new TVT();
-		new EW();
+		new TvT();
+		new EnchantWar();
 		StringUtil.printSection("Quests & Scripts");
 		ScriptManager.getInstance();
 		
@@ -298,7 +298,8 @@ public class GameServer
 			BoatInnadrilTour.load();
 			BoatRunePrimeval.load();
 			BoatTalkingGludin.load();
-		}		
+		}
+		EventManager.getInstance();
 		if(EventConfig.AUTO_EVENT_SCHEDULER)
 		{
 			EventManager.getInstance().startAutoEventScheduler();

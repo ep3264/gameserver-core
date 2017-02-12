@@ -52,7 +52,7 @@ import net.sf.l2j.commons.random.Rnd;
 import net.sf.l2j.gameserver.scripting.scripts.ai.AbstractNpcAI;
 
 /**
- * @Addapted Reborn12, Dandilo
+ * @Addapted 
  */
 public class Frintezza extends AbstractNpcAI
 {
