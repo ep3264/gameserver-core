@@ -14,7 +14,7 @@
  */
 package net.sf.l2j.gameserver.handler.admincommandhandlers;
 
-import com.l2je.extensions.PremiumAccount;
+import com.l2je.extensions.PremiumManager;
 
 import net.sf.l2j.gameserver.handler.IAdminCommandHandler;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
@@ -42,7 +42,7 @@ public class AdminPremium implements IAdminCommandHandler
 			if(activeChar.getTarget() instanceof L2PcInstance)
 			{
 				L2PcInstance target  = (L2PcInstance) activeChar.getTarget();
-				PremiumAccount.addPremiumServices(target, target.getAccountName(), 1);
+				PremiumManager.addPremiumServices(target, target.getAccountName(), 1);
 			}
 		}
 		else if (command.equals("admin_unset_premium")){

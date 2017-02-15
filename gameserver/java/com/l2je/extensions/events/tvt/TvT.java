@@ -28,7 +28,7 @@ public class TvT extends CombatEvent
 	public TvT()
 	{
 		super();
-		setName("TVT");
+		setName("TvT");
 		setId(EventConfig.TVT_ID);
 	}
 	

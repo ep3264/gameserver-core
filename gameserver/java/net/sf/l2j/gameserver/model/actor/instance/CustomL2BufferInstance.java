@@ -112,7 +112,7 @@ public class CustomL2BufferInstance extends L2NpcInstance
 				player.sendMessage("You can't use buffer in PvP, Duel, Olympiad or Siege mode.");
 				return;
 			}
-			final L2Character target = (targetType.equalsIgnoreCase("pet")) ? player.getPet() : player;
+			final L2Character target = (targetType.equals("pet")) ? player.getPet() : player;
 			if (target == null)
 			{
 				player.sendMessage("У вас нет питомца.");
@@ -267,12 +267,11 @@ public class CustomL2BufferInstance extends L2NpcInstance
 				final int cost = 100000;// getFee(scheme.getValue());
 				StringUtil.append(sb, "<font color=\"LEVEL\"><a action=\"bypass -h npc_%objectId%_givebuffs ", targetType, " ", scheme.getKey(), " ", cost, "\">", scheme.getKey(), " (", scheme.getValue().size(), " skill(s))</a>", ((cost > 0) ? " - Стоимость Adena: " + cost : ""), "</font><br1>");
 			}
-		}
-		
+		}		
 		final NpcHtmlMessage html = new NpcHtmlMessage(0);
 		html.setFile(getHtmlPath(getNpcId(), 8));
 		html.replace("%schemes%", sb.toString());
-		html.replace("%targettype%", (targetType.equalsIgnoreCase("pet") ? "&nbsp;<a action=\"bypass -h npc_%objectId%_LoadList player\">Вы</a>&nbsp;|&nbsp;Ваш питомец" : "Вы&nbsp;|&nbsp;<a action=\"bypass -h npc_%objectId%_LoadList pet\">Ваш питомец</a>"));
+		html.replace("%targettype%", (targetType.equals("pet") ? "&nbsp;<a action=\"bypass -h npc_%objectId%_LoadList player\">Вы</a>&nbsp;|&nbsp;Ваш питомец" : "Вы&nbsp;|&nbsp;<a action=\"bypass -h npc_%objectId%_LoadList pet\">Ваш питомец</a>"));
 		html.replace("%objectId%", getObjectId());
 		player.sendPacket(html);
 	}

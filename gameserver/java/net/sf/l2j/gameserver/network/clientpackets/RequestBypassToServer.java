@@ -14,6 +14,8 @@
  */
 package net.sf.l2j.gameserver.network.clientpackets;
 
+import com.l2je.extensions.MenuManager;
+import com.l2je.extensions.PremiumManager;
 import com.l2je.extensions.events.EventManager;
 
 import java.util.StringTokenizer;
@@ -95,27 +97,7 @@ public final class RequestBypassToServer extends L2GameClientPacket
 					GMAudit.auditGMAction(activeChar.getName() + " [" + activeChar.getObjectId() + "]", _command, (activeChar.getTarget() != null ? activeChar.getTarget().getName() : "no-target"));
 				
 				ach.useAdminCommand(_command, activeChar);
-			}
-			else if (_command.startsWith("player_help "))
-			{
-				playerHelp(activeChar, _command.substring(12));
-			}
-			else if (_command.startsWith("event_"))
-			{
-				String command =_command.substring(6).trim();
-				if(command.equals("info"))
-				{
-					EventManager.getInstance().getInfo(activeChar);
-				}
-				else if(command.equals("join"))
-				{
-					EventManager.getInstance().joinToEvent(activeChar);
-				}
-				else if(command.equals("leave"))
-				{
-					EventManager.getInstance().leaveFromEvent(activeChar);
-				}
-			}		
+			}			
 			else if (_command.startsWith("npc_"))
 			{
 				if (!activeChar.validateBypass(_command))
@@ -149,6 +131,25 @@ public final class RequestBypassToServer extends L2GameClientPacket
 				catch (NumberFormatException nfe)
 				{
 				}
+			}
+			else if (_command.startsWith("menu_"))
+			{
+				String command =_command.substring(5).trim();
+				MenuManager.getInstance().onBypassFeedback(activeChar,command);
+			}
+			else if (_command.startsWith("player_help "))
+			{
+				playerHelp(activeChar, _command.substring(12));
+			}
+			else if (_command.startsWith("event_"))
+			{
+				String command =_command.substring(6).trim();
+				EventManager.getInstance().onBypassFeedback(activeChar,command);
+			}
+			else if (_command.startsWith("premium"))
+			{
+				String command =_command.substring(7).trim();
+				PremiumManager.onBypassFeedback(activeChar,command);
 			}
 			// Navigate throught Manor windows
 			else if (_command.startsWith("manor_menu_select?"))

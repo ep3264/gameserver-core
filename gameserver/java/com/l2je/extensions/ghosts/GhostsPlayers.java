@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.concurrent.ScheduledFuture;
 import java.util.logging.Logger;
 import net.sf.l2j.Config;
@@ -71,7 +72,7 @@ public class GhostsPlayers
 	//private static final String DELETE_GHOST = "DELETE FROM `ghosts_players` WHERE `obj_Id`=?";
 	private static final String DELETE_GHOSTS = "TRUNCATE TABLE ghosts_players";
     //private LinkedList<Location> locs = new LinkedList<>();
-    private final HashSet<L2PcInstance> _ghosts = new HashSet<>();
+    private HashSet<L2PcInstance> _ghosts = new HashSet<>();
     boolean _changeTable=false;
 	private static class SingletonHolder
 	{
@@ -83,7 +84,29 @@ public class GhostsPlayers
 		return SingletonHolder._instance;
 	}
 		
+	//TODO 
+	private L2PcInstance getRandomGhost()
+	{
+		Random random  = new Random();
+		if (_ghosts.size() > 0)
+		{
+			L2PcInstance[] arrGhosts = _ghosts.toArray(new L2PcInstance[_ghosts.size()]);
+			return arrGhosts[random.nextInt(arrGhosts.length)];
+		}
+		return null;	
+	}
 	
+	public String getRandomGhostName()
+	{
+		L2PcInstance l2PcInstance = getRandomGhost();
+		if (l2PcInstance == null)
+		{
+			return "donater";
+		}
+		
+		return l2PcInstance.getName();
+		
+	}
 	protected GhostsPlayers()
 	{		
 	}

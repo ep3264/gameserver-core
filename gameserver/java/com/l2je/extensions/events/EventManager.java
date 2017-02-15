@@ -244,7 +244,23 @@ public final class EventManager
 		}
 	}
 	
-	public void adminByPass(L2PcInstance player, String command)
+	public  void onBypassFeedback(L2PcInstance activeChar, String command)
+	{
+		if (command.equals("join"))
+		{
+			joinToEvent(activeChar);
+		}
+		else if (command.equals("info"))
+		{
+			getInfo(activeChar);
+		}
+		else if (command.equals("leave"))
+		{
+			leaveFromEvent(activeChar);
+		
+		}
+	}
+	public void onBypassFeedbackAdmin(L2PcInstance player, String command)
 	{
 		ThreadPool.schedule(new Runnable()
 		{
@@ -253,11 +269,11 @@ public final class EventManager
 			{
 				if (EventConfig.EVENT_MANAGER_DEBUG)
 					debug("AdminByPass: " + player.getName() + " Command " + command);
-				if (command.equalsIgnoreCase("reload"))
+				if (command.equals("reload"))
 				{
 					EventConfig.init();
 				}
-				else if (command.equalsIgnoreCase("startRandom"))
+				else if (command.equals("startRandom"))
 				{
 					if (getCurrentEvent() != null)
 					{
@@ -301,14 +317,14 @@ public final class EventManager
 						}
 					}
 				}
-				else if (command.equalsIgnoreCase("skip"))
+				else if (command.equals("skip"))
 				{
 					if (getCurrentEvent() != null)
 					{
 						getCurrentEvent().skip(player);
 					}
 				}
-				else if (command.equalsIgnoreCase("end"))
+				else if (command.equals("end"))
 				{
 					if (getCurrentEvent() != null)
 					{

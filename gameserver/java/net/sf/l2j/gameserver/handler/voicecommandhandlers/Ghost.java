@@ -14,7 +14,6 @@
  */
 package net.sf.l2j.gameserver.handler.voicecommandhandlers;
 
-import com.l2je.extensions.ghosts.GhostsPlayers;
 
 import net.sf.l2j.Config;
 import net.sf.l2j.gameserver.handler.IVoicedCommandHandler;
@@ -31,9 +30,7 @@ public class Ghost implements IVoicedCommandHandler
 		"ghost"				
 	};
 
-	/* (non-Javadoc)
-	 * @see net.sf.l2j.gameserver.handler.IVoicedCommandHandler#useVoicedCommand(java.lang.String, net.sf.l2j.gameserver.model.actor.instance.L2PcInstance, java.lang.String)
-	 */
+
 	@Override
 	public boolean useVoicedCommand(String command, L2PcInstance activeChar, String params)
 	{
@@ -44,9 +41,7 @@ public class Ghost implements IVoicedCommandHandler
 		return true;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.l2j.gameserver.handler.IVoicedCommandHandler#getVoicedCommandList()
-	 */
+
 	@Override
 	public String[] getVoicedCommandList()
 	{

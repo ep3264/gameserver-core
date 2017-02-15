@@ -14,7 +14,7 @@
  */
 package net.sf.l2j.gameserver.model.actor.instance;
 
-import com.l2je.extensions.ColorsManager;
+import com.l2je.extensions.ColorManager;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -152,14 +152,14 @@ public class CustomL2ColorsInstance extends L2NpcInstance
 	private static void setNameColor(L2PcInstance player, int color)
 	{
 		player.getAppearance().setNameColor(color);
-		ColorsManager.getInstance().storeNameColor(player);
+		ColorManager.getInstance().storeNameColor(player);
 		player.broadcastUserInfo();
 	}
 	
 	private static void setTitleColor(L2PcInstance player, int color)
 	{
 		player.getAppearance().setTitleColor(color);
-		ColorsManager.getInstance().storeTitleColor(player);
+		ColorManager.getInstance().storeTitleColor(player);
 		player.broadcastUserInfo();
 	}
 	

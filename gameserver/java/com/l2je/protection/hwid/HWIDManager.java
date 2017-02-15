@@ -13,6 +13,7 @@ import java.util.LinkedList;
 import java.util.logging.Logger;
 
 import net.sf.l2j.L2DatabaseFactory;
+import net.sf.l2j.commons.lang.StringUtil;
 import net.sf.l2j.gameserver.network.L2GameClient;
 
 public class HWIDManager
@@ -60,12 +61,32 @@ public class HWIDManager
 					client.banByHwid();
 					_log.warning("Banned HWID: " + client.getHWid() + ". Account:" + client.getAccountName());
 				}
+				ipCheck(client);
 			}
 			else
 			{
 				_log.warning("Bad HWID. Account:" + client.getAccountName());
 			}
 			
+		}
+	}
+	
+	/**
+	 * Проверка привязки по ip
+	 * @param client
+	 */
+	private static void ipCheck(L2GameClient client)
+	{
+		String ipBlock = client.getAccountData().getString("ip", "0");
+		if (!ipBlock.equals("0"))
+		{
+			if (!ipBlock.equals(client.getConnection().getInetAddress().getHostAddress()))
+			{
+				client.closeNow();
+				StringBuffer sb = new StringBuffer();
+				StringUtil.append(sb, "Bad ip for:", client.getAccountName(), " ", client.getConnection().getInetAddress().getHostAddress(), ". Must be - " + ipBlock);
+				_log.warning(sb.toString());
+			}
 		}
 	}
 	

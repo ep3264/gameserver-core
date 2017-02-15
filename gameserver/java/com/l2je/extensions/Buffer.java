@@ -237,23 +237,23 @@ public class Buffer
 					// Illegal action
 				}
 			}
-			else if (action.equalsIgnoreCase("mbuff"))
+			else if (action.equals("mbuff"))
 			{
 				getBuffSet(l2Character, MBUFF);
 			}
-			else if (action.equalsIgnoreCase("fbuff"))
+			else if (action.equals("fbuff"))
 			{
 				getBuffSet(l2Character, FBUFF);
 			}
-			else if (action.equalsIgnoreCase("dbuff"))
+			else if (action.equals("dbuff"))
 			{
 				getBuffSet(l2Character, DAGGER_BUFFS);
 			}
-			else if (action.equalsIgnoreCase("tbuff"))
+			else if (action.equals("tbuff"))
 			{
 				getBuffSet(l2Character, TANK_BUFFS);
 			}
-			else if (action.equalsIgnoreCase("vipfbuff"))
+			else if (action.equals("vipfbuff"))
 			{
 				if (activeChar.getPremiumService() > 0)
 				{
@@ -264,7 +264,7 @@ public class Buffer
 					getBuffSet(l2Character, VIP_FBUFF);
 				}
 			}
-			else if (action.equalsIgnoreCase("vipmbuff"))
+			else if (action.equals("vipmbuff"))
 			{
 				if (activeChar.getPremiumService() > 0)
 				{
@@ -275,12 +275,12 @@ public class Buffer
 					getBuffSet(l2Character, VIP_MBUFF);
 				}
 			}
-			else if (action.equalsIgnoreCase("heal"))
+			else if (action.equals("heal"))
 			{
 				l2Character.setCurrentHpMp(l2Character.getMaxHp(), l2Character.getMaxMp());
 				l2Character.setCurrentCp(l2Character.getMaxCp());
 			}
-			else if (action.equalsIgnoreCase("cancel"))
+			else if (action.equals("cancel"))
 			{
 				l2Character.stopAllEffectsExceptThoseThatLastThroughDeath();
 			}

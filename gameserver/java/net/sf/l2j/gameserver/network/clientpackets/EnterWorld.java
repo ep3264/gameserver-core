@@ -14,6 +14,7 @@
  */
 package net.sf.l2j.gameserver.network.clientpackets;
 
+import com.l2je.extensions.PremiumManager;
 import com.l2je.extensions.auction.Auction;
 import com.l2je.extensions.auction.AuctionConfig;
 import com.l2je.extensions.events.EventManager;
@@ -320,20 +321,13 @@ public class EnterWorld extends L2GameClientPacket
 			sendPacket(html);
 		}
 		// Check premium state
-		if (activeChar.getPremiumService() > 0)
+		if (activeChar.isPremium())
 		{
-			if (System.currentTimeMillis() > activeChar.getPremiumService())
-				activeChar.setPremiumService(0);
-			else
+			if (Config.SHOW_PREMIUM_STATE_ON_ENTER)
 			{
-				activeChar.setPremiumService(activeChar.getPremiumService());
-				if (Config.SHOW_PREMIUM_STATE_ON_ENTER)
-				{
-					SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-					activeChar.sendMessage("Премиум до: "+ String.valueOf(format.format(activeChar.getPremiumService())));
-				}
-			}			
-		}
+				activeChar.sendMessage("Премиум до: " + PremiumManager.getPremiumEndDate(activeChar));
+			}
+		}	
 		// Check auction
 		if (AuctionConfig.AUCTION_ENABLE)
 		{

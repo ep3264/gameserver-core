@@ -41,12 +41,12 @@ public class Exp implements IVoicedCommandHandler
 	public boolean useVoicedCommand(String command, L2PcInstance activeChar, String params)
 	{
 		// TODO Auto-generated method stub
-		if(command.equalsIgnoreCase("expoff"))
+		if(command.equals("expoff"))
 		{
 			activeChar.setStopExp(true);
 			activeChar.sendMessage("Опыт выключен.");
 		}
-		else if(command.equalsIgnoreCase("expon"))
+		else if(command.equals("expon"))
 		{
 		   activeChar.setStopExp(false);
 		   activeChar.sendMessage("Опыт включен.");

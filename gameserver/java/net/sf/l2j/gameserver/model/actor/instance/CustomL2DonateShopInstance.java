@@ -14,26 +14,21 @@
  */
 package net.sf.l2j.gameserver.model.actor.instance;
 
-import com.l2je.extensions.PremiumAccount;
+import com.l2je.extensions.PremiumManager;
 
-import java.text.SimpleDateFormat;
+
 import java.util.StringTokenizer;
 
-import net.sf.l2j.Config;
 import net.sf.l2j.commons.lang.StringUtil;
-import net.sf.l2j.gameserver.datatables.ItemTable;
 import net.sf.l2j.gameserver.model.actor.template.NpcTemplate;
-import net.sf.l2j.gameserver.model.item.instance.ItemInstance;
-import net.sf.l2j.gameserver.network.SystemMessageId;
 import net.sf.l2j.gameserver.network.serverpackets.NpcHtmlMessage;
-import net.sf.l2j.gameserver.network.serverpackets.SystemMessage;
+
 
 /**
  * @author user
  */
 public class CustomL2DonateShopInstance extends L2NpcInstance
-{
-	
+{	
 	/**
 	 * @param objectId
 	 * @param template
@@ -41,7 +36,6 @@ public class CustomL2DonateShopInstance extends L2NpcInstance
 	public CustomL2DonateShopInstance(int objectId, NpcTemplate template)
 	{
 		super(objectId, template);
-		// TODO Auto-generated constructor stub
 	}
 	
 	@Override
@@ -88,67 +82,19 @@ public class CustomL2DonateShopInstance extends L2NpcInstance
 		}
 		else if (currentCommand.startsWith("Premium"))
 		{
-			if (player.getPremiumService() > 0)
+			if (player.isPremium())
 			{
-				SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 				StringBuffer sb = new StringBuffer();
-				StringUtil.append(sb, "Премиум уже активирован до: " , String.valueOf(format.format(player.getPremiumService())));
+				StringUtil.append(sb, "Премиум уже активирован до: ", PremiumManager.getPremiumEndDate(player));
 				player.sendMessage(sb.toString());
 				return;
 			}
-			if (st.hasMoreTokens())
-			{
-				String input = st.nextToken();
-				try
-				{
-					int days = Integer.valueOf(input);
-					if (pay(player, days))
-					{
-						PremiumAccount.addPremiumServices(player, player.getAccountName(), days);
-						StringBuffer sb = new StringBuffer();
-						StringUtil.append(sb, "Вы активировали премиум аккаунт на ", days, " дней.");
-						player.sendMessage(sb.toString());
-					}
-					
-				}
-				catch (NumberFormatException e)
-				{
-					player.sendMessage("Неверный формат, введите количество дней.");
-				}
-				showPaWindow(player);
-			}
-			else
-			{
-				showPaWindow(player);
-			}
+			PremiumManager.showChatWindow(player);			
 		}
 		else
 		{
 			super.onBypassFeedback(player, command);
 		}
 	}
-	private static boolean pay(L2PcInstance player, int countDays)
-	{
-		ItemInstance item = player.getInventory().getItemByItemId(Config.PREMIUM_ITEM);
-		if (item == null || item.getCount() < Config.PREMIUM_PRICE*countDays)
-		{
-			player.sendPacket(SystemMessage.getSystemMessage(SystemMessageId.INCORRECT_ITEM_COUNT));
-			return false;
-		}
-		if (!player.destroyItem("Premium Manager", item, Config.PREMIUM_PRICE*countDays, player, true))
-		{
-			return false;
-		}
-		return true;
-	}
-	private void showPaWindow(L2PcInstance player)
-	{
-		NpcHtmlMessage html = new NpcHtmlMessage(1);
-		html.setFile(getHtmlPath(getNpcId(), 1));
-		html.replace("%objectId%", getObjectId());
-		html.replace("%price%", Config.PREMIUM_PRICE);
-		String itemName = ItemTable.getInstance().getTemplate(Config.PREMIUM_ITEM).getName();
-		html.replace("%item%", itemName);
-		player.sendPacket(html);
-	}
+	
 }

@@ -24,27 +24,22 @@ import net.sf.l2j.gameserver.network.serverpackets.NpcHtmlMessage;
  */
 public class Help  implements IVoicedCommandHandler
 {
-	private static final String HTML_FILE_PATH = "data/html/commands/help/";
+	private static final String HTML_FILE_PATH = "data/html/commands/help/Help.htm";
 	private final String[] _voicedCommands =
 	{
 		"help"
 	};
 
-	/* (non-Javadoc)
-	 * @see net.sf.l2j.gameserver.handler.IVoicedCommandHandler#useVoicedCommand(java.lang.String, net.sf.l2j.gameserver.model.actor.instance.L2PcInstance, java.lang.String)
-	 */
 	@Override
 	public boolean useVoicedCommand(String command, L2PcInstance activeChar, String params)
 	{
 		NpcHtmlMessage html = new NpcHtmlMessage(0);
-		html.setFile(HTML_FILE_PATH+"help.htm");		
+		html.setFile(HTML_FILE_PATH);		
 		activeChar.sendPacket(html);
 		return true;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.l2j.gameserver.handler.IVoicedCommandHandler#getVoicedCommandList()
-	 */
+
 	@Override
 	public String[] getVoicedCommandList()
 	{

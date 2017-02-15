@@ -38,13 +38,13 @@ public class EnchantWar extends CombatEvent
 
 	private final int NPC_ID = 40005;
 	private int _currentTownId;
-	private L2Spawn spawn = null;
+	private L2Spawn _spawn = null;
 	protected final static String DESCRIPTION = "Ищите продавца заточек в городе:</br> ";
 	
 	public EnchantWar()
 	{
 		super();
-		setName("EW");
+		setName("Enchant War");
 		setId(EventConfig.EW_ID);
 	}
 	
@@ -86,7 +86,7 @@ public class EnchantWar extends CombatEvent
 	@Override
 	public void end(boolean inform)
 	{		
-		if (spawn != null)
+		if (_spawn != null)
 		{
 			deleteSpawnNpc(false);
 		}		
@@ -174,7 +174,7 @@ public class EnchantWar extends CombatEvent
 	
 	private void spawnNpc()
 	{
-		if (_players.size() >= getMinPlayers() && spawn == null)
+		if (_players.size() >= getMinPlayers() && _spawn == null)
 		{
 			Location loc = null;
 			if (_currentTownId == 13)
@@ -254,12 +254,12 @@ public class EnchantWar extends CombatEvent
 		}
 		try
 		{
-			spawn = new L2Spawn(template);
-			spawn.setLoc(coordinat[0], coordinat[1], coordinat[2], -1);
-			spawn.setRespawnDelay(respawnTime);
-			SpawnTable.getInstance().addNewSpawn(spawn, permanent);
-			spawn.doSpawn(false);
-			spawn.setRespawnState(permanent);
+			_spawn = new L2Spawn(template);
+			_spawn.setLoc(coordinat[0], coordinat[1], coordinat[2], -1);
+			_spawn.setRespawnDelay(respawnTime);
+			SpawnTable.getInstance().addNewSpawn(_spawn, permanent);
+			_spawn.doSpawn(false);
+			_spawn.setRespawnState(permanent);
 		}
 		catch (Exception e)
 		{
@@ -270,10 +270,10 @@ public class EnchantWar extends CombatEvent
 	
 	private void deleteSpawnNpc(boolean updateDb)
 	{
-		L2Npc l2Npc = spawn.getNpc();
+		L2Npc l2Npc = _spawn.getNpc();
 		l2Npc.deleteMe();
-		SpawnTable.getInstance().deleteSpawn(spawn, updateDb);
-		spawn = null;
+		SpawnTable.getInstance().deleteSpawn(_spawn, updateDb);
+		_spawn = null;
 	}
 	
 	@Override

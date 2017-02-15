@@ -33,7 +33,7 @@ public class AdminEvents implements IAdminCommandHandler
 	{
 		if (command.startsWith("admin_event"))
 		{
-			EventManager.getInstance().adminByPass(player, command.substring(11).trim());
+			EventManager.getInstance().onBypassFeedbackAdmin(player, command.substring(11).trim());
 		}		
 		return true;
 	}

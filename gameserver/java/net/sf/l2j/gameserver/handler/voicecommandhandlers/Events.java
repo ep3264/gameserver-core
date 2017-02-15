@@ -38,19 +38,7 @@ public class Events implements IVoicedCommandHandler
 	@Override
 	public boolean useVoicedCommand(String command, L2PcInstance activeChar, String params)
 	{
-		if (command.equalsIgnoreCase("join"))
-		{
-			EventManager.getInstance().joinToEvent(activeChar);
-		}
-		else if (command.equalsIgnoreCase("info"))
-		{
-			EventManager.getInstance().getInfo(activeChar);
-		}
-		else if (command.equalsIgnoreCase("leave"))
-		{
-			EventManager.getInstance().leaveFromEvent(activeChar);
-		
-		}
+		EventManager.getInstance().onBypassFeedback(activeChar,command);
 		return true;
 	}	
 }

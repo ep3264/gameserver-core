@@ -14,7 +14,7 @@
  */
 package net.sf.l2j.gameserver.model.actor.instance;
 
-import com.l2je.extensions.ColorsManager;
+import com.l2je.extensions.ColorManager;
 import com.l2je.extensions.acp.AcpTask;
 import com.l2je.extensions.events.Event;
 import com.l2je.extensions.events.EventManager;
@@ -5589,7 +5589,7 @@ public final class L2PcInstance extends L2Playable
 		// Retrieve from the database all recom data of this L2PcInstance and add to _recomChars.
 		restoreRecom();
 		// colors Fix Redist
-		ColorsManager.getInstance().restoreColors(this);
+		ColorManager.getInstance().restoreColors(this);
 		// Retrieve from the database the recipe book of this L2PcInstance.
 		if (!isSubClassActive())
 			restoreRecipeBook();
@@ -10769,14 +10769,14 @@ public final class L2PcInstance extends L2Playable
 		getDisabledSkills().clear();
 		sendPacket(new SkillCoolTime(this));
 	}
-	// Авто использование банок
+	// Автоиспользование зелья TODO:
 	private boolean _acp =false;
 	private ScheduledFuture<?> _acpScheduledFuture = null;
-	public boolean acp()
+	public boolean isAcpOn()
 	{
 		return  _acp;
 	}
-	private void setAcp(boolean value)
+	private void setAcpOn(boolean value)
 	{
 		_acp = value;
 	}
@@ -10784,20 +10784,18 @@ public final class L2PcInstance extends L2Playable
 	public void onAcp(AcpTask acpTask)
 	{		
 		offAcp();		
-		if (_acpScheduledFuture == null)
-		{
-			sendMessage("создан поток");
-			setAcp(true);
+		if (!isAcpOn())
+		{		
+			setAcpOn(true);
 			_acpScheduledFuture = ThreadPool.scheduleAtFixedRate(acpTask, 100, 750);
 		}
 	}
 	
 	public void offAcp()
 	{
-		if (_acpScheduledFuture != null)
-		{
-			sendMessage("завершен поток");
-			setAcp(false);
+		if (isAcpOn())
+		{			
+			setAcpOn(false);
 			_acpScheduledFuture.cancel(false);
 			_acpScheduledFuture = null;
 		}
@@ -10846,11 +10844,35 @@ public final class L2PcInstance extends L2Playable
 
 	public boolean isPremium()
 	{
-		return getPremiumService() > 0;
+		if (getPremiumService() > 0)
+		{
+			if (System.currentTimeMillis() > getPremiumService())
+			{
+				setPremiumService(0);
+			}
+			return true;
+		}
+		return false;
 	}
 
 	public void setPremiumService(long PS)
 	{	
 		getAccountData().set("premium", PS);
+	}
+	public void setIpBlock(String ip)
+	{
+		getAccountData().set("ip", ip);
+	}
+	public String getIpBlock()
+	{
+		return getAccountData().getString("ip","0");
+	}
+	public boolean isIpBlock()
+	{
+		if(getIpBlock().equals("0"))
+		{
+			return false;
+		}
+		return true;
 	}
 }

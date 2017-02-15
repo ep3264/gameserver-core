@@ -445,8 +445,8 @@ public abstract class L2Object
 		_region = value;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
+	/**
+	 * Fix Redist
 	 */
 	@Override
 	public int hashCode()
@@ -457,8 +457,8 @@ public abstract class L2Object
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
+	/**
+	 * Fix Redist
 	 */
 	@Override
 	public boolean equals(Object obj)

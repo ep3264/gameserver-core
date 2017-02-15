@@ -26,14 +26,14 @@ import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
  * @author Redist
  *
  */
-public class ColorsManager
+public class ColorManager
 {
 	private static class SingletonHolder
 	{
-		protected static final ColorsManager _instance = new ColorsManager();
+		protected static final ColorManager _instance = new ColorManager();
 	}
 	
-	public static ColorsManager getInstance()
+	public static ColorManager getInstance()
 	{
 		return SingletonHolder._instance;
 	}
