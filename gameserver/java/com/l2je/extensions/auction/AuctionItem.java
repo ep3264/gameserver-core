@@ -119,7 +119,10 @@ public class AuctionItem
 		return sb.toString();
 	}
 	
-	// Вышло время
+	/**
+	 *
+	 * @return  Вышло ли врямя отведенное на продажу
+	 */
 	public boolean isOverdue()
 	{
 		return this.getDeleteTime() < System.currentTimeMillis();
@@ -127,7 +130,7 @@ public class AuctionItem
 	
 	public long getDeleteTime()
 	{
-		return this.addTime + 86400000 * ((AuctionConfig.AUCTION_COUNT_DAY_FOR_DELETE_ITEM > 300) ? 300 : AuctionConfig.AUCTION_COUNT_DAY_FOR_DELETE_ITEM);
+		return this.addTime + 86400000L * ((AuctionConfig.AUCTION_COUNT_DAY_FOR_DELETE_ITEM > 366) ? 366L : AuctionConfig.AUCTION_COUNT_DAY_FOR_DELETE_ITEM);
 	}
 	
 	public String getPrice()

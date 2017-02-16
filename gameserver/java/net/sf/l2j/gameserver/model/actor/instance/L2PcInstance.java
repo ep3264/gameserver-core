@@ -8953,11 +8953,9 @@ public final class L2PcInstance extends L2Playable
 	{
 		try
 		{
-			if(isAcpOn())
-			{
-				offAcp();
-			}
-			// Put the online status to false
+			// cancel Auto combat potion
+			cancelAcp();
+		    // Put the online status to false
 			setOnlineStatus(false, true);
 			
 			// abort cast & attack and remove the target. Cancels movement aswell.
@@ -10773,37 +10771,32 @@ public final class L2PcInstance extends L2Playable
 		getDisabledSkills().clear();
 		sendPacket(new SkillCoolTime(this));
 	}
-	// Автоиспользование зелья TODO:
-	private boolean _acp =false;
-	private ScheduledFuture<?> _acpScheduledFuture = null;
-	public boolean isAcpOn()
+	// Auto combat potion
+	private HashMap <Integer,ScheduledFuture<?>> _acpTasks = new HashMap<>();
+
+	public boolean isAcp(int id)
 	{
-		return  _acp;
-	}
-	private void setAcpOn(boolean value)
-	{
-		_acp = value;
+		return _acpTasks.containsKey(id);
 	}
 	
-	public void onAcp(AcpTask acpTask)
+	public void setAcp(ScheduledFuture<?> acpTask, int id)
 	{		
-		offAcp();		
-		if (!isAcpOn())
-		{		
-			setAcpOn(true);
-			_acpScheduledFuture = ThreadPool.scheduleAtFixedRate(acpTask, 100, 750);
+		_acpTasks.put(id, acpTask);		
+	}	
+	public void cancelAcp(int id)
+	{
+		_acpTasks.get(id).cancel(false);
+		_acpTasks.remove(id);
+	}
+	public void cancelAcp()
+	{
+		for(ScheduledFuture<?> acpTask : _acpTasks.values())
+		{
+			acpTask.cancel(false);
 		}
+		_acpTasks.clear();
 	}
 	
-	public void offAcp()
-	{
-		if (isAcpOn())
-		{			
-			setAcpOn(false);
-			_acpScheduledFuture.cancel(false);
-			_acpScheduledFuture = null;
-		}
-	}
 	//TODO Redist Офлайн трейд
 	private boolean _isOffline = false;
 	public boolean isOfflineTrader()
@@ -10862,21 +10855,27 @@ public final class L2PcInstance extends L2Playable
 		return false;
 	}
 
-	public void setPremiumService(long PS)
+	public void setPremiumService(long premium)
 	{	
-		getAccountData().set("premium", PS);
+		getAccountData().set("premium", premium);
 	}
+	/**
+	 * Установить привязку по ip
+	 * @param ip
+	 */
 	public void setIpBlock(String ip)
 	{
 		getAccountData().set("ip", ip);
 	}
+	
 	public String getIpBlock()
 	{
-		return getAccountData().getString("ip","0");
+		return getAccountData().getString("ip", "0");
 	}
+	
 	public boolean isIpBlock()
 	{
-		if(getIpBlock().equals("0"))
+		if (getIpBlock().equals("0"))
 		{
 			return false;
 		}

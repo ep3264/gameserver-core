@@ -38,7 +38,35 @@ public class MenuManager
 		}
 		html.basicReplace("%premium%", premiumInfo);
 		html.basicReplace("%exp%", stateToString(!activeChar.getStopExp()));
-		html.basicReplace("%acp%", stateToString(activeChar.isAcpOn()));
+		StringBuffer sbAcp = new StringBuffer();
+		String acp = "<font color=\"ff0000\">Выкл</font></td>";
+		boolean status = false;
+		sbAcp.append("<font color=\"LEVEL\">");
+		if(activeChar.isAcp(AcpManager.CP_ID))
+		{
+			sbAcp.append("CP");
+			status = true;
+		}
+		if(activeChar.isAcp(AcpManager.HP_ID))
+		{
+			if(status)
+				sbAcp.append("/");
+			sbAcp.append("HP");
+			status = true;
+		}
+		if(activeChar.isAcp(AcpManager.MP_ID))
+		{
+			if(status)
+				sbAcp.append("/");
+			sbAcp.append("MP ");
+			status = true;
+		}
+		if(status)
+		{
+			sbAcp.append("</font>");
+			acp = sbAcp.toString();
+		}
+		html.basicReplace("%acp%",acp);
 		html.basicReplace("%ip%", activeChar.getClient().getConnection().getInetAddress().getHostAddress());
 		html.basicReplace("%ipon%", stateToString(activeChar.isIpBlock()));
 		String eventInfo = "<td><font color=\"ff0000\">Нет доступных ивентов</font></td>";

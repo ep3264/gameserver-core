@@ -20,7 +20,7 @@ public class AuctionConfig {
 	   public static int[] AUCTION_PRICE;
 	   public static int[] AUCTION_AUGMENT_PRICE;
 	   public static int[] AUCTION_ALLOWED_ITEM_ID;
-	   public static int AUCTION_COUNT_DAY_FOR_DELETE_ITEM;
+	   public static long AUCTION_COUNT_DAY_FOR_DELETE_ITEM;
 	   public static int AUCTION_SEE_COUNT_PRODUCTS_ON_PAGE;	   
 	   private final static String FILE = "./config/extensions/auction.ini"; 
 
@@ -53,7 +53,7 @@ public class AuctionConfig {
 			{
 				AUCTION_ALLOWED_ITEM_ID[i] = Integer.parseInt(temp[i]);
 			}
-			AUCTION_COUNT_DAY_FOR_DELETE_ITEM = Integer.parseInt(auctionPropeties.getProperty("AuctionCountDayForDeleteItem", "7"));
+			AUCTION_COUNT_DAY_FOR_DELETE_ITEM = Long.parseLong(auctionPropeties.getProperty("AuctionCountDayForDeleteItem", "7"));
 			AUCTION_SEE_COUNT_PRODUCTS_ON_PAGE = Integer.parseInt(auctionPropeties.getProperty("AuctionSeeCountProductsOnPage", "5"));
 		}
 		catch(NumberFormatException e)
