@@ -8953,6 +8953,10 @@ public final class L2PcInstance extends L2Playable
 	{
 		try
 		{
+			if(isAcpOn())
+			{
+				offAcp();
+			}
 			// Put the online status to false
 			setOnlineStatus(false, true);
 			
@@ -10850,7 +10854,10 @@ public final class L2PcInstance extends L2Playable
 			{
 				setPremiumService(0);
 			}
-			return true;
+			else
+			{
+				return true;
+			}
 		}
 		return false;
 	}

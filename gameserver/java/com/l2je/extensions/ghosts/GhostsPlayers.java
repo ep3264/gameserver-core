@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.ScheduledFuture;
 import java.util.logging.Logger;
@@ -31,31 +31,29 @@ public class GhostsPlayers
 	protected class GhostsResurrector implements Runnable
 	{
 		private ScheduledFuture<?> _task = null;
-		HashSet<L2PcInstance> _ghosts;
 		
-		
-		public GhostsResurrector(HashSet<L2PcInstance> ghosts)
+		public GhostsResurrector()
 		{
-			_ghosts = ghosts;				
+			
 		}
 		
 		@Override
 		public void run()
 		{
-			synchronized (_ghosts)
+			for (L2PcInstance ghost : _ghosts)
 			{
-				for (L2PcInstance ghost : _ghosts)
+				if (ghost.isDead())
 				{
-					if (ghost.isDead())
+					synchronized (ghost)
 					{
 						ghost.doRevive();
-					}
+					}					
 				}
-			}
+			}			
 			_task = null;
 		}
 		
-		public  void cancel()
+		public void cancel()
 		{
 			if (_task != null)
 			{
@@ -64,36 +62,35 @@ public class GhostsPlayers
 			_task = null;
 		}
 	}
-	protected static final Logger _log = Logger.getLogger(GhostsPlayers.class.getName());
 	
-	//private static final String CLEAR_OFFLINE_TABLE = "DELETE FROM fake_players";
+	protected static final Logger _log = Logger.getLogger(GhostsPlayers.class.getName());	
+	// private static final String CLEAR_OFFLINE_TABLE = "DELETE FROM fake_players";
 	private static final String SELECT_GHOSTS = "SELECT * FROM ghosts_players";
 	private static final String SAVE_GHOST = "INSERT INTO `ghosts_players` (`obj_Id`) VALUES (?)";
-	//private static final String DELETE_GHOST = "DELETE FROM `ghosts_players` WHERE `obj_Id`=?";
+	// private static final String DELETE_GHOST = "DELETE FROM `ghosts_players` WHERE `obj_Id`=?";
 	private static final String DELETE_GHOSTS = "TRUNCATE TABLE ghosts_players";
-    //private LinkedList<Location> locs = new LinkedList<>();
-    private HashSet<L2PcInstance> _ghosts = new HashSet<>();
-    boolean _changeTable=false;
+	
+	protected ArrayList<L2PcInstance> _ghosts = new ArrayList<>();
+	boolean _changeTable = false;
+	
 	private static class SingletonHolder
 	{
 		protected static final GhostsPlayers _instance = new GhostsPlayers();
 	}
 	
 	public static GhostsPlayers getInstance()
-	{		
+	{
 		return SingletonHolder._instance;
 	}
-		
-	//TODO 
+	
 	private L2PcInstance getRandomGhost()
 	{
-		Random random  = new Random();
+		Random random = new Random();
 		if (_ghosts.size() > 0)
 		{
-			L2PcInstance[] arrGhosts = _ghosts.toArray(new L2PcInstance[_ghosts.size()]);
-			return arrGhosts[random.nextInt(arrGhosts.length)];
+			return _ghosts.get(random.nextInt(_ghosts.size()));
 		}
-		return null;	
+		return null;
 	}
 	
 	public String getRandomGhostName()
@@ -103,29 +100,31 @@ public class GhostsPlayers
 		{
 			return "donater";
 		}
-		
 		return l2PcInstance.getName();
-		
 	}
+	
 	protected GhostsPlayers()
-	{		
+	{
 	}
-
+	
 	public void addGhost(L2PcInstance player)
 	{
-		if(!_changeTable)
-			_changeTable=true;
+		if (!_changeTable)
+			_changeTable = true;
 		_ghosts.add(player);
 	}
+	
 	public void deleteGhost(L2PcInstance player)
 	{
-		if(!_changeTable)
-			_changeTable=true;
-		_ghosts.remove(player);		
+		if (!_changeTable)
+			_changeTable = true;
+		_ghosts.remove(player);
 	}
+	
 	public void saveGhosts()
 	{
-		if(!_changeTable){
+		if (!_changeTable)
+		{
 			_log.info("GhostsPlayers: Nothing to save.");
 			return;
 		}
@@ -136,8 +135,9 @@ public class GhostsPlayers
 			st.execute();
 			st.close();
 			PreparedStatement statementInsert = con.prepareStatement(SAVE_GHOST);
-		for (L2PcInstance ghost : _ghosts){
-				statementInsert.setInt(1, ghost.getObjectId());		
+			for (L2PcInstance ghost : _ghosts)
+			{
+				statementInsert.setInt(1, ghost.getObjectId());
 				statementInsert.execute();
 				statementInsert.clearParameters();
 			}
@@ -151,17 +151,18 @@ public class GhostsPlayers
 		}
 		
 	}
+	
 	public void loadGhosts()
 	{
 		_log.info("GhostsPlayers: Activated.");
-		Connection con = null;		
+		Connection con = null;
 		try
 		{
 			con = L2DatabaseFactory.getInstance().getConnection();
 			PreparedStatement stm = con.prepareStatement(SELECT_GHOSTS);
 			ResultSet rs = stm.executeQuery();
-
-			while(rs.next())
+			
+			while (rs.next())
 			{
 				L2PcInstance player = null;
 				
@@ -169,19 +170,19 @@ public class GhostsPlayers
 				{
 					
 					L2GameClient client = new L2GameClient(null);
-					player = L2PcInstance.restore(rs.getInt("obj_Id"));					
+					player = L2PcInstance.restore(rs.getInt("obj_Id"));
 					player.setIsGhost(true);
 					client.setActiveChar(player);
 					client.setAccountName(player.getAccountName());
 					client.setState(GameClientState.IN_GAME);
 					player.setOnlineStatus(true, false);
-					player.setClient(client);					
+					player.setClient(client);
 					_ghosts.add(player);
 					player.spawnMe(player.getX(), player.getY(), player.getZ());
 					
 					LoginServerThread.getInstance().addGameServerLogin(player.getAccountName(), client);
 					
-					if(Config.GHOSTS_PLAYERS_SIT)
+					if (Config.GHOSTS_PLAYERS_SIT)
 					{
 						int random = Rnd.get(100);
 						
@@ -190,40 +191,41 @@ public class GhostsPlayers
 							player.sitDown();
 						}
 					}
-					player.broadcastUserInfo();					
+					player.broadcastUserInfo();
 				}
-				catch(Exception e)
+				catch (Exception e)
 				{
-					_log.info("Ghosts Players Engine: Error loading player: " + player); //, e);
+					_log.info("Ghosts Players Engine: Error loading player: " + player); // , e);
 					e.printStackTrace();
-					if(player != null)
+					if (player != null)
 					{
 						player.deleteMe();
 					}
 				}
 			}
 			rs.close();
-			stm.close();	
-			if(_ghosts.size()>1){
-				 ThreadPool.scheduleAtFixedRate(new GhostsResurrector(_ghosts), 60000, 60000);
-				 }
-			
+			stm.close();
+			if (_ghosts.size() > 0)
+			{
+				ThreadPool.scheduleAtFixedRate(new GhostsResurrector(), 60000, 12000);
+			}			
 			_log.info("Loaded: " + _ghosts.size() + " Ghosts Players.");
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
-			_log.info("Ghosts Players Engine : Error while loading player: "+e.toString());
+			_log.info("Ghosts Players Engine : Error while loading player: " + e.toString());
 		}
 		finally
 		{
 			try
 			{
-				if(con!=null){
-				con.close();
+				if (con != null)
+				{
+					con.close();
 				}
 			}
 			catch (SQLException e)
-			{				
+			{
 				e.printStackTrace();
 			}
 		}
