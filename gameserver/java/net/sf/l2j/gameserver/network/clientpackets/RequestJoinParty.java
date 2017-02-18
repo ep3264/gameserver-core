@@ -17,7 +17,7 @@ package net.sf.l2j.gameserver.network.clientpackets;
 import net.sf.l2j.Config;
 import net.sf.l2j.gameserver.model.BlockList;
 import net.sf.l2j.gameserver.model.L2Party;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.network.SystemMessageId;
 import net.sf.l2j.gameserver.network.serverpackets.AskJoinParty;
@@ -45,7 +45,7 @@ public final class RequestJoinParty extends L2GameClientPacket
 		if (requestor == null)
 			return;
 		
-		final L2PcInstance target = L2World.getInstance().getPlayer(_name);
+		final L2PcInstance target = World.getInstance().getPlayer(_name);
 		if (target == null)
 		{
 			requestor.sendPacket(SystemMessageId.FIRST_SELECT_USER_TO_INVITE_TO_PARTY);

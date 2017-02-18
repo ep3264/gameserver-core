@@ -92,7 +92,6 @@ public class L2BossZone extends L2ZoneType
 			super.setParameter(name, value);
 	}
 	
-	// FIX Redist
 	@Override
 	protected void onEnter(L2Character character)
 	{
@@ -194,19 +193,15 @@ public class L2BossZone extends L2ZoneType
 				
 				for (L2Attackable raid : getKnownTypeInside(L2Attackable.class))
 				{
-					if (raid.isRaid())
-					{
-						if (raid.getSpawn() == null || raid.isDead())
-							continue;
-						
-						if (!raid.isInsideRadius(raid.getSpawn().getLocX(), raid.getSpawn().getLocY(), 150, false))
-							raid.returnHome();
-					}
+					if (!raid.isRaid())
+						continue;
+					
+					raid.returnHome(true);
 				}
 			}
 		}
-		else if (character instanceof L2Attackable && character.isRaid() && !character.isDead())
-			((L2Attackable) character).returnHome();
+		else if (character instanceof L2Attackable && character.isRaid())
+			((L2Attackable) character).returnHome(true);
 	}
 	
 	/**

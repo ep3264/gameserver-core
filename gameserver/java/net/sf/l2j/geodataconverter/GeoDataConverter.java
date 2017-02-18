@@ -31,7 +31,7 @@ import net.sf.l2j.gameserver.geoengine.geodata.BlockFlat;
 import net.sf.l2j.gameserver.geoengine.geodata.BlockMultilayer;
 import net.sf.l2j.gameserver.geoengine.geodata.GeoFormat;
 import net.sf.l2j.gameserver.geoengine.geodata.GeoStructure;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 
 /**
  * @author Hasha
@@ -77,9 +77,9 @@ public final class GeoDataConverter
 		// load geo files according to geoengine config setup
 		final ExProperties props = Config.initProperties(Config.GEOENGINE_FILE);
 		int converted = 0;
-		for (int rx = L2World.TILE_X_MIN; rx <= L2World.TILE_X_MAX; rx++)
+		for (int rx = World.TILE_X_MIN; rx <= World.TILE_X_MAX; rx++)
 		{
-			for (int ry = L2World.TILE_Y_MIN; ry <= L2World.TILE_Y_MAX; ry++)
+			for (int ry = World.TILE_Y_MIN; ry <= World.TILE_Y_MAX; ry++)
 			{
 				if (props.containsKey(String.valueOf(rx) + "_" + String.valueOf(ry)))
 				{

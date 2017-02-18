@@ -41,7 +41,7 @@ import net.sf.l2j.gameserver.datatables.ClanTable;
 import net.sf.l2j.gameserver.datatables.NpcTable;
 import net.sf.l2j.gameserver.instancemanager.CastleManager;
 import net.sf.l2j.gameserver.model.L2Clan;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.model.actor.template.NpcTemplate;
 import net.sf.l2j.gameserver.model.item.instance.ItemInstance;
@@ -595,7 +595,7 @@ public class Hero
 			{
 				String name = hero.getString(Olympiad.CHAR_NAME);
 				
-				L2PcInstance player = L2World.getInstance().getPlayer(name);
+				L2PcInstance player = World.getInstance().getPlayer(name);
 				if (player == null)
 					continue;
 				

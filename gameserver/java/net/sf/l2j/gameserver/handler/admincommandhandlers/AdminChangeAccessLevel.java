@@ -19,7 +19,7 @@ import java.sql.PreparedStatement;
 
 import net.sf.l2j.L2DatabaseFactory;
 import net.sf.l2j.gameserver.handler.IAdminCommandHandler;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.network.SystemMessageId;
 
@@ -56,7 +56,7 @@ public class AdminChangeAccessLevel implements IAdminCommandHandler
 		{
 			String name = parts[1];
 			int lvl = Integer.parseInt(parts[2]);
-			L2PcInstance player = L2World.getInstance().getPlayer(name);
+			L2PcInstance player = World.getInstance().getPlayer(name);
 			if (player != null)
 				onLineChange(activeChar, player, lvl);
 			else

@@ -30,8 +30,8 @@ import java.util.logging.Logger;
 import net.sf.l2j.Config;
 import net.sf.l2j.L2DatabaseFactory;
 import net.sf.l2j.gameserver.model.L2Object;
-import net.sf.l2j.gameserver.model.L2World;
-import net.sf.l2j.gameserver.model.L2WorldRegion;
+import net.sf.l2j.gameserver.model.World;
+import net.sf.l2j.gameserver.model.WorldRegion;
 import net.sf.l2j.gameserver.model.actor.L2Character;
 import net.sf.l2j.gameserver.model.item.instance.ItemInstance;
 import net.sf.l2j.gameserver.model.zone.L2SpawnZone;
@@ -82,9 +82,9 @@ public class ZoneManager
 		
 		// remove zones from world
 		int count = 0;
-		for (L2WorldRegion[] worldRegion : L2World.getInstance().getWorldRegions())
+		for (WorldRegion[] worldRegion : World.getInstance().getWorldRegions())
 		{
-			for (L2WorldRegion element : worldRegion)
+			for (WorldRegion element : worldRegion)
 			{
 				element.getZones().clear();
 				count++;
@@ -101,7 +101,7 @@ public class ZoneManager
 		load();
 		
 		// revalidate objects in zones
-		for (L2Object o : L2World.getInstance().getObjects())
+		for (L2Object o : World.getInstance().getObjects())
 		{
 			if (o instanceof L2Character)
 				((L2Character) o).revalidateZone(true);
@@ -111,7 +111,7 @@ public class ZoneManager
 	private final void load()
 	{
 		// Get the world regions
-		L2WorldRegion[][] worldRegions = L2World.getInstance().getWorldRegions();
+		WorldRegion[][] worldRegions = World.getInstance().getWorldRegions();
 		
 		// Load the zone xml
 		try
@@ -148,7 +148,7 @@ public class ZoneManager
 		_log.info("ZoneManager: Loaded " + _classZones.size() + " zones classes and total " + size + " zones.");
 	}
 	
-	private void loadFileZone(final File f, L2WorldRegion[][] worldRegions) throws Exception
+	private void loadFileZone(final File f, WorldRegion[][] worldRegions) throws Exception
 	{
 		final Document doc = XMLDocumentFactory.getInstance().loadDocument(f);
 		for (Node n = doc.getFirstChild(); n != null; n = n.getNextSibling())
@@ -317,7 +317,7 @@ public class ZoneManager
 						{
 							for (int y = 0; y < worldRegions[x].length; y++)
 							{
-								if (temp.getZone().intersectsRectangle(L2World.getRegionX(x), L2World.getRegionX(x + 1), L2World.getRegionY(y), L2World.getRegionY(y + 1)))
+								if (temp.getZone().intersectsRectangle(World.getRegionX(x), World.getRegionX(x + 1), World.getRegionY(y), World.getRegionY(y + 1)))
 								{
 									if (Config.DEBUG)
 										_log.info("Zone (" + zoneId + ") added to: " + x + " " + y);
@@ -469,7 +469,7 @@ public class ZoneManager
 	public List<L2ZoneType> getZones(int x, int y)
 	{
 		final List<L2ZoneType> temp = new ArrayList<>();
-		for (L2ZoneType zone : L2World.getInstance().getRegion(x, y).getZones())
+		for (L2ZoneType zone : World.getInstance().getRegion(x, y).getZones())
 		{
 			if (zone.isInsideZone(x, y))
 				temp.add(zone);
@@ -487,7 +487,7 @@ public class ZoneManager
 	public List<L2ZoneType> getZones(int x, int y, int z)
 	{
 		final List<L2ZoneType> temp = new ArrayList<>();
-		for (L2ZoneType zone : L2World.getInstance().getRegion(x, y).getZones())
+		for (L2ZoneType zone : World.getInstance().getRegion(x, y).getZones())
 		{
 			if (zone.isInsideZone(x, y, z))
 				temp.add(zone);
@@ -507,7 +507,7 @@ public class ZoneManager
 	@SuppressWarnings("unchecked")
 	public <T extends L2ZoneType> T getZone(int x, int y, int z, Class<T> type)
 	{
-		for (L2ZoneType zone : L2World.getInstance().getRegion(x, y).getZones())
+		for (L2ZoneType zone : World.getInstance().getRegion(x, y).getZones())
 		{
 			if (zone.isInsideZone(x, y, z) && type.isInstance(zone))
 				return (T) zone;

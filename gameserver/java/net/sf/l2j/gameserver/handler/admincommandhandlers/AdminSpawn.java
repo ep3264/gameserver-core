@@ -32,7 +32,7 @@ import net.sf.l2j.gameserver.instancemanager.RaidBossSpawnManager;
 import net.sf.l2j.gameserver.instancemanager.SevenSigns;
 import net.sf.l2j.gameserver.model.L2Object;
 import net.sf.l2j.gameserver.model.L2Spawn;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.L2Npc;
 import net.sf.l2j.gameserver.model.actor.instance.L2FenceInstance;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
@@ -198,7 +198,7 @@ public class AdminSpawn implements IAdminCommandHandler
 			Broadcast.toAllOnlinePlayers(SystemMessage.getSystemMessage(SystemMessageId.NPC_SERVER_NOT_OPERATING));
 			RaidBossSpawnManager.getInstance().cleanUp();
 			DayNightSpawnManager.getInstance().cleanUp();
-			L2World.getInstance().deleteVisibleNpcSpawns();
+			World.getInstance().deleteVisibleNpcSpawns();
 			GmListTable.broadcastMessageToGMs("NPCs' unspawn is now complete.");
 		}
 		else if (command.startsWith("admin_spawnday"))
@@ -210,7 +210,7 @@ public class AdminSpawn implements IAdminCommandHandler
 			// make sure all spawns are deleted
 			RaidBossSpawnManager.getInstance().cleanUp();
 			DayNightSpawnManager.getInstance().cleanUp();
-			L2World.getInstance().deleteVisibleNpcSpawns();
+			World.getInstance().deleteVisibleNpcSpawns();
 			// now respawn all
 			NpcTable.getInstance().reloadAllNpc();
 			SpawnTable.getInstance().reloadAll();
@@ -246,7 +246,7 @@ public class AdminSpawn implements IAdminCommandHandler
 			st.nextToken();
 			try
 			{
-				L2Object object = L2World.getInstance().getObject(Integer.parseInt(st.nextToken()));
+				L2Object object = World.getInstance().getObject(Integer.parseInt(st.nextToken()));
 				if (object instanceof L2FenceInstance)
 				{
 					FenceTable.getInstance().removeFence((L2FenceInstance) object);

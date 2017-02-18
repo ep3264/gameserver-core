@@ -15,7 +15,7 @@
 package net.sf.l2j.gameserver.network.clientpackets;
 
 import net.sf.l2j.gameserver.model.L2Party;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.network.SystemMessageId;
 import net.sf.l2j.gameserver.network.serverpackets.ExAskJoinMPCC;
@@ -42,7 +42,7 @@ public final class RequestExAskJoinMPCC extends L2GameClientPacket
 		if (activeChar == null)
 			return;
 		
-		L2PcInstance player = L2World.getInstance().getPlayer(_name);
+		L2PcInstance player = World.getInstance().getPlayer(_name);
 		if (player == null)
 			return;
 		

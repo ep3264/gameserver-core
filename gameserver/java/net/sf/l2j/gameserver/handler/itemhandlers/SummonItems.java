@@ -42,6 +42,7 @@ import net.sf.l2j.gameserver.network.serverpackets.MagicSkillLaunched;
 import net.sf.l2j.gameserver.network.serverpackets.MagicSkillUse;
 import net.sf.l2j.gameserver.network.serverpackets.PetItemList;
 import net.sf.l2j.gameserver.network.serverpackets.SetupGauge;
+import net.sf.l2j.gameserver.network.serverpackets.SetupGauge.GaugeColor;
 import net.sf.l2j.gameserver.network.serverpackets.SystemMessage;
 import net.sf.l2j.gameserver.util.Broadcast;
 
@@ -126,7 +127,7 @@ public class SummonItems implements IItemHandler
 				activeChar.setTarget(activeChar);
 				Broadcast.toSelfAndKnownPlayers(activeChar, new MagicSkillUse(activeChar, 2046, 1, 5000, 0));
 				activeChar.setTarget(oldTarget);
-				activeChar.sendPacket(new SetupGauge(0, 5000));
+				activeChar.sendPacket(new SetupGauge(GaugeColor.BLUE, 5000));
 				activeChar.sendPacket(SystemMessageId.SUMMON_A_PET);
 				activeChar.setIsCastingNow(true);
 				

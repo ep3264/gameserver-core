@@ -22,7 +22,7 @@ import com.l2je.extensions.events.EventManager;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.text.SimpleDateFormat;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 
 import net.sf.l2j.Config;
@@ -41,12 +41,12 @@ import net.sf.l2j.gameserver.instancemanager.SevenSigns;
 import net.sf.l2j.gameserver.instancemanager.SiegeManager;
 import net.sf.l2j.gameserver.model.L2Clan;
 import net.sf.l2j.gameserver.model.L2Clan.SubPledge;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.model.base.ClassRace;
 import net.sf.l2j.gameserver.model.entity.ClanHall;
-import net.sf.l2j.gameserver.model.entity.Couple;
 import net.sf.l2j.gameserver.model.entity.Siege;
+import net.sf.l2j.gameserver.model.holder.IntIntHolder;
 import net.sf.l2j.gameserver.model.olympiad.Olympiad;
 import net.sf.l2j.gameserver.model.zone.ZoneId;
 import net.sf.l2j.gameserver.network.SystemMessageId;
@@ -74,7 +74,6 @@ import net.sf.l2j.gameserver.scripting.QuestState;
 import net.sf.l2j.gameserver.scripting.ScriptManager;
 import net.sf.l2j.gameserver.taskmanager.GameTimeTaskManager;
 
-
 public class EnterWorld extends L2GameClientPacket
 {
 	private static final String LOAD_PLAYER_QUESTS = "SELECT name,var,value FROM character_quests WHERE charId=?";
@@ -82,7 +81,6 @@ public class EnterWorld extends L2GameClientPacket
 	@Override
 	protected void readImpl()
 	{
-		// this is just a trigger packet. it has no content
 	}
 	
 	@Override
@@ -145,13 +143,13 @@ public class EnterWorld extends L2GameClientPacket
 			// Send a login notification to sponsor or apprentice, if logged.
 			if (activeChar.getSponsor() != 0)
 			{
-				final L2PcInstance sponsor = L2World.getInstance().getPlayer(activeChar.getSponsor());
+				final L2PcInstance sponsor = World.getInstance().getPlayer(activeChar.getSponsor());
 				if (sponsor != null)
 					sponsor.sendPacket(SystemMessage.getSystemMessage(SystemMessageId.YOUR_APPRENTICE_S1_HAS_LOGGED_IN).addPcName(activeChar));
 			}
 			else if (activeChar.getApprentice() != 0)
 			{
-				final L2PcInstance apprentice = L2World.getInstance().getPlayer(activeChar.getApprentice());
+				final L2PcInstance apprentice = World.getInstance().getPlayer(activeChar.getApprentice());
 				if (apprentice != null)
 					apprentice.sendPacket(SystemMessage.getSystemMessage(SystemMessageId.YOUR_SPONSOR_S1_HAS_LOGGED_IN).addPcName(activeChar));
 			}
@@ -207,14 +205,13 @@ public class EnterWorld extends L2GameClientPacket
 		// Engage and notify partner.
 		if (Config.ALLOW_WEDDING)
 		{
-			for (Couple cl : CoupleManager.getInstance().getCouples())
+			for (Entry<Integer, IntIntHolder> coupleEntry : CoupleManager.getInstance().getCouples().entrySet())
 			{
-				if (cl.getPlayer1Id() == objectId || cl.getPlayer2Id() == objectId)
+				final IntIntHolder couple = coupleEntry.getValue();
+				if (couple.getId() == objectId || couple.getValue() == objectId)
 				{
-					if (cl.getMaried())
-						activeChar.setMarried(true);
-					
-					activeChar.setCoupleId(cl.getId());
+					activeChar.setCoupleId(coupleEntry.getKey());
+					break;
 				}
 			}
 		}
@@ -241,6 +238,11 @@ public class EnterWorld extends L2GameClientPacket
 		activeChar.sendPacket(new ItemList(activeChar, false));
 		activeChar.sendPacket(new ShortCutInit(activeChar));
 		activeChar.sendPacket(new ExStorageMaxCount(activeChar));
+		
+		// no broadcast needed since the player will already spawn dead to others
+		if (activeChar.isAlikeDead())
+			activeChar.sendPacket(new Die(activeChar));
+		
 		activeChar.updateEffectIcons();
 		activeChar.sendPacket(new EtcStatusUpdate(activeChar));
 		activeChar.sendSkillList();
@@ -333,11 +335,8 @@ public class EnterWorld extends L2GameClientPacket
 		{
 			Auction.getInstance().enterTheGame(activeChar);
 		}	
-		PetitionManager.getInstance().checkPetitionMessages(activeChar);
 		
-		// no broadcast needed since the player will already spawn dead to others
-		if (activeChar.isAlikeDead())
-			sendPacket(new Die(activeChar));
+		PetitionManager.getInstance().checkPetitionMessages(activeChar);
 		
 		activeChar.onPlayerEnter();
 		

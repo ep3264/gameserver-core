@@ -101,6 +101,12 @@ public class EffectFear extends L2Effect
 	}
 	
 	@Override
+	public boolean onSameEffect(L2Effect effect)
+	{
+		return false;
+	}
+	
+	@Override
 	public int getEffectFlags()
 	{
 		return L2EffectFlag.FEAR.getMask();

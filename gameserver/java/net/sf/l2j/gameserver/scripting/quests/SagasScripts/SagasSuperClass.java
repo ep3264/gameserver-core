@@ -26,7 +26,7 @@ import net.sf.l2j.gameserver.ai.CtrlIntention;
 import net.sf.l2j.gameserver.model.L2Object;
 import net.sf.l2j.gameserver.model.L2Party;
 import net.sf.l2j.gameserver.model.L2Skill;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.L2Attackable;
 import net.sf.l2j.gameserver.model.actor.L2Character;
 import net.sf.l2j.gameserver.model.actor.L2Npc;
@@ -183,7 +183,7 @@ public class SagasSuperClass extends Quest
 	{
 		if (_SpawnList.containsKey(npc))
 		{
-			final L2PcInstance player = L2World.getInstance().getPlayer(_SpawnList.get(npc));
+			final L2PcInstance player = World.getInstance().getPlayer(_SpawnList.get(npc));
 			if (player != null)
 				return player.getQuestState(getName());
 		}
@@ -480,7 +480,7 @@ public class SagasSuperClass extends Quest
 			else if (event.equalsIgnoreCase("Mob_3 Timer 1"))
 			{
 				// Search the NPC.
-				L2Npc Mob_2 = (L2Npc) L2World.getInstance().getObject(st.getInt("Mob_2"));
+				L2Npc Mob_2 = (L2Npc) World.getInstance().getObject(st.getInt("Mob_2"));
 				if (Mob_2 == null)
 					return null;
 				
@@ -820,7 +820,7 @@ public class SagasSuperClass extends Quest
 	{
 		if (_SpawnList.containsKey(npc) && _SpawnList.get(npc) != player.getObjectId())
 		{
-			L2PcInstance quest_player = L2World.getInstance().getPlayer(_SpawnList.get(npc));
+			L2PcInstance quest_player = World.getInstance().getPlayer(_SpawnList.get(npc));
 			if (quest_player == null)
 				return null;
 			

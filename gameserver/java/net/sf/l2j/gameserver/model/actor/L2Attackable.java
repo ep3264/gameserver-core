@@ -1270,11 +1270,12 @@ public class L2Attackable extends L2Npc
 		getAI().setIntention(CtrlIntention.CAST, skill, target);
 	}
 	
-	public boolean returnHome()
+	public final boolean returnHome(boolean cleanAggro)
 	{
-		_aggroList.clear();
+		if (cleanAggro)
+			_aggroList.clear();
 		
-		if (getMoveSpeed() > 0 && hasAI() && getSpawn() != null && !isInsideRadius(getSpawn().getLocX(), getSpawn().getLocY(), Config.MAX_DRIFT_RANGE, false))
+		if (hasAI() && !isDead() && getMoveSpeed() > 0 && getSpawn() != null && !isInsideRadius(getSpawn().getLocX(), getSpawn().getLocY(), getDriftRange(), false))
 		{
 			setIsReturningToSpawnPoint(true);
 			setWalking();
@@ -1282,6 +1283,11 @@ public class L2Attackable extends L2Npc
 			return true;
 		}
 		return false;
+	}
+	
+	public int getDriftRange()
+	{
+		return Config.MAX_DRIFT_RANGE;
 	}
 	
 	public final Set<L2Character> getAttackByList()

@@ -14,6 +14,8 @@
  */
 package net.sf.l2j.gameserver.network;
 
+import com.l2je.protection.ProtectionConfig;
+
 /**
  * @author KenM
  */
@@ -57,13 +59,14 @@ public class GameCrypt
 		_inKey[10] = (byte) (old >> 0x10 & 0xff);
 		_inKey[11] = (byte) (old >> 0x18 & 0xff);
 		
-		if (com.l2je.protection.ProtectionConfig.RC5){
-			if(index == MAX_SIZE_K-1)
+		if (ProtectionConfig.RC5)
+		{
+			if (index == MAX_SIZE_K - 1)
 			{
-				index =0;
+				index = 0;
 			}
-			 raw[offset]^=_iv[index];
-			//RC5.getInstance().ndecrypt(raw, size, offset,_iv[index],_iv[index+1]);
+			raw[offset] ^= _iv[index];
+			// RC5.getInstance().ndecrypt(raw, size, offset,_iv[index],_iv[index+1]);
 			index++;
 		}
 	}

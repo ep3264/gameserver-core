@@ -288,6 +288,7 @@ public class CharEffectList
 				switch (e.getSkill().getSkillType())
 				{
 					case BUFF:
+					case COMBATPOINTHEAL:
 					case REFLECT:
 					case HEAL_PERCENT:
 					case MANAHEAL_PERCENT:
@@ -656,6 +657,12 @@ public class CharEffectList
 		// array modified, then rebuild on next request
 		_rebuildCache = true;
 		
+		if (isAffected(newEffect.getEffectFlags()) && !newEffect.onSameEffect(null))
+		{
+			newEffect.stopEffectTask();
+			return;
+		}
+		
 		if (newSkill.isDebuff())
 		{
 			if (_debuffs == null)
@@ -704,6 +711,7 @@ public class CharEffectList
 						case REFLECT:
 						case HEAL_PERCENT:
 						case MANAHEAL_PERCENT:
+						case COMBATPOINTHEAL:
 							for (L2Effect e : _buffs)
 							{
 								if (e == null)
@@ -715,6 +723,7 @@ public class CharEffectList
 									case REFLECT:
 									case HEAL_PERCENT:
 									case MANAHEAL_PERCENT:
+									case COMBATPOINTHEAL:
 										e.exit();
 										effectsToRemove--;
 										break; // break switch()
@@ -1064,7 +1073,12 @@ public class CharEffectList
 	 */
 	public boolean isAffected(L2EffectFlag flag)
 	{
-		return (_effectFlags & flag.getMask()) != 0;
+		return isAffected(flag.getMask());
+	}
+	
+	public boolean isAffected(int mask)
+	{
+		return (_effectFlags & mask) != 0;
 	}
 	
 	/**

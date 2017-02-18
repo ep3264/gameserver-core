@@ -23,7 +23,7 @@ import net.sf.l2j.commons.random.Rnd;
 import net.sf.l2j.gameserver.ai.CtrlIntention;
 import net.sf.l2j.gameserver.datatables.DoorTable;
 import net.sf.l2j.gameserver.instancemanager.FourSepulchersManager;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.L2Npc;
 import net.sf.l2j.gameserver.model.actor.template.NpcTemplate;
 import net.sf.l2j.gameserver.model.item.instance.ItemInstance;
@@ -374,7 +374,7 @@ public class L2SepulcherNpcInstance extends L2NpcInstance
 			return;// wrong usage
 			
 		final CreatureSay sm = new CreatureSay(0, Say2.SHOUT, getName(), msg);
-		for (L2PcInstance player : L2World.getInstance().getPlayers())
+		for (L2PcInstance player : World.getInstance().getPlayers())
 		{
 			if (Util.checkIfInRange(15000, player, this, true))
 				player.sendPacket(sm);

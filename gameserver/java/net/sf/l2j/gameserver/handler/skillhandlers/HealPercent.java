@@ -32,8 +32,7 @@ public class HealPercent implements ISkillHandler
 	private static final L2SkillType[] SKILL_IDS =
 	{
 		L2SkillType.HEAL_PERCENT,
-		L2SkillType.MANAHEAL_PERCENT,
-		L2SkillType.CPHEAL_PERCENT
+		L2SkillType.MANAHEAL_PERCENT
 	};
 	
 	@Override
@@ -44,16 +43,11 @@ public class HealPercent implements ISkillHandler
 		if (handler != null)
 			handler.useSkill(activeChar, skill, targets);
 		
-		boolean cp = false;
 		boolean hp = false;
 		boolean mp = false;
 		
 		switch (skill.getSkillType())
 		{
-			case CPHEAL_PERCENT:
-				cp = true;
-				break;
-			
 			case HEAL_PERCENT:
 				hp = true;
 				break;
@@ -109,17 +103,7 @@ public class HealPercent implements ISkillHandler
 			{
 				su = new StatusUpdate(target);
 				
-				if (cp)
-				{
-					amount = Math.min(((full) ? target.getMaxCp() : (target.getMaxCp() * skill.getPower() / 100.0)), target.getMaxCp() - target.getCurrentCp());
-					target.setCurrentCp(amount + target.getCurrentCp());
-					
-					sm = SystemMessage.getSystemMessage(SystemMessageId.S1_CP_WILL_BE_RESTORED);
-					sm.addNumber((int) amount);
-					target.sendPacket(sm);
-					su.addAttribute(StatusUpdate.CUR_CP, (int) target.getCurrentCp());
-				}
-				else if (hp)
+				if (hp)
 				{
 					if (activeChar != target)
 						sm = SystemMessage.getSystemMessage(SystemMessageId.S2_HP_RESTORED_BY_S1).addCharName(activeChar);

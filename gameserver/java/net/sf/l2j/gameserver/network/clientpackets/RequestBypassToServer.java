@@ -27,7 +27,7 @@ import net.sf.l2j.gameserver.datatables.AdminCommandAccessRights;
 import net.sf.l2j.gameserver.handler.AdminCommandHandler;
 import net.sf.l2j.gameserver.handler.IAdminCommandHandler;
 import net.sf.l2j.gameserver.model.L2Object;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.L2Npc;
 import net.sf.l2j.gameserver.model.actor.instance.L2OlympiadManagerInstance;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
@@ -112,7 +112,7 @@ public final class RequestBypassToServer extends L2GameClientPacket
 				
 				try
 				{
-					final L2Object object = L2World.getInstance().getObject(Integer.parseInt(id));
+					final L2Object object = World.getInstance().getObject(Integer.parseInt(id));
 					
 					if (object != null && object instanceof L2Npc && endOfId > 0 && ((L2Npc) object).canInteract(activeChar))
 					{

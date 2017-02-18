@@ -38,7 +38,7 @@ import net.sf.l2j.gameserver.instancemanager.CursedWeaponsManager;
 import net.sf.l2j.gameserver.model.L2Object;
 import net.sf.l2j.gameserver.model.L2Party;
 import net.sf.l2j.gameserver.model.L2Skill;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.PetDataEntry;
 import net.sf.l2j.gameserver.model.actor.L2Character;
 import net.sf.l2j.gameserver.model.actor.L2Summon;
@@ -177,7 +177,7 @@ public class L2PetInstance extends L2Summon
 	public synchronized static L2PetInstance spawnPet(NpcTemplate template, L2PcInstance owner, ItemInstance control)
 	{
 		// Owner has a pet listed in world.
-		if (L2World.getInstance().getPet(owner.getObjectId()) != null)
+		if (World.getInstance().getPet(owner.getObjectId()) != null)
 			return null;
 		
 		// Add the pet instance to world.
@@ -185,7 +185,7 @@ public class L2PetInstance extends L2Summon
 		if (pet != null)
 		{
 			pet.setTitle(owner.getName());
-			L2World.getInstance().addPet(owner.getObjectId(), pet);
+			World.getInstance().addPet(owner.getObjectId(), pet);
 		}
 		
 		return pet;
@@ -606,7 +606,7 @@ public class L2PetInstance extends L2Summon
 	public void destroyControlItem(L2PcInstance owner)
 	{
 		// remove the pet instance from world
-		L2World.getInstance().removePet(owner.getObjectId());
+		World.getInstance().removePet(owner.getObjectId());
 		
 		// delete from inventory
 		try
@@ -628,7 +628,7 @@ public class L2PetInstance extends L2Summon
 				
 				owner.broadcastUserInfo();
 				
-				L2World.getInstance().removeObject(removedItem);
+				World.getInstance().removeObject(removedItem);
 			}
 		}
 		catch (Exception e)
@@ -782,7 +782,7 @@ public class L2PetInstance extends L2Summon
 		
 		// Drop pet from world's pet list.
 		if (!isDead())
-			L2World.getInstance().removePet(owner.getObjectId());
+			World.getInstance().removePet(owner.getObjectId());
 	}
 	
 	/**
@@ -854,8 +854,8 @@ public class L2PetInstance extends L2Summon
 		int oldOwnerId = getOwner().getObjectId();
 		
 		setOwner(owner);
-		L2World.getInstance().removePet(oldOwnerId);
-		L2World.getInstance().addPet(oldOwnerId, this);
+		World.getInstance().removePet(oldOwnerId);
+		World.getInstance().addPet(oldOwnerId, this);
 	}
 	
 	public int getCurrentLoad()

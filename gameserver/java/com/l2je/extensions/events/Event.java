@@ -23,8 +23,8 @@ import net.sf.l2j.gameserver.datatables.FenceTable;
 import net.sf.l2j.gameserver.model.L2Effect;
 
 import net.sf.l2j.gameserver.model.L2Skill;
-import net.sf.l2j.gameserver.model.L2World;
-import net.sf.l2j.gameserver.model.L2WorldRegion;
+import net.sf.l2j.gameserver.model.World;
+import net.sf.l2j.gameserver.model.WorldRegion;
 import net.sf.l2j.gameserver.model.actor.L2Character;
 import net.sf.l2j.gameserver.model.actor.L2Summon;
 import net.sf.l2j.gameserver.model.actor.instance.L2FenceInstance;
@@ -597,7 +597,7 @@ public abstract class Event
 		}
 		for (L2FenceInstance fence : _fences)
 		{
-			L2WorldRegion region = fence.getRegion();
+			WorldRegion region = fence.getRegion();
 			if (region != null)
 			{
 				region.removeVisibleObject(fence);
@@ -606,7 +606,7 @@ public abstract class Event
 			{
 				fence.getKnownList().removeAllKnownObjects();
 			}
-			L2World.getInstance().removeObject(fence);
+			World.getInstance().removeObject(fence);
 			FenceTable.getInstance().removeFence(fence);
 		}
 	}

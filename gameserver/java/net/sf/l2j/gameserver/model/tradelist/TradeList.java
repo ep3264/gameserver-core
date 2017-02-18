@@ -23,7 +23,7 @@ import net.sf.l2j.Config;
 import net.sf.l2j.gameserver.datatables.ItemTable;
 import net.sf.l2j.gameserver.model.ItemRequest;
 import net.sf.l2j.gameserver.model.L2Object;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.model.item.instance.ItemInstance;
 import net.sf.l2j.gameserver.model.item.kind.Item;
@@ -187,7 +187,7 @@ public class TradeList
 		if (isLocked())
 			return null;
 		
-		L2Object o = L2World.getInstance().getObject(objectId);
+		L2Object o = World.getInstance().getObject(objectId);
 		if (!(o instanceof ItemInstance))
 			return null;
 		
@@ -395,7 +395,7 @@ public class TradeList
 	private boolean validate()
 	{
 		// Check for Owner validity
-		if (_owner == null || L2World.getInstance().getPlayer(_owner.getObjectId()) == null)
+		if (_owner == null || World.getInstance().getPlayer(_owner.getObjectId()) == null)
 			return false;
 		
 		// Check for Item validity

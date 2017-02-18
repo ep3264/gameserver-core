@@ -35,7 +35,7 @@ import net.sf.l2j.gameserver.handler.IAdminCommandHandler;
 import net.sf.l2j.gameserver.instancemanager.CursedWeaponsManager;
 import net.sf.l2j.gameserver.instancemanager.ZoneManager;
 import net.sf.l2j.gameserver.model.L2Object;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.L2Character;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.network.SystemMessageId;
@@ -97,7 +97,7 @@ public class AdminAdmin implements IAdminCommandHandler
 			}
 			
 			String firstParam = st.nextToken();
-			L2PcInstance player = L2World.getInstance().getPlayer(firstParam);
+			L2PcInstance player = World.getInstance().getPlayer(firstParam);
 			if (player != null)
 			{
 				if (st.hasMoreTokens())

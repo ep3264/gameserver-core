@@ -32,7 +32,7 @@ import net.sf.l2j.L2DatabaseFactory;
 import net.sf.l2j.gameserver.cache.HtmCache;
 import net.sf.l2j.gameserver.datatables.CharNameTable;
 import net.sf.l2j.gameserver.model.BlockList;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.network.SystemMessageId;
 import net.sf.l2j.gameserver.network.serverpackets.ExMailArrived;
@@ -521,7 +521,7 @@ public class MailBBSManager extends BaseBBSManager
 					continue;
 				}
 				
-				final L2PcInstance recipientPlayer = L2World.getInstance().getPlayer(recipientId);
+				final L2PcInstance recipientPlayer = World.getInstance().getPlayer(recipientId);
 				
 				if (!activeChar.isGM())
 				{
@@ -656,7 +656,7 @@ public class MailBBSManager extends BaseBBSManager
 	
 	private static boolean isBlocked(L2PcInstance activeChar, int recipId)
 	{
-		for (L2PcInstance player : L2World.getInstance().getPlayers())
+		for (L2PcInstance player : World.getInstance().getPlayers())
 		{
 			if (player.getObjectId() == recipId)
 			{

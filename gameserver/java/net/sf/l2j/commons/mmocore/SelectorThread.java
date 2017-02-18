@@ -447,7 +447,6 @@ public final class SelectorThread<T extends MMOClient<?>> extends Thread
 			// apply limit
 			final int limit = buf.limit();
 			buf.limit(pos + dataSize);
-		
 			final ReceivablePacket<T> cp = _packetHandler.handlePacket(buf, client);
 			
 			if (cp != null)

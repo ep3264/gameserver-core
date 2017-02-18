@@ -18,7 +18,7 @@ import com.l2je.extensions.events.EventManager;
 
 import net.sf.l2j.gameserver.model.L2CommandChannel;
 import net.sf.l2j.gameserver.model.L2Party;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.network.SystemMessageId;
 import net.sf.l2j.gameserver.network.serverpackets.ExDuelAskStart;
@@ -43,7 +43,7 @@ public final class RequestDuelStart extends L2GameClientPacket
 		if (activeChar == null)
 			return;
 		
-		final L2PcInstance targetChar = L2World.getInstance().getPlayer(_player);
+		final L2PcInstance targetChar = World.getInstance().getPlayer(_player);
 		if (targetChar == null || activeChar == targetChar)
 		{
 			activeChar.sendPacket(SystemMessageId.THERE_IS_NO_OPPONENT_TO_RECEIVE_YOUR_CHALLENGE_FOR_A_DUEL);

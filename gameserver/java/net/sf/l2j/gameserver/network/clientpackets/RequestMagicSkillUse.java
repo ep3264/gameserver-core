@@ -137,6 +137,12 @@ public final class RequestMagicSkillUse extends L2GameClientPacket
 		
 		if (activeChar.isAttackingNow())
 		{
+			if (skill.isToggle())
+			{
+				activeChar.sendPacket(ActionFailed.STATIC_PACKET);
+				return;
+			}
+			
 			activeChar.getAI().setNextAction(new NextAction(CtrlEvent.EVT_READY_TO_ACT, CtrlIntention.CAST, new Runnable()
 			{
 				@Override

@@ -131,17 +131,8 @@ public final class L2SiegeGuardInstance extends L2Attackable
 	}
 	
 	@Override
-	public boolean returnHome()
+	public int getDriftRange()
 	{
-		getAggroList().clear();
-		
-		if (getMoveSpeed() > 0 && hasAI() && getSpawn() != null && !isInsideRadius(getSpawn().getLocX(), getSpawn().getLocY(), 20, false))
-		{
-			setIsReturningToSpawnPoint(true);
-			setWalking();
-			getAI().setIntention(CtrlIntention.MOVE_TO, getSpawn().getLoc());
-			return true;
-		}
-		return false;
+		return 20;
 	}
 }

@@ -18,9 +18,10 @@ import java.util.Collection;
 import java.util.StringTokenizer;
 
 import net.sf.l2j.commons.lang.StringUtil;
+
 import net.sf.l2j.gameserver.handler.IAdminCommandHandler;
 import net.sf.l2j.gameserver.model.L2Object;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.model.actor.knownlist.ObjectKnownList;
 import net.sf.l2j.gameserver.network.serverpackets.NpcHtmlMessage;
@@ -54,11 +55,11 @@ public class AdminKnownlist implements IAdminCommandHandler
 				try
 				{
 					final int objectId = Integer.parseInt(parameter);
-					target = L2World.getInstance().getObject(objectId);
+					target = World.getInstance().getObject(objectId);
 				}
 				catch (NumberFormatException nfe)
 				{
-					target = L2World.getInstance().getPlayer(parameter);
+					target = World.getInstance().getPlayer(parameter);
 				}
 			}
 			

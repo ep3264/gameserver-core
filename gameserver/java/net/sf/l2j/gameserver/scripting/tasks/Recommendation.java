@@ -14,7 +14,7 @@
  */
 package net.sf.l2j.gameserver.scripting.tasks;
 
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.network.serverpackets.UserInfo;
 import net.sf.l2j.gameserver.scripting.ScheduledQuest;
@@ -32,7 +32,7 @@ public final class Recommendation extends ScheduledQuest
 	@Override
 	public final void onStart()
 	{
-		for (L2PcInstance player : L2World.getInstance().getPlayers())
+		for (L2PcInstance player : World.getInstance().getPlayers())
 		{
 			player.restartRecom();
 			player.sendPacket(new UserInfo(player));

@@ -5,7 +5,7 @@ import java.util.List;
 
 import net.sf.l2j.commons.random.Rnd;
 import net.sf.l2j.gameserver.datatables.MapRegionTable;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.network.serverpackets.CreatureSay;
 
@@ -1006,7 +1006,7 @@ public class GhostsShouts implements Runnable
 			{
 				int region = MapRegionTable.getMapRegion(player.getX(), player.getY());
 				
-				for (L2PcInstance pc : L2World.getInstance().getAllPlayers())
+				for (L2PcInstance pc : World.getInstance().getAllPlayers())
 				{
 					if (region == MapRegionTable.getMapRegion(pc.getX(), pc.getY()) && !pc.isGhost())
 					{
@@ -1038,7 +1038,7 @@ public class GhostsShouts implements Runnable
 	
 	private static L2PcInstance getNewFake()
 	{
-		List<L2PcInstance> players = new ArrayList<>(L2World.getInstance().getAllPlayers());
+		List<L2PcInstance> players = new ArrayList<>(World.getInstance().getAllPlayers());
 		if (players.isEmpty())
 			return null;
 		return players.get(Rnd.nextInt(players.size()));

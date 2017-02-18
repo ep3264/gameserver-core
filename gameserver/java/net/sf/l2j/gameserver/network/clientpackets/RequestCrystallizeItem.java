@@ -15,7 +15,7 @@
 package net.sf.l2j.gameserver.network.clientpackets;
 
 import net.sf.l2j.gameserver.model.L2Skill;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.model.item.instance.ItemInstance;
 import net.sf.l2j.gameserver.model.item.type.CrystalType;
@@ -169,7 +169,7 @@ public final class RequestCrystallizeItem extends L2GameClientPacket
 		activeChar.sendPacket(SystemMessage.getSystemMessage(SystemMessageId.EARNED_S2_S1_S).addItemName(createditem.getItemId()).addItemNumber(crystalAmount));
 		
 		activeChar.broadcastUserInfo();
-		L2World.getInstance().removeObject(removedItem);
+		World.getInstance().removeObject(removedItem);
 		activeChar.setCrystallizing(false);
 	}
 }

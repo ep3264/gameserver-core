@@ -19,7 +19,7 @@ import java.util.StringTokenizer;
 import net.sf.l2j.commons.concurrent.ThreadPool;
 
 import net.sf.l2j.gameserver.datatables.MapRegionTable;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.template.NpcTemplate;
 import net.sf.l2j.gameserver.network.serverpackets.NpcHtmlMessage;
 import net.sf.l2j.gameserver.network.serverpackets.NpcSay;
@@ -102,7 +102,7 @@ public class L2CastleTeleporterInstance extends L2NpcInstance
 				final NpcSay cs = new NpcSay(getObjectId(), 1, getNpcId(), "The defenders of " + getCastle().getName() + " castle have been teleported to the inner castle.");
 				final int region = MapRegionTable.getMapRegion(getX(), getY());
 				
-				for (L2PcInstance player : L2World.getInstance().getPlayers())
+				for (L2PcInstance player : World.getInstance().getPlayers())
 				{
 					if (region == MapRegionTable.getMapRegion(player.getX(), player.getY()))
 						player.sendPacket(cs);

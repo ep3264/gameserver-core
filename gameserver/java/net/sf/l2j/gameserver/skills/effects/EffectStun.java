@@ -55,6 +55,12 @@ final class EffectStun extends L2Effect
 	}
 	
 	@Override
+	public boolean onSameEffect(L2Effect effect)
+	{
+		return false;
+	}
+	
+	@Override
 	public int getEffectFlags()
 	{
 		return L2EffectFlag.STUNNED.getMask();

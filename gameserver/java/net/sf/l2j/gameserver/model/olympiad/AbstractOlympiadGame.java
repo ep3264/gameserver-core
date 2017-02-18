@@ -245,10 +245,10 @@ public abstract class AbstractOlympiadGame
 	}
 	
 	/**
-	 * Buff and heal the player. WW2 for fighter/mage + haste 1 if fighter.
+	 * Buff the player. WW2 for fighter/mage + haste 1 if fighter.
 	 * @param player : the happy benefactor.
 	 */
-	protected static final void buffAndHealPlayer(L2PcInstance player)
+	protected static final void buffPlayer(L2PcInstance player)
 	{
 		L2Skill skill = SkillTable.getInstance().getInfo(1204, 2); // Windwalk 2
 		if (skill != null)
@@ -266,8 +266,14 @@ public abstract class AbstractOlympiadGame
 				player.sendPacket(SystemMessage.getSystemMessage(SystemMessageId.YOU_FEEL_S1_EFFECT).addSkillName(1086));
 			}
 		}
-		
-		// Heal Player fully
+	}
+	
+	/**
+	 * Heal the player.
+	 * @param player : the happy benefactor.
+	 */
+	protected static final void healPlayer(L2PcInstance player)
+	{
 		player.setCurrentCp(player.getMaxCp());
 		player.setCurrentHp(player.getMaxHp());
 		player.setCurrentMp(player.getMaxMp());
@@ -408,7 +414,9 @@ public abstract class AbstractOlympiadGame
 	
 	protected abstract void removals();
 	
-	protected abstract void buffAndHealPlayers();
+	protected abstract void buffPlayers();
+	
+	protected abstract void healPlayers();
 	
 	protected abstract boolean portPlayersToArena(List<Location> spawns);
 	

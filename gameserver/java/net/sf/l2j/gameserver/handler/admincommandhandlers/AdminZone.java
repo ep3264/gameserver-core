@@ -21,7 +21,7 @@ import net.sf.l2j.commons.lang.StringUtil;
 import net.sf.l2j.gameserver.datatables.MapRegionTable;
 import net.sf.l2j.gameserver.handler.IAdminCommandHandler;
 import net.sf.l2j.gameserver.instancemanager.ZoneManager;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.model.zone.L2ZoneType;
 import net.sf.l2j.gameserver.model.zone.ZoneId;
@@ -82,8 +82,8 @@ public class AdminZone implements IAdminCommandHandler
 	{
 		int x = activeChar.getX();
 		int y = activeChar.getY();
-		int rx = (x - L2World.WORLD_X_MIN) / L2World.TILE_SIZE + L2World.TILE_X_MIN;
-		int ry = (y - L2World.WORLD_Y_MIN) / L2World.TILE_SIZE + L2World.TILE_Y_MIN;
+		int rx = (x - World.WORLD_X_MIN) / World.TILE_SIZE + World.TILE_X_MIN;
+		int ry = (y - World.WORLD_Y_MIN) / World.TILE_SIZE + World.TILE_Y_MIN;
 		
 		final NpcHtmlMessage html = new NpcHtmlMessage(0);
 		html.setFile("data/html/admin/zone.htm");
@@ -113,7 +113,7 @@ public class AdminZone implements IAdminCommandHandler
 		html.replace("%NORESTART%", (activeChar.isInsideZone(ZoneId.NO_RESTART) ? "<font color=\"LEVEL\">YES</font>" : "NO"));
 		
 		final StringBuilder sb = new StringBuilder(100);
-		for (L2ZoneType zone : L2World.getInstance().getRegion(x, y).getZones())
+		for (L2ZoneType zone : World.getInstance().getRegion(x, y).getZones())
 		{
 			if (zone.isCharacterInZone(activeChar))
 				StringUtil.append(sb, zone.getId(), " ");

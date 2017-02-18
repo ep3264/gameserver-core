@@ -18,8 +18,8 @@ import net.sf.l2j.commons.concurrent.ThreadPool;
 
 import net.sf.l2j.Config;
 import net.sf.l2j.gameserver.model.L2Object;
-import net.sf.l2j.gameserver.model.L2World;
-import net.sf.l2j.gameserver.model.L2WorldRegion;
+import net.sf.l2j.gameserver.model.World;
+import net.sf.l2j.gameserver.model.WorldRegion;
 import net.sf.l2j.gameserver.model.actor.L2Attackable;
 import net.sf.l2j.gameserver.model.actor.L2Character;
 import net.sf.l2j.gameserver.model.actor.L2Playable;
@@ -27,7 +27,7 @@ import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 
 /**
  * Periodically updates known list of all existing {@link L2Character}.<br>
- * Special scope is used for {@link L2WorldRegion} without {@link L2PcInstance} inside.
+ * Special scope is used for {@link WorldRegion} without {@link L2PcInstance} inside.
  * @author Hasha
  */
 public final class KnownListUpdateTaskManager implements Runnable
@@ -62,16 +62,16 @@ public final class KnownListUpdateTaskManager implements Runnable
 		_flagForgetAdd = !_flagForgetAdd;
 		
 		// Go through all world regions.
-		for (L2WorldRegion regions[] : L2World.getInstance().getWorldRegions())
+		for (WorldRegion regions[] : World.getInstance().getWorldRegions())
 		{
-			for (L2WorldRegion region : regions)
+			for (WorldRegion region : regions)
 			{
 				// Skip inactive regions unless full update (knownlist can be still updated regardless AI active or detached).
 				if (!region.isActive() && !fullUpdate)
 					continue;
 				
 				// Go through all visible objects.
-				for (L2Object object : region.getVisibleObjects().values())
+				for (L2Object object : region.getObjects())
 				{
 					// don't busy about objects lower than L2Character.
 					if (!(object instanceof L2Character) || !object.isVisible())
@@ -92,13 +92,13 @@ public final class KnownListUpdateTaskManager implements Runnable
 						// The other iteration performs object add.
 						else
 						{
-							for (L2WorldRegion surroundingRegion : region.getSurroundingRegions())
+							for (WorldRegion surroundingRegion : region.getSurroundingRegions())
 							{
 								// Object is a monster and surrounding region does not contain playable, skip.
 								if (isAttackable && !surroundingRegion.isActive())
 									continue;
 								
-								for (L2Object o : surroundingRegion.getVisibleObjects().values())
+								for (L2Object o : surroundingRegion.getObjects())
 								{
 									if (o != object)
 										object.getKnownList().addKnownObject(o);

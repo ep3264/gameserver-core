@@ -26,7 +26,7 @@ import net.sf.l2j.Config;
 import net.sf.l2j.L2DatabaseFactory;
 import net.sf.l2j.gameserver.LoginServerThread;
 import net.sf.l2j.gameserver.handler.IAdminCommandHandler;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.network.SystemMessageId;
 
@@ -77,7 +77,7 @@ public class AdminBan implements IAdminCommandHandler
 		if (st.hasMoreTokens())
 		{
 			player = st.nextToken();
-			targetPlayer = L2World.getInstance().getPlayer(player);
+			targetPlayer = World.getInstance().getPlayer(player);
 			
 			// Second parameter, duration
 			if (st.hasMoreTokens())

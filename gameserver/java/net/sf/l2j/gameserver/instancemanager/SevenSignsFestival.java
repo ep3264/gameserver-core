@@ -41,7 +41,7 @@ import net.sf.l2j.gameserver.model.L2Clan;
 import net.sf.l2j.gameserver.model.L2Party;
 import net.sf.l2j.gameserver.model.L2Party.MessageType;
 import net.sf.l2j.gameserver.model.L2Spawn;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.Location;
 import net.sf.l2j.gameserver.model.actor.L2Npc;
 import net.sf.l2j.gameserver.model.actor.instance.L2FestivalMonsterInstance;
@@ -3502,7 +3502,7 @@ public class SevenSignsFestival
 	
 	private static void addReputationPointsForPartyMemberClan(String partyMemberName)
 	{
-		L2PcInstance player = L2World.getInstance().getPlayer(partyMemberName);
+		L2PcInstance player = World.getInstance().getPlayer(partyMemberName);
 		if (player != null)
 		{
 			if (player.getClan() != null)
@@ -3603,7 +3603,7 @@ public class SevenSignsFestival
 		saveFestivalData(updateSettings);
 		
 		// Remove any unused blood offerings from online players.
-		for (L2PcInstance player : L2World.getInstance().getPlayers())
+		for (L2PcInstance player : World.getInstance().getPlayers())
 		{
 			ItemInstance bloodOfferings = player.getInventory().getItemByItemId(FESTIVAL_OFFERING_ID);
 			if (bloodOfferings != null)
@@ -3784,7 +3784,7 @@ public class SevenSignsFestival
 				if (festivalParty == null)// leader has left
 					for (int partyMemberObjId : getParticipants(oracle, festivalId))
 					{
-						L2PcInstance partyMember = L2World.getInstance().getPlayer(partyMemberObjId);
+						L2PcInstance partyMember = World.getInstance().getPlayer(partyMemberObjId);
 						if (partyMember == null)
 							continue;
 						
@@ -4395,7 +4395,7 @@ public class SevenSignsFestival
 			{
 				for (int participantObjId : _participants)
 				{
-					L2PcInstance participant = L2World.getInstance().getPlayer(participantObjId);
+					L2PcInstance participant = World.getInstance().getPlayer(participantObjId);
 					if (participant == null)
 						continue;
 					
@@ -4615,7 +4615,7 @@ public class SevenSignsFestival
 			{
 				for (int participantObjId : _participants)
 				{
-					L2PcInstance participant = L2World.getInstance().getPlayer(participantObjId);
+					L2PcInstance participant = World.getInstance().getPlayer(participantObjId);
 					if (participant == null)
 						continue;
 					

@@ -25,7 +25,7 @@ public final class PcAppearance
 	private boolean _invisible = false;
 	private int _nameColor = 0xFFFFFF;
 	private int _titleColor = 0xFFFF77;
-		
+	
 	public PcAppearance(byte face, byte hColor, byte hStyle, Sex sex)
 	{
 		_face = face;

@@ -97,7 +97,7 @@ import net.sf.l2j.gameserver.util.Broadcast;
  */
 public class L2Npc extends L2Character
 {
-	public static final int INTERACTION_DISTANCE = 150;
+	public static final int INTERACTION_DISTANCE = 100;
 	private static final int SOCIAL_INTERVAL = 12000;
 	
 	private L2Spawn _spawn;

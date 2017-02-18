@@ -21,7 +21,7 @@ import net.sf.l2j.gameserver.geoengine.geodata.ABlock;
 import net.sf.l2j.gameserver.geoengine.geodata.GeoStructure;
 import net.sf.l2j.gameserver.handler.IAdminCommandHandler;
 import net.sf.l2j.gameserver.model.L2Object;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.Location;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.network.SystemMessageId;
@@ -72,8 +72,8 @@ public class AdminGeoEngine implements IAdminCommandHandler
 		{
 			final int geoX = GeoEngine.getGeoX(activeChar.getX());
 			final int geoY = GeoEngine.getGeoY(activeChar.getY());
-			final int rx = (activeChar.getX() - L2World.WORLD_X_MIN) / L2World.TILE_SIZE + L2World.TILE_X_MIN;
-			final int ry = (activeChar.getY() - L2World.WORLD_Y_MIN) / L2World.TILE_SIZE + L2World.TILE_Y_MIN;
+			final int rx = (activeChar.getX() - World.WORLD_X_MIN) / World.TILE_SIZE + World.TILE_X_MIN;
+			final int ry = (activeChar.getY() - World.WORLD_Y_MIN) / World.TILE_SIZE + World.TILE_Y_MIN;
 			final ABlock block = GeoEngine.getInstance().getBlock(geoX, geoY);
 			activeChar.sendMessage("Region: " + rx + "_" + ry + "; Block: " + block.getClass().getSimpleName());
 			if (block.hasGeoPos())

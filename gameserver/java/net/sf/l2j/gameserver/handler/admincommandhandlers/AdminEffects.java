@@ -19,7 +19,7 @@ import java.util.StringTokenizer;
 import net.sf.l2j.gameserver.datatables.SkillTable;
 import net.sf.l2j.gameserver.handler.IAdminCommandHandler;
 import net.sf.l2j.gameserver.model.L2Object;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.L2Character;
 import net.sf.l2j.gameserver.model.actor.L2Npc;
 import net.sf.l2j.gameserver.model.actor.L2Summon;
@@ -269,13 +269,13 @@ public class AdminEffects implements IAdminCommandHandler
 				}
 				
 				if (player instanceof L2PcInstance)
-					L2World.getInstance().removePlayer((L2PcInstance) player);
+					World.getInstance().removePlayer((L2PcInstance) player);
 				
 				player.setName(name);
 				
 				if (player instanceof L2PcInstance)
 				{
-					L2World.getInstance().addVisibleObject(player, null);
+					World.getInstance().addVisibleObject(player, null);
 					((L2PcInstance) player).broadcastUserInfo();
 				}
 				else if (player instanceof L2Npc)
@@ -298,7 +298,7 @@ public class AdminEffects implements IAdminCommandHandler
 					final String targetOrRadius = st.nextToken();
 					if (targetOrRadius != null)
 					{
-						L2PcInstance player = L2World.getInstance().getPlayer(targetOrRadius);
+						L2PcInstance player = World.getInstance().getPlayer(targetOrRadius);
 						if (player != null)
 						{
 							if (performSocial(social, player))
@@ -347,7 +347,7 @@ public class AdminEffects implements IAdminCommandHandler
 					final String targetOrRadius = st.nextToken();
 					if (targetOrRadius != null)
 					{
-						L2PcInstance player = L2World.getInstance().getPlayer(targetOrRadius);
+						L2PcInstance player = World.getInstance().getPlayer(targetOrRadius);
 						if (player != null)
 						{
 							if (performAbnormal(abnormal, player))

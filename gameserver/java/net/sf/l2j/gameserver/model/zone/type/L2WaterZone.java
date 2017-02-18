@@ -53,7 +53,6 @@ public class L2WaterZone extends L2ZoneType
 	{
 		character.setInsideZone(ZoneId.WATER, false);
 		
-		// TODO: update to only send speed status when that packet is known
 		if (character instanceof L2PcInstance)
 			((L2PcInstance) character).broadcastUserInfo();
 		else if (character instanceof L2Npc)

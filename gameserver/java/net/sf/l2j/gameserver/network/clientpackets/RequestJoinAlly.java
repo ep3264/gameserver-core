@@ -15,7 +15,7 @@
 package net.sf.l2j.gameserver.network.clientpackets;
 
 import net.sf.l2j.gameserver.model.L2Clan;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.network.SystemMessageId;
 import net.sf.l2j.gameserver.network.serverpackets.AskJoinAlly;
@@ -45,7 +45,7 @@ public final class RequestJoinAlly extends L2GameClientPacket
 			return;
 		}
 		
-		final L2PcInstance target = L2World.getInstance().getPlayer(_id);
+		final L2PcInstance target = World.getInstance().getPlayer(_id);
 		if (target == null)
 		{
 			activeChar.sendPacket(SystemMessageId.YOU_HAVE_INVITED_THE_WRONG_TARGET);

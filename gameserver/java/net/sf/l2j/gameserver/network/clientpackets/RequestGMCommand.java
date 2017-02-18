@@ -16,7 +16,7 @@ package net.sf.l2j.gameserver.network.clientpackets;
 
 import net.sf.l2j.gameserver.datatables.ClanTable;
 import net.sf.l2j.gameserver.model.L2Clan;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.network.serverpackets.GMViewCharacterInfo;
 import net.sf.l2j.gameserver.network.serverpackets.GMViewHennaInfo;
@@ -49,7 +49,7 @@ public final class RequestGMCommand extends L2GameClientPacket
 		if (!activeChar.isGM() || !activeChar.getAccessLevel().allowAltG())
 			return;
 		
-		final L2PcInstance target = L2World.getInstance().getPlayer(_targetName);
+		final L2PcInstance target = World.getInstance().getPlayer(_targetName);
 		final L2Clan clan = ClanTable.getInstance().getClanByName(_targetName);
 		
 		if (target == null && (clan == null || _command != 6))

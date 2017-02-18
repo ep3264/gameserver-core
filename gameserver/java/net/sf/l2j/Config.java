@@ -375,10 +375,6 @@ public final class Config
 	public static int MIN_MONSTER_ANIMATION;
 	public static int MAX_MONSTER_ANIMATION;
 	
-	public static boolean GRIDS_ALWAYS_ON;
-	public static int GRID_NEIGHBOR_TURNON_TIME;
-	public static int GRID_NEIGHBOR_TURNOFF_TIME;
-	
 	// --------------------------------------------------
 	// Players
 	// --------------------------------------------------
@@ -717,7 +713,6 @@ public final class Config
 	public static int THREADS_PER_INSTANT_THREAD_POOL;
 	/** Misc */
 	public static boolean L2WALKER_PROTECTION;
-	public static boolean AUTODELETE_INVALID_QUEST_DATA;
 	public static boolean SERVER_NEWS;
 	public static int ZONE_TOWN;
 	public static boolean DISABLE_TUTORIAL;
@@ -788,7 +783,7 @@ public final class Config
 		final String[] propertySplit = line.split(";");
 		if (propertySplit.length == 0)
 			return null;
-			
+		
 		int i = 0;
 		String[] valueSplit;
 		final int[][] result = new int[propertySplit.length][];
@@ -1099,7 +1094,7 @@ public final class Config
 		ALLOW_ENTIRE_TREE = npcs.getProperty("AllowEntireTree", false);
 		if (ALLOW_CLASS_MASTERS)
 			CLASS_MASTER_SETTINGS = new ClassMasterSettings(npcs.getProperty("ConfigClassMaster"));
-			
+		
 		ALT_GAME_FREE_TELEPORT = npcs.getProperty("AltFreeTeleporting", false);
 		ANNOUNCE_MAMMON_SPAWN = npcs.getProperty("AnnounceMammonSpawn", true);
 		ALT_MOB_AGRO_IN_PEACEZONE = npcs.getProperty("AltMobAgroInPeaceZone", true);
@@ -1164,10 +1159,6 @@ public final class Config
 		MAX_NPC_ANIMATION = npcs.getProperty("MaxNPCAnimation", 40);
 		MIN_MONSTER_ANIMATION = npcs.getProperty("MinMonsterAnimation", 10);
 		MAX_MONSTER_ANIMATION = npcs.getProperty("MaxMonsterAnimation", 40);
-		
-		GRIDS_ALWAYS_ON = npcs.getProperty("GridsAlwaysOn", false);
-		GRID_NEIGHBOR_TURNON_TIME = npcs.getProperty("GridNeighborTurnOnTime", 1);
-		GRID_NEIGHBOR_TURNOFF_TIME = npcs.getProperty("GridNeighborTurnOffTime", 90);
 	}
 	
 	/**
@@ -1241,13 +1232,13 @@ public final class Config
 		
 		for (int i = 0; i < array.length; i++)
 			KARMA_LIST_NONDROPPABLE_PET_ITEMS[i] = Integer.parseInt(array[i]);
-			
+		
 		array = KARMA_NONDROPPABLE_ITEMS.split(",");
 		KARMA_LIST_NONDROPPABLE_ITEMS = new int[array.length];
 		
 		for (int i = 0; i < array.length; i++)
 			KARMA_LIST_NONDROPPABLE_ITEMS[i] = Integer.parseInt(array[i]);
-			
+		
 		// sorting so binarySearch can be used later
 		Arrays.sort(KARMA_LIST_NONDROPPABLE_PET_ITEMS);
 		Arrays.sort(KARMA_LIST_NONDROPPABLE_ITEMS);
@@ -1332,7 +1323,7 @@ public final class Config
 		MAX_PROTOCOL_REVISION = server.getProperty("MaxProtocolRevision", 746);
 		if (MIN_PROTOCOL_REVISION > MAX_PROTOCOL_REVISION)
 			throw new Error("MinProtocolRevision is bigger than MaxProtocolRevision in server.properties.");
-			
+		
 		DEFAULT_PUNISH = server.getProperty("DefaultPunish", 2);
 		DEFAULT_PUNISH_PARAM = server.getProperty("DefaultPunishParam", 0);
 		
@@ -1443,7 +1434,6 @@ public final class Config
 		THREADS_PER_INSTANT_THREAD_POOL = server.getProperty("ThreadsPerInstantThreadPool", 2);
 		
 		L2WALKER_PROTECTION = server.getProperty("L2WalkerProtection", false);
-		AUTODELETE_INVALID_QUEST_DATA = server.getProperty("AutoDeleteInvalidQuestData", false);
 		ZONE_TOWN = server.getProperty("ZoneTown", 0);
 		SERVER_NEWS = server.getProperty("ShowServerNews", false);
 		DISABLE_TUTORIAL = server.getProperty("DisableTutorial", false);
@@ -1678,10 +1668,10 @@ public final class Config
 		{
 			if (_allowedClassChange == null)
 				return false;
-				
+			
 			if (_allowedClassChange.containsKey(job))
 				return _allowedClassChange.get(job);
-				
+			
 			return false;
 		}
 		

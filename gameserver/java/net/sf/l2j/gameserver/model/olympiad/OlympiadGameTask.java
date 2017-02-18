@@ -205,7 +205,10 @@ public final class OlympiadGameTask implements Runnable
 					_zone.broadcastPacket(SystemMessage.getSystemMessage(SystemMessageId.THE_GAME_WILL_START_IN_S1_SECOND_S).addNumber(_countDown));
 					
 					if (_countDown == 20)
-						_game.buffAndHealPlayers();
+					{
+						_game.buffPlayers();
+						_game.healPlayers();
+					}
 					
 					delay = getDelay(BATTLE_START_TIME);
 					if (_countDown <= 0)
@@ -217,7 +220,10 @@ public final class OlympiadGameTask implements Runnable
 				case BATTLE_STARTED:
 				{
 					_countDown = 0;
+					
+					_game.healPlayers();
 					_game.resetDamage();
+					
 					_state = GameState.BATTLE_IN_PROGRESS; // set state first, used in zone update
 					if (!startBattle())
 						_state = GameState.GAME_STOPPED;

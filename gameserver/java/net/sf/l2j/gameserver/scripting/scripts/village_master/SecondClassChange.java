@@ -90,8 +90,8 @@ public class SecondClassChange extends Quest
 		});
 		Classes.put("SE", new int[]
 		{
-			42,
 			43,
+			42,
 			2,
 			34,
 			35,

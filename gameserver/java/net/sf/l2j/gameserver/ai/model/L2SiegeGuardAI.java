@@ -176,7 +176,7 @@ public class L2SiegeGuardAI extends L2AttackableAI
 			}
 		}
 		// Order to the L2SiegeGuardInstance to return to its home location because there's no target to attack
-		getActiveChar().returnHome();
+		getActiveChar().returnHome(true);
 	}
 	
 	/**
@@ -201,7 +201,7 @@ public class L2SiegeGuardAI extends L2AttackableAI
 		 */
 		if (!actor.isInsideZone(ZoneId.SIEGE))
 		{
-			actor.returnHome();
+			actor.returnHome(true);
 			return;
 		}
 		

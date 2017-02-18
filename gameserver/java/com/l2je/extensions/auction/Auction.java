@@ -17,7 +17,7 @@ import net.sf.l2j.gameserver.cache.HtmCache;
 import net.sf.l2j.gameserver.datatables.ItemTable;
 import net.sf.l2j.gameserver.model.L2Object;
 import net.sf.l2j.gameserver.model.L2Skill;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.model.item.instance.ItemIcons;
 import net.sf.l2j.gameserver.model.item.instance.ItemInstance;
@@ -687,7 +687,7 @@ public class Auction
 
 	private void sendPayment(AuctionItem item)
 	{
-		L2PcInstance player = L2World.getInstance().getPlayer(item.trader_objId);
+		L2PcInstance player = World.getInstance().getPlayer(item.trader_objId);
 		if (player == null)
 		{
 			setSendPayment(item, true);

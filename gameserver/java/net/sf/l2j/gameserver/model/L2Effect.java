@@ -542,4 +542,9 @@ public abstract class L2Effect
 	{
 		return false;
 	}
+	
+	public boolean onSameEffect(L2Effect effect)
+	{
+		return true;
+	}
 }

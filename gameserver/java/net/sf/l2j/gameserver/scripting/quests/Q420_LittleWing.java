@@ -16,6 +16,7 @@ package net.sf.l2j.gameserver.scripting.quests;
 
 import net.sf.l2j.commons.random.Rnd;
 
+import net.sf.l2j.gameserver.model.SpawnLocation;
 import net.sf.l2j.gameserver.model.actor.L2Npc;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.scripting.Quest;
@@ -72,13 +73,23 @@ public class Q420_LittleWing extends Quest
 	private static final int SHAMHAI = 30752;
 	private static final int COOPER = 30829;
 	
+	// Spawn Points
+	private static final SpawnLocation[] LOCATIONS =
+	{
+		new SpawnLocation(109816, 40854, -4640, 0),
+		new SpawnLocation(108940, 41615, -4643, 0),
+		new SpawnLocation(110395, 41625, -4642, 0)
+	};
+	
+	private static int _counter = 0;
+	
 	public Q420_LittleWing()
 	{
 		super(420, "Little Wing");
 		
 		setItemsIds(FAIRY_STONE, DELUXE_FAIRY_STONE, FAIRY_STONE_LIST, DELUXE_FAIRY_STONE_LIST, TOAD_LORD_BACK_SKIN, JUICE_OF_MONKSHOOD, SCALE_OF_DRAKE_EXARION, EGG_OF_DRAKE_EXARION, SCALE_OF_DRAKE_ZWOV, EGG_OF_DRAKE_ZWOV, SCALE_OF_DRAKE_KALIBRAN, EGG_OF_DRAKE_KALIBRAN, SCALE_OF_WYVERN_SUZET, EGG_OF_WYVERN_SUZET, SCALE_OF_WYVERN_SHAMHAI, EGG_OF_WYVERN_SHAMHAI);
 		
-		addStartNpc(COOPER);
+		addStartNpc(COOPER, MIMYU);
 		addTalkId(MARIA, CRONOS, BYRON, MIMYU, EXARION, ZWOV, KALIBRAN, SUZET, SHAMHAI, COOPER);
 		
 		addKillId(20202, 20231, 20233, 20270, 20551, 20580, 20589, 20590, 20591, 20592, 20593, 20594, 20595, 20596, 20597, 20598, 20599);
@@ -278,7 +289,17 @@ public class Q420_LittleWing extends Quest
 		switch (st.getState())
 		{
 			case STATE_CREATED:
-				htmltext = (player.getLevel() >= 35) ? "30829-01.htm" : "30829-03.htm";
+				switch (npc.getNpcId())
+				{
+					case COOPER:
+						htmltext = (player.getLevel() >= 35) ? "30829-01.htm" : "30829-03.htm";
+						break;
+					
+					case MIMYU:
+						_counter += 1;
+						npc.teleToLocation(LOCATIONS[_counter % 3], 0);
+						return null;
+				}
 				break;
 			
 			case STATE_STARTED:
@@ -384,6 +405,12 @@ public class Q420_LittleWing extends Quest
 						}
 						else if (cond == 7)
 							htmltext = "30747-11.htm";
+						else
+						{
+							_counter += 1;
+							npc.teleToLocation(LOCATIONS[_counter % 3], 0);
+							return null;
+						}
 						break;
 					
 					case EXARION:

@@ -35,8 +35,8 @@ import net.sf.l2j.gameserver.geoengine.GeoEngine;
 import net.sf.l2j.gameserver.instancemanager.MercTicketManager;
 import net.sf.l2j.gameserver.model.L2Augmentation;
 import net.sf.l2j.gameserver.model.L2Object;
-import net.sf.l2j.gameserver.model.L2World;
-import net.sf.l2j.gameserver.model.L2WorldRegion;
+import net.sf.l2j.gameserver.model.World;
+import net.sf.l2j.gameserver.model.WorldRegion;
 import net.sf.l2j.gameserver.model.Location;
 import net.sf.l2j.gameserver.model.ShotType;
 import net.sf.l2j.gameserver.model.actor.L2Character;
@@ -966,14 +966,14 @@ public final class ItemInstance extends L2Object implements Runnable
 				// Set the x,y,z position of the ItemInstance dropped and update its _worldregion
 				_itm.setIsVisible(true);
 				_itm.getPosition().set(_x, _y, _z);
-				_itm.setRegion(L2World.getInstance().getRegion(getPosition()));
+				_itm.setRegion(World.getInstance().getRegion(getPosition()));
 			}
 			
 			_itm.getRegion().addVisibleObject(_itm);
 			_itm.setDropperObjectId(_dropper != null ? _dropper.getObjectId() : 0); // Set the dropper Id for the knownlist packets in sendInfo
 			
 			// Add the ItemInstance dropped in the world as a visible object
-			L2World.getInstance().addVisibleObject(_itm, _itm.getRegion());
+			World.getInstance().addVisibleObject(_itm, _itm.getRegion());
 			
 			ItemsOnGroundTaskManager.getInstance().add(_itm, _dropper);
 			
@@ -992,7 +992,7 @@ public final class ItemInstance extends L2Object implements Runnable
 	{
 		assert getRegion() != null;
 		
-		L2WorldRegion oldregion = getRegion();
+		WorldRegion oldregion = getRegion();
 		
 		// Create a server->client GetItem packet to pick up the ItemInstance
 		player.broadcastPacket(new GetItem(this, player.getObjectId()));
@@ -1021,7 +1021,7 @@ public final class ItemInstance extends L2Object implements Runnable
 		}
 		
 		// Remove the ItemInstance from the world (out of synchro, to avoid deadlocks)
-		L2World.getInstance().removeVisibleObject(this, oldregion);
+		World.getInstance().removeVisibleObject(this, oldregion);
 	}
 	
 	/**

@@ -48,12 +48,9 @@ import net.sf.l2j.gameserver.network.serverpackets.UserInfo;
  */
 public final class L2ClassMasterInstance extends L2NpcInstance
 {
-	
-
-	
 	public L2ClassMasterInstance(int objectId, NpcTemplate template)
 	{
-		super(objectId, template);		
+		super(objectId, template);
 	}
 	
 	@Override
@@ -123,9 +120,8 @@ public final class L2ClassMasterInstance extends L2NpcInstance
 			player.giveAvailableSkills();
 			player.sendSkillList();
 		}
-		else{
+		else
 			super.onBypassFeedback(player, command);
-		}
 	}
 	
 	private static boolean payBecomeNoble(L2PcInstance player)

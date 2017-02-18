@@ -24,7 +24,7 @@ import net.sf.l2j.commons.random.Rnd;
 
 import net.sf.l2j.Config;
 import net.sf.l2j.L2DatabaseFactory;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.Location;
 import net.sf.l2j.gameserver.model.actor.L2Character;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
@@ -68,11 +68,11 @@ abstract public class OlympiadGameNormal extends AbstractOlympiadGame
 		while (list.size() > 1)
 		{
 			playerOneObjectId = list.remove(Rnd.get(list.size()));
-			playerOne = L2World.getInstance().getPlayer(playerOneObjectId);
+			playerOne = World.getInstance().getPlayer(playerOneObjectId);
 			if (playerOne == null || !playerOne.isOnline())
 				continue;
 			
-			playerTwo = L2World.getInstance().getPlayer(list.remove(Rnd.get(list.size())));
+			playerTwo = World.getInstance().getPlayer(list.remove(Rnd.get(list.size())));
 			if (playerTwo == null || !playerTwo.isOnline())
 			{
 				list.add(playerOneObjectId);
@@ -160,13 +160,23 @@ abstract public class OlympiadGameNormal extends AbstractOlympiadGame
 	}
 	
 	@Override
-	protected final void buffAndHealPlayers()
+	protected final void buffPlayers()
 	{
 		if (_aborted)
 			return;
 		
-		buffAndHealPlayer(_playerOne.player);
-		buffAndHealPlayer(_playerTwo.player);
+		buffPlayer(_playerOne.player);
+		buffPlayer(_playerTwo.player);
+	}
+	
+	@Override
+	protected final void healPlayers()
+	{
+		if (_aborted)
+			return;
+		
+		healPlayer(_playerOne.player);
+		healPlayer(_playerTwo.player);
 	}
 	
 	@Override

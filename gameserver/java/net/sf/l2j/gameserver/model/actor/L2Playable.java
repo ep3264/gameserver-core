@@ -19,7 +19,7 @@ import net.sf.l2j.gameserver.ai.CtrlEvent;
 import net.sf.l2j.gameserver.model.L2Effect;
 import net.sf.l2j.gameserver.model.L2Object;
 import net.sf.l2j.gameserver.model.L2Skill;
-import net.sf.l2j.gameserver.model.L2WorldRegion;
+import net.sf.l2j.gameserver.model.WorldRegion;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.model.actor.stat.PlayableStat;
 import net.sf.l2j.gameserver.model.actor.status.PlayableStatus;
@@ -141,7 +141,7 @@ public abstract class L2Playable extends L2Character
 		// Notify L2Character AI
 		getAI().notifyEvent(CtrlEvent.EVT_DEAD);
 		
-		final L2WorldRegion region = getRegion();
+		final WorldRegion region = getRegion();
 		if (region != null)
 			region.onDeath(this);
 		
@@ -181,7 +181,7 @@ public abstract class L2Playable extends L2Character
 		// Start broadcast status
 		broadcastPacket(new Revive(this));
 		
-		final L2WorldRegion region = getRegion();
+		final WorldRegion region = getRegion();
 		if (region != null)
 			region.onRevive(this);
 	}

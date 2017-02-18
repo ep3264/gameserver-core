@@ -47,7 +47,7 @@ public final class DlgAnswer extends L2GameClientPacket
 		else if (_messageId == SystemMessageId.S1_WISHES_TO_SUMMON_YOU_FROM_S2_DO_YOU_ACCEPT.getId())
 			activeChar.teleportAnswer(_answer, _requesterId);
 		else if (_messageId == 1983 && Config.ALLOW_WEDDING)
-			activeChar.EngageAnswer(_answer);
+			activeChar.engageAnswer(_answer);
 		else if (_messageId == SystemMessageId.WOULD_YOU_LIKE_TO_OPEN_THE_GATE.getId())
 			activeChar.activateGate(_answer, 1);
 		else if (_messageId == SystemMessageId.WOULD_YOU_LIKE_TO_CLOSE_THE_GATE.getId())

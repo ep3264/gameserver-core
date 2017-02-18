@@ -24,7 +24,7 @@ import net.sf.l2j.gameserver.datatables.SkillTreeTable;
 import net.sf.l2j.gameserver.idfactory.IdFactory;
 import net.sf.l2j.gameserver.model.L2ShortCut;
 import net.sf.l2j.gameserver.model.L2SkillLearn;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.model.actor.template.PcTemplate;
 import net.sf.l2j.gameserver.model.base.Experience;
@@ -36,8 +36,6 @@ import net.sf.l2j.gameserver.network.serverpackets.CharCreateOk;
 import net.sf.l2j.gameserver.network.serverpackets.CharSelectInfo;
 import net.sf.l2j.gameserver.scripting.Quest;
 import net.sf.l2j.gameserver.scripting.ScriptManager;
-
-
 
 @SuppressWarnings("unused")
 public final class CharacterCreate extends L2GameClientPacket
@@ -135,7 +133,7 @@ public final class CharacterCreate extends L2GameClientPacket
 		// send acknowledgement
 		sendPacket(CharCreateOk.STATIC_PACKET);
 		
-		L2World.getInstance().addObject(newChar);
+		World.getInstance().addObject(newChar);
 		
 		newChar.addAdena("Init", Config.STARTING_ADENA, null, false);
 		newChar.setXYZInvisible(template.getSpawnX(), template.getSpawnY(), template.getSpawnZ());

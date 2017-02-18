@@ -15,7 +15,7 @@
 package net.sf.l2j.gameserver.handler.admincommandhandlers;
 
 import net.sf.l2j.gameserver.handler.IAdminCommandHandler;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.network.SystemMessageId;
 
@@ -48,7 +48,7 @@ public class AdminTarget implements IAdminCommandHandler
 		try
 		{
 			String targetName = command.substring(13);
-			L2PcInstance obj = L2World.getInstance().getPlayer(targetName);
+			L2PcInstance obj = World.getInstance().getPlayer(targetName);
 			
 			if (obj != null)
 				obj.onAction(activeChar);

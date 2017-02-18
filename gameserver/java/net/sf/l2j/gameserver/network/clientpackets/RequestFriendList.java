@@ -15,7 +15,7 @@
 package net.sf.l2j.gameserver.network.clientpackets;
 
 import net.sf.l2j.gameserver.datatables.CharNameTable;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.network.SystemMessageId;
 import net.sf.l2j.gameserver.network.serverpackets.SystemMessage;
@@ -43,7 +43,7 @@ public final class RequestFriendList extends L2GameClientPacket
 			if (friendName == null)
 				continue;
 			
-			final L2PcInstance friend = L2World.getInstance().getPlayer(id);
+			final L2PcInstance friend = World.getInstance().getPlayer(id);
 			
 			activeChar.sendPacket(SystemMessage.getSystemMessage((friend == null || !friend.isOnline()) ? SystemMessageId.S1_OFFLINE : SystemMessageId.S1_ONLINE).addString(friendName));
 		}

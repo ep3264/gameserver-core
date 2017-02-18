@@ -14,7 +14,7 @@
  */
 package net.sf.l2j.gameserver.network.clientpackets;
 
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.model.tradelist.TradeItem;
 import net.sf.l2j.gameserver.model.tradelist.TradeList;
@@ -59,7 +59,7 @@ public final class AddTradeItem extends L2GameClientPacket
 		}
 		
 		final L2PcInstance partner = trade.getPartner();
-		if (partner == null || L2World.getInstance().getPlayer(partner.getObjectId()) == null || partner.getActiveTradeList() == null)
+		if (partner == null || World.getInstance().getPlayer(partner.getObjectId()) == null || partner.getActiveTradeList() == null)
 		{
 			// Trade partner not found, cancel trade
 			if (partner != null)

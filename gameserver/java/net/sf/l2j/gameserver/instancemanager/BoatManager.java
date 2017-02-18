@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.sf.l2j.gameserver.idfactory.IdFactory;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.VehiclePathPoint;
 import net.sf.l2j.gameserver.model.actor.L2Vehicle;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
@@ -132,7 +132,7 @@ public class BoatManager
 	 */
 	public void broadcastPacket(VehiclePathPoint point1, VehiclePathPoint point2, L2GameServerPacket packet)
 	{
-		for (L2PcInstance player : L2World.getInstance().getPlayers())
+		for (L2PcInstance player : World.getInstance().getPlayers())
 		{
 			double dx = (double) player.getX() - point1.x;
 			double dy = (double) player.getY() - point1.y;
@@ -158,7 +158,7 @@ public class BoatManager
 	 */
 	public void broadcastPackets(VehiclePathPoint point1, VehiclePathPoint point2, L2GameServerPacket... packets)
 	{
-		for (L2PcInstance player : L2World.getInstance().getPlayers())
+		for (L2PcInstance player : World.getInstance().getPlayers())
 		{
 			double dx = (double) player.getX() - point1.x;
 			double dy = (double) player.getY() - point1.y;

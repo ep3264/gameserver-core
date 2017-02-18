@@ -18,7 +18,7 @@ import net.sf.l2j.Config;
 import net.sf.l2j.gameserver.LoginServerThread;
 import net.sf.l2j.gameserver.Shutdown;
 import net.sf.l2j.gameserver.handler.IAdminCommandHandler;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.network.serverpackets.NpcHtmlMessage;
 import net.sf.l2j.gameserver.taskmanager.GameTimeTaskManager;
@@ -108,7 +108,7 @@ public class AdminMaintenance implements IAdminCommandHandler
 	{
 		final NpcHtmlMessage html = new NpcHtmlMessage(0);
 		html.setFile("data/html/admin/maintenance.htm");
-		html.replace("%count%", L2World.getInstance().getPlayers().size());
+		html.replace("%count%", World.getInstance().getPlayers().size());
 		html.replace("%used%", Math.round((int) ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1048576)));
 		html.replace("%server_name%", LoginServerThread.getInstance().getServerName());
 		html.replace("%status%", LoginServerThread.getInstance().getStatusString());

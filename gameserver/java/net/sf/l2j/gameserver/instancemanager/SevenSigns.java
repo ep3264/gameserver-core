@@ -31,7 +31,7 @@ import net.sf.l2j.L2DatabaseFactory;
 import net.sf.l2j.gameserver.datatables.MapRegionTable.TeleportWhereType;
 import net.sf.l2j.gameserver.datatables.SkillTable;
 import net.sf.l2j.gameserver.instancemanager.AutoSpawnManager.AutoSpawnInstance;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.network.SystemMessageId;
 import net.sf.l2j.gameserver.network.serverpackets.SSQInfo;
@@ -1222,7 +1222,7 @@ public class SevenSigns
 	 */
 	protected void teleLosingCabalFromDungeons(String compWinner)
 	{
-		for (L2PcInstance player : L2World.getInstance().getPlayers())
+		for (L2PcInstance player : World.getInstance().getPlayers())
 		{
 			StatsSet currPlayer = _signsPlayerData.get(player.getObjectId());
 			
@@ -1362,7 +1362,7 @@ public class SevenSigns
 	 */
 	public void giveSosEffect(int strifeOwner)
 	{
-		for (L2PcInstance player : L2World.getInstance().getPlayers())
+		for (L2PcInstance player : World.getInstance().getPlayers())
 		{
 			int cabal = getPlayerCabal(player.getObjectId());
 			if (cabal != SevenSigns.CABAL_NULL)
@@ -1382,7 +1382,7 @@ public class SevenSigns
 	 */
 	public void removeSosEffect()
 	{
-		for (L2PcInstance player : L2World.getInstance().getPlayers())
+		for (L2PcInstance player : World.getInstance().getPlayers())
 		{
 			// Remove Seal of Strife buffs/debuffs.
 			player.removeSkill(SkillTable.FrequentSkill.THE_VICTOR_OF_WAR.getSkill());

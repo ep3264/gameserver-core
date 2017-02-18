@@ -32,7 +32,7 @@ import net.sf.l2j.L2DatabaseFactory;
 import net.sf.l2j.gameserver.datatables.ClanTable;
 import net.sf.l2j.gameserver.model.L2Clan;
 import net.sf.l2j.gameserver.model.L2Manor;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.model.entity.Castle;
 import net.sf.l2j.gameserver.model.itemcontainer.ClanWarehouse;
@@ -454,7 +454,7 @@ public class CastleManorManager
 			
 			// Sending notification to a clan leader
 			L2PcInstance clanLeader = null;
-			clanLeader = L2World.getInstance().getPlayer(clan.getLeader().getName());
+			clanLeader = World.getInstance().getPlayer(clan.getLeader().getName());
 			if (clanLeader != null)
 				clanLeader.sendPacket(SystemMessageId.THE_MANOR_INFORMATION_HAS_BEEN_UPDATED);
 			

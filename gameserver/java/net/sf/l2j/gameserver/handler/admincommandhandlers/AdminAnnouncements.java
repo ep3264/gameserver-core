@@ -16,7 +16,7 @@ package net.sf.l2j.gameserver.handler.admincommandhandlers;
 
 import net.sf.l2j.gameserver.datatables.AnnouncementTable;
 import net.sf.l2j.gameserver.handler.IAdminCommandHandler;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 
 /**
@@ -53,7 +53,7 @@ public class AdminAnnouncements implements IAdminCommandHandler
 					case "all":
 					case "all_auto":
 						final boolean isAuto = tokens[1].equalsIgnoreCase("all_auto");
-						for (L2PcInstance player : L2World.getInstance().getPlayers())
+						for (L2PcInstance player : World.getInstance().getPlayers())
 							AnnouncementTable.getInstance().showAnnouncements(player, isAuto);
 						
 						AnnouncementTable.getInstance().listAnnouncements(activeChar);

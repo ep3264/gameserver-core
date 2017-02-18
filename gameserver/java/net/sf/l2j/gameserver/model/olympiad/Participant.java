@@ -14,7 +14,7 @@
  */
 package net.sf.l2j.gameserver.model.olympiad;
 
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.templates.StatsSet;
 
@@ -55,7 +55,7 @@ public final class Participant
 	public final void updatePlayer()
 	{
 		if (player == null || !player.isOnline())
-			player = L2World.getInstance().getPlayer(objectId);
+			player = World.getInstance().getPlayer(objectId);
 	}
 	
 	public final void updateStat(String statName, int increment)

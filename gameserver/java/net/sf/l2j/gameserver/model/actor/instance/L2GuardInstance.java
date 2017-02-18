@@ -97,20 +97,27 @@ public final class L2GuardInstance extends L2Attackable
 			}
 			else
 			{
+				// Rotate the player to face the instance
+				player.sendPacket(new MoveToPawn(player, this, L2Npc.INTERACTION_DISTANCE));
+				
+				// Send a Server->Client ActionFailed to the L2PcInstance in order to avoid that the client wait another packet
+				player.sendPacket(ActionFailed.STATIC_PACKET);
+				
 				// Some guards have no HTMs on retail. Bypass the chat window if such guard is met.
 				switch (getNpcId())
 				{
-					case 31671:
+					case 30733: // Guards in start villages
+					case 31032:
+					case 31033:
+					case 31034:
+					case 31035:
+					case 31036:
+					case 31671: // Patrols
 					case 31672:
 					case 31673:
 					case 31674:
-						// Send a Server->Client ActionFailed to the L2PcInstance in order to avoid that the client wait another packet
-						player.sendPacket(ActionFailed.STATIC_PACKET);
 						return;
 				}
-				
-				// Rotate the player to face the instance
-				player.sendPacket(new MoveToPawn(player, this, L2Npc.INTERACTION_DISTANCE));
 				
 				if (hasRandomAnimation())
 					onRandomAnimation(Rnd.get(8));
@@ -135,17 +142,8 @@ public final class L2GuardInstance extends L2Attackable
 	}
 	
 	@Override
-	public boolean returnHome()
+	public int getDriftRange()
 	{
-		getAggroList().clear();
-		
-		if (getMoveSpeed() > 0 && hasAI() && getSpawn() != null && !isInsideRadius(getSpawn().getLocX(), getSpawn().getLocY(), 20, false))
-		{
-			setIsReturningToSpawnPoint(true);
-			setWalking();
-			getAI().setIntention(CtrlIntention.MOVE_TO, getSpawn().getLoc());
-			return true;
-		}
-		return false;
+		return 20;
 	}
 }

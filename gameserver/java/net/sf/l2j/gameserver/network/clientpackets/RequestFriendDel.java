@@ -20,7 +20,7 @@ import java.util.logging.Level;
 
 import net.sf.l2j.L2DatabaseFactory;
 import net.sf.l2j.gameserver.datatables.CharNameTable;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.network.SystemMessageId;
 import net.sf.l2j.gameserver.network.serverpackets.FriendList;
@@ -67,7 +67,7 @@ public final class RequestFriendDel extends L2GameClientPacket
 			activeChar.getFriendList().remove(Integer.valueOf(id));
 			activeChar.sendPacket(new FriendList(activeChar)); // update friendList *heavy method*
 			
-			L2PcInstance player = L2World.getInstance().getPlayer(_name);
+			L2PcInstance player = World.getInstance().getPlayer(_name);
 			if (player != null)
 			{
 				player.getFriendList().remove(Integer.valueOf(activeChar.getObjectId()));

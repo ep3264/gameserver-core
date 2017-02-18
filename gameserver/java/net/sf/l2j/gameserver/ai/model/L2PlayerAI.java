@@ -23,7 +23,9 @@ import net.sf.l2j.gameserver.model.Location;
 import net.sf.l2j.gameserver.model.actor.L2Character;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.model.actor.instance.L2StaticObjectInstance;
+import net.sf.l2j.gameserver.network.SystemMessageId;
 import net.sf.l2j.gameserver.network.serverpackets.ActionFailed;
+import net.sf.l2j.gameserver.network.serverpackets.SystemMessage;
 
 public class L2PlayerAI extends L2PlayableAI
 {
@@ -247,6 +249,9 @@ public class L2PlayerAI extends L2PlayableAI
 				_actor.setIsCastingNow(false);
 				return;
 			}
+			
+			if (_actor.isSkillDisabled(_skill))
+				_actor.sendPacket(SystemMessage.getSystemMessage(SystemMessageId.S1_PREPARED_FOR_REUSE).addSkillName(_skill));
 		}
 		
 		if (_skill.getHitTime() > 50 && !_skill.isSimultaneousCast())

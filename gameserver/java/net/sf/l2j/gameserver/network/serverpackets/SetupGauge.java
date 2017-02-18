@@ -16,34 +16,38 @@ package net.sf.l2j.gameserver.network.serverpackets;
 
 public class SetupGauge extends L2GameServerPacket
 {
-	public static final int BLUE = 0;
-	public static final int RED = 1;
-	public static final int CYAN = 2;
-	
-	private final int _dat1;
-	private final int _time;
-	private final int _time2;
-	
-	public SetupGauge(int dat1, int time)
+	public enum GaugeColor
 	{
-		_dat1 = dat1;
-		_time = time;
-		_time2 = time;
+		BLUE,
+		RED,
+		CYAN,
+		GREEN
 	}
 	
-	public SetupGauge(int color, int currentTime, int maxTime)
+	private final GaugeColor _color;
+	private final int _time;
+	private final int _maxTime;
+	
+	public SetupGauge(GaugeColor color, int time)
 	{
-		_dat1 = color;
+		_color = color;
+		_time = time;
+		_maxTime = time;
+	}
+	
+	public SetupGauge(GaugeColor color, int currentTime, int maxTime)
+	{
+		_color = color;
 		_time = currentTime;
-		_time2 = maxTime;
+		_maxTime = maxTime;
 	}
 	
 	@Override
 	protected final void writeImpl()
 	{
 		writeC(0x6d);
-		writeD(_dat1);
+		writeD(_color.ordinal());
 		writeD(_time);
-		writeD(_time2);
+		writeD(_maxTime);
 	}
 }

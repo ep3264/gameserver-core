@@ -49,8 +49,8 @@ import net.sf.l2j.gameserver.model.L2Object;
 import net.sf.l2j.gameserver.model.L2Party;
 import net.sf.l2j.gameserver.model.L2Skill;
 import net.sf.l2j.gameserver.model.L2Skill.SkillTargetType;
-import net.sf.l2j.gameserver.model.L2World;
-import net.sf.l2j.gameserver.model.L2WorldRegion;
+import net.sf.l2j.gameserver.model.World;
+import net.sf.l2j.gameserver.model.WorldRegion;
 import net.sf.l2j.gameserver.model.Location;
 import net.sf.l2j.gameserver.model.ShotType;
 import net.sf.l2j.gameserver.model.SpawnLocation;
@@ -87,6 +87,7 @@ import net.sf.l2j.gameserver.network.serverpackets.MoveToLocation;
 import net.sf.l2j.gameserver.network.serverpackets.Revive;
 import net.sf.l2j.gameserver.network.serverpackets.ServerObjectInfo;
 import net.sf.l2j.gameserver.network.serverpackets.SetupGauge;
+import net.sf.l2j.gameserver.network.serverpackets.SetupGauge.GaugeColor;
 import net.sf.l2j.gameserver.network.serverpackets.StatusUpdate;
 import net.sf.l2j.gameserver.network.serverpackets.StopMove;
 import net.sf.l2j.gameserver.network.serverpackets.SystemMessage;
@@ -654,6 +655,7 @@ public abstract class L2Character extends L2Object
 		
 		// Create Attack
 		Attack attack = new Attack(this, isChargedShot(ShotType.SOULSHOT), (weaponItem != null) ? weaponItem.getCrystalType().getId() : 0);
+		
 		// Make sure that char is facing selected target
 		setHeading(Util.calculateHeadingFrom(this, target));
 		
@@ -815,7 +817,7 @@ public abstract class L2Character extends L2Object
 			sendPacket(SystemMessage.getSystemMessage(SystemMessageId.GETTING_READY_TO_SHOOT_AN_ARROW));
 			
 			// Send SetupGauge
-			sendPacket(new SetupGauge(SetupGauge.RED, sAtk + reuse));
+			sendPacket(new SetupGauge(GaugeColor.RED, sAtk + reuse));
 		}
 		
 		// Create a new hit task with Medium priority
@@ -1333,7 +1335,7 @@ public abstract class L2Character extends L2Object
 		{
 			// Send SetupGauge with the color of the gauge and the casting time
 			if (this instanceof L2PcInstance && !effectWhileCasting)
-				sendPacket(new SetupGauge(SetupGauge.BLUE, hitTime));
+				sendPacket(new SetupGauge(GaugeColor.BLUE, hitTime));
 			
 			if (effectWhileCasting)
 				mut.phase = 2;
@@ -1419,7 +1421,7 @@ public abstract class L2Character extends L2Object
 		// prevent casting signets to peace zone
 		if (skill.getSkillType() == L2SkillType.SIGNET || skill.getSkillType() == L2SkillType.SIGNET_CASTTIME)
 		{
-			final L2WorldRegion region = getRegion();
+			final WorldRegion region = getRegion();
 			if (region == null)
 				return false;
 			
@@ -1546,7 +1548,7 @@ public abstract class L2Character extends L2Object
 		if (hasAI())
 			getAI().notifyEvent(CtrlEvent.EVT_DEAD, null);
 		
-		final L2WorldRegion region = getRegion();
+		final WorldRegion region = getRegion();
 		if (region != null)
 			region.onDeath(this);
 		
@@ -1581,7 +1583,7 @@ public abstract class L2Character extends L2Object
 		// Start broadcast status
 		broadcastPacket(new Revive(this));
 		
-		final L2WorldRegion region = getRegion();
+		final WorldRegion region = getRegion();
 		if (region != null)
 			region.onRevive(this);
 	}
@@ -2963,7 +2965,7 @@ public abstract class L2Character extends L2Object
 	 */
 	public boolean isInCombat()
 	{
-		return (getAI().getTarget() != null || getAI().isAutoAttacking());
+		return hasAI() && getAI().isAutoAttacking();
 	}
 	
 	/**
@@ -3459,8 +3461,8 @@ public abstract class L2Character extends L2Object
 			int originalX = x;
 			int originalY = y;
 			int originalZ = z;
-			int gtx = (originalX - L2World.WORLD_X_MIN) >> 4;
-			int gty = (originalY - L2World.WORLD_Y_MIN) >> 4;
+			int gtx = (originalX - World.WORLD_X_MIN) >> 4;
+			int gty = (originalY - World.WORLD_Y_MIN) >> 4;
 			
 			// Movement checks:
 			// when geodata == 2, for all characters except mobs returning home (could be changed later to teleport if pathfinding fails)
@@ -3483,7 +3485,7 @@ public abstract class L2Character extends L2Object
 					}
 				}
 				
-				if (curX < L2World.WORLD_X_MIN || curX > L2World.WORLD_X_MAX || curY < L2World.WORLD_Y_MIN || curY > L2World.WORLD_Y_MAX)
+				if (curX < World.WORLD_X_MIN || curX > World.WORLD_X_MAX || curY < World.WORLD_Y_MIN || curY > World.WORLD_Y_MAX)
 				{
 					// Temporary fix for character outside world region errors
 					_log.warning("Character " + getName() + " outside world area, in coordinates x:" + curX + " y:" + curY);
@@ -4118,7 +4120,7 @@ public abstract class L2Character extends L2Object
 	{
 		try
 		{
-			L2WorldRegion region = L2World.getInstance().getRegion(getX(), getY());
+			WorldRegion region = World.getInstance().getRegion(getX(), getY());
 			return ((region != null) && (region.isActive()));
 		}
 		catch (Exception e)
@@ -5554,7 +5556,7 @@ public abstract class L2Character extends L2Object
 	}
 	
 	@Override
-	public final void setRegion(L2WorldRegion value)
+	public final void setRegion(WorldRegion value)
 	{
 		// confirm revalidation of old region's zones
 		if (getRegion() != null)

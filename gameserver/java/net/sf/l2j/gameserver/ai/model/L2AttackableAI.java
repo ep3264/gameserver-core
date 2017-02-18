@@ -425,7 +425,7 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable
 		else
 		{
 			// Return to home if too far.
-			if (npc.returnHome())
+			if (npc.returnHome(false))
 				return;
 			
 			// Random walk otherwise.

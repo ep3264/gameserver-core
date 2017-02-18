@@ -235,7 +235,7 @@ public class RaidBossSpawnManager
 		else
 		{
 			long spawnTime = respawnTime - Calendar.getInstance().getTimeInMillis();
-				_schedules.put(bossId, ThreadPool.schedule(new spawnSchedule(bossId), spawnTime));
+			_schedules.put(bossId, ThreadPool.schedule(new spawnSchedule(bossId), spawnTime));
 			
           RaidBossInfo.getInstance().setRespawnTime(bossId, respawnTime);
 		}

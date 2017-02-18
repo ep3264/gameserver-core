@@ -23,11 +23,9 @@ import net.sf.l2j.gameserver.ai.CtrlIntention;
 import net.sf.l2j.gameserver.datatables.SkillTable.FrequentSkill;
 import net.sf.l2j.gameserver.instancemanager.CastleManager;
 import net.sf.l2j.gameserver.instancemanager.CoupleManager;
-import net.sf.l2j.gameserver.model.L2Skill;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.L2Npc;
 import net.sf.l2j.gameserver.model.actor.template.NpcTemplate;
-import net.sf.l2j.gameserver.model.entity.Couple;
 import net.sf.l2j.gameserver.model.item.instance.ItemInstance;
 import net.sf.l2j.gameserver.model.itemcontainer.Inventory;
 import net.sf.l2j.gameserver.network.serverpackets.ActionFailed;
@@ -37,9 +35,6 @@ import net.sf.l2j.gameserver.network.serverpackets.MoveToPawn;
 import net.sf.l2j.gameserver.network.serverpackets.NpcHtmlMessage;
 import net.sf.l2j.gameserver.util.Broadcast;
 
-/**
- * @author evill33t & squeezed, rework Tryskell
- */
 public class L2WeddingManagerInstance extends L2NpcInstance
 {
 	public L2WeddingManagerInstance(int objectId, NpcTemplate template)
@@ -72,7 +67,7 @@ public class L2WeddingManagerInstance extends L2NpcInstance
 				else
 				{
 					// Married people got access to another menu
-					if (player.isMarried())
+					if (player.getCoupleId() > 0)
 						sendHtmlMessage(player, "data/html/mods/Wedding_start2.htm");
 					// "Under marriage acceptance" people go to this one
 					else if (player.isUnderMarryRequest())
@@ -95,43 +90,41 @@ public class L2WeddingManagerInstance extends L2NpcInstance
 			
 			if (st.hasMoreTokens())
 			{
-				final L2PcInstance ptarget = L2World.getInstance().getPlayer(st.nextToken());
-				if (ptarget == null)
+				final L2PcInstance partner = World.getInstance().getPlayer(st.nextToken());
+				if (partner == null)
 				{
 					sendHtmlMessage(player, "data/html/mods/Wedding_notfound.htm");
 					return;
 				}
 				
 				// check conditions
-				if (!weddingConditions(player, ptarget))
+				if (!weddingConditions(player, partner))
 					return;
 				
 				// block the wedding manager until an answer is given.
 				player.setUnderMarryRequest(true);
-				ptarget.setUnderMarryRequest(true);
+				partner.setUnderMarryRequest(true);
 				
 				// memorize the requesterId for future use, and send a popup to the target
-				ptarget.setRequesterId(player.getObjectId());
-				ptarget.sendPacket(new ConfirmDlg(1983).addString(player.getName() + " asked you to marry. Do you want to start a new relationship ?"));
+				partner.setRequesterId(player.getObjectId());
+				partner.sendPacket(new ConfirmDlg(1983).addString(player.getName() + " asked you to marry. Do you want to start a new relationship ?"));
 			}
 			else
 				sendHtmlMessage(player, "data/html/mods/Wedding_notfound.htm");
 		}
 		else if (command.startsWith("Divorce"))
-		{
-			player.sendMessage("You are now divorced.");
-			
-			// Find the partner using the couple information
-			final L2PcInstance partner = L2World.getInstance().getPlayer(Couple.getPartnerId(player.getObjectId()));
-			if (partner != null)
-				partner.sendMessage("Your beloved has decided to divorce.");
-			
 			CoupleManager.getInstance().deleteCouple(player.getCoupleId());
-		}
 		else if (command.startsWith("GoToLove"))
 		{
-			// Find the partner using the couple information
-			final L2PcInstance partner = L2World.getInstance().getPlayer(Couple.getPartnerId(player.getObjectId()));
+			// Find the partner using the couple id.
+			final int partnerId = CoupleManager.getInstance().getPartnerId(player.getCoupleId(), player.getObjectId());
+			if (partnerId == 0)
+			{
+				player.sendMessage("Your partner can't be found.");
+				return;
+			}
+			
+			final L2PcInstance partner = World.getInstance().getPlayer(partnerId);
 			if (partner == null)
 			{
 				player.sendMessage("Your partner is not online.");
@@ -175,85 +168,76 @@ public class L2WeddingManagerInstance extends L2NpcInstance
 		return true;
 	}
 	
-	private boolean weddingConditions(L2PcInstance player, L2PcInstance ptarget)
+	private boolean weddingConditions(L2PcInstance requester, L2PcInstance partner)
 	{
 		// Check if player target himself
-		if (ptarget.getObjectId() == player.getObjectId())
+		if (partner.getObjectId() == requester.getObjectId())
 		{
-			sendHtmlMessage(player, "data/html/mods/Wedding_error_wrongtarget.htm");
+			sendHtmlMessage(requester, "data/html/mods/Wedding_error_wrongtarget.htm");
 			return false;
 		}
 		
 		// Sex check
-		if (ptarget.getAppearance().getSex() == player.getAppearance().getSex() && !Config.WEDDING_SAMESEX)
+		if (!Config.WEDDING_SAMESEX && partner.getAppearance().getSex() == requester.getAppearance().getSex())
 		{
-			sendHtmlMessage(player, "data/html/mods/Wedding_error_sex.htm");
+			sendHtmlMessage(requester, "data/html/mods/Wedding_error_sex.htm");
 			return false;
 		}
 		
 		// Check if player has the target on friendlist
-		if (!player.getFriendList().contains(ptarget.getObjectId()))
+		if (!requester.getFriendList().contains(partner.getObjectId()))
 		{
-			sendHtmlMessage(player, "data/html/mods/Wedding_error_friendlist.htm");
+			sendHtmlMessage(requester, "data/html/mods/Wedding_error_friendlist.htm");
 			return false;
 		}
 		
 		// Target mustn't be already married
-		if (ptarget.isMarried())
+		if (partner.getCoupleId() > 0)
 		{
-			sendHtmlMessage(player, "data/html/mods/Wedding_error_alreadymarried.htm");
+			sendHtmlMessage(requester, "data/html/mods/Wedding_error_alreadymarried.htm");
 			return false;
 		}
 		
 		// Check for Formal Wear
-		if (Config.WEDDING_FORMALWEAR)
-			if (!wearsFormalWear(player, ptarget))
-			{
-				sendHtmlMessage(player, "data/html/mods/Wedding_error_noformal.htm");
-				return false;
-			}
+		if (Config.WEDDING_FORMALWEAR && !wearsFormalWear(requester, partner))
+		{
+			sendHtmlMessage(requester, "data/html/mods/Wedding_error_noformal.htm");
+			return false;
+		}
 		
 		// Check and reduce wedding price
-		if (player.getAdena() < Config.WEDDING_PRICE || ptarget.getAdena() < Config.WEDDING_PRICE)
+		if (requester.getAdena() < Config.WEDDING_PRICE || partner.getAdena() < Config.WEDDING_PRICE)
 		{
-			sendHtmlMessage(player, "data/html/mods/Wedding_error_adena.htm");
+			sendHtmlMessage(requester, "data/html/mods/Wedding_error_adena.htm");
 			return false;
 		}
 		
 		return true;
 	}
 	
-	public static void justMarried(L2PcInstance player, L2PcInstance ptarget)
+	public static void justMarried(L2PcInstance requester, L2PcInstance partner)
 	{
 		// Unlock the wedding manager for both users, and set them as married
-		player.setUnderMarryRequest(false);
-		ptarget.setUnderMarryRequest(false);
-		
-		player.setMarried(true);
-		ptarget.setMarried(true);
+		requester.setUnderMarryRequest(false);
+		partner.setUnderMarryRequest(false);
 		
 		// reduce adenas amount according to configs
-		player.reduceAdena("Wedding", Config.WEDDING_PRICE, player.getCurrentFolkNPC(), true);
-		ptarget.reduceAdena("Wedding", Config.WEDDING_PRICE, player.getCurrentFolkNPC(), true);
-		
-		// Flag players as married
-		Couple couple = CoupleManager.getInstance().getCouple(player.getCoupleId());
-		couple.marry();
+		requester.reduceAdena("Wedding", Config.WEDDING_PRICE, requester.getCurrentFolkNPC(), true);
+		partner.reduceAdena("Wedding", Config.WEDDING_PRICE, requester.getCurrentFolkNPC(), true);
 		
 		// Messages to the couple
-		player.sendMessage("Congratulations, you are now married with " + ptarget.getName() + " !");
-		ptarget.sendMessage("Congratulations, you are now married with " + player.getName() + " !");
+		requester.sendMessage("Congratulations, you are now married with " + partner.getName() + " !");
+		partner.sendMessage("Congratulations, you are now married with " + requester.getName() + " !");
 		
 		// Wedding march
-		player.broadcastPacket(new MagicSkillUse(player, player, 2230, 1, 1, 0));
-		ptarget.broadcastPacket(new MagicSkillUse(ptarget, ptarget, 2230, 1, 1, 0));
+		requester.broadcastPacket(new MagicSkillUse(requester, requester, 2230, 1, 1, 0));
+		partner.broadcastPacket(new MagicSkillUse(partner, partner, 2230, 1, 1, 0));
 		
 		// Fireworks
-		L2Skill skill = FrequentSkill.LARGE_FIREWORK.getSkill();
-		player.doCast(skill);
-		ptarget.doCast(skill);
+		requester.doCast(FrequentSkill.LARGE_FIREWORK.getSkill());
+		partner.doCast(FrequentSkill.LARGE_FIREWORK.getSkill());
 		
-		Broadcast.announceToOnlinePlayers("Congratulations to " + player.getName() + " and " + ptarget.getName() + "! They have been married.");
+		Broadcast.announceToOnlinePlayers("Congratulations to " + requester.getName() + " and " + partner.getName() + "! They have been married.");
 	}
 	
 	private void sendHtmlMessage(L2PcInstance player, String file)

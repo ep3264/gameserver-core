@@ -12,28 +12,29 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package net.sf.l2j.gameserver.taskmanager.tasks;
+package net.sf.l2j.gameserver.network.serverpackets;
 
-import net.sf.l2j.gameserver.Shutdown;
-import net.sf.l2j.gameserver.taskmanager.TaskManager.ExecutedTask;
-
-/**
- * @author Layane
- */
-public final class TaskRestart extends ATask
+public final class ExRegenMax extends L2GameServerPacket
 {
-	public static final String NAME = "restart";
+	private final int _count;
+	private final int _time;
+	private final double _hpRegen;
 	
-	@Override
-	public String getName()
+	public ExRegenMax(int count, int time, double hpRegen)
 	{
-		return NAME;
+		_count = count;
+		_time = time;
+		_hpRegen = hpRegen * 0.66;
 	}
 	
 	@Override
-	public void onTimeElapsed(ExecutedTask task)
+	protected void writeImpl()
 	{
-		Shutdown handler = new Shutdown(Integer.valueOf(task.getParams()[2]), true);
-		handler.start();
+		writeC(0xFE);
+		writeH(0x01);
+		writeD(1);
+		writeD(_count);
+		writeD(_time);
+		writeF(_hpRegen);
 	}
 }

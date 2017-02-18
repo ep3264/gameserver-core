@@ -16,7 +16,7 @@ package net.sf.l2j.gameserver.network.clientpackets;
 
 import net.sf.l2j.Config;
 import net.sf.l2j.gameserver.model.ItemRequest;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance.StoreType;
 import net.sf.l2j.gameserver.model.tradelist.TradeList;
@@ -70,7 +70,7 @@ public final class RequestPrivateStoreSell extends L2GameClientPacket
 		if (_items == null)
 			return;
 		
-		L2PcInstance storePlayer = L2World.getInstance().getPlayer(_storePlayerId);
+		L2PcInstance storePlayer = World.getInstance().getPlayer(_storePlayerId);
 		if (storePlayer == null)
 			return;
 		

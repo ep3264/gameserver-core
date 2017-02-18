@@ -14,7 +14,7 @@
  */
 package net.sf.l2j.gameserver.network.clientpackets;
 
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.network.SystemMessageId;
 import net.sf.l2j.gameserver.network.serverpackets.ExAskJoinPartyRoom;
@@ -38,7 +38,7 @@ public class RequestAskJoinPartyRoom extends L2GameClientPacket
 			return;
 		
 		// Send PartyRoom invite request (with activeChar) name to the target
-		final L2PcInstance target = L2World.getInstance().getPlayer(_name);
+		final L2PcInstance target = World.getInstance().getPlayer(_name);
 		if (target != null)
 		{
 			//Fix redist offline trader

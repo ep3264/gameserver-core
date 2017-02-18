@@ -14,7 +14,7 @@
  */
 package net.sf.l2j.gameserver.network.clientpackets;
 
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance.StoreType;
 import net.sf.l2j.gameserver.network.serverpackets.RecipeShopItemInfo;
@@ -37,7 +37,7 @@ public final class RequestRecipeShopMakeInfo extends L2GameClientPacket
 		if (player == null)
 			return;
 		
-		final L2PcInstance shop = L2World.getInstance().getPlayer(_playerObjectId);
+		final L2PcInstance shop = World.getInstance().getPlayer(_playerObjectId);
 		if (shop == null || shop.getStoreType() != StoreType.MANUFACTURE)
 			return;
 		

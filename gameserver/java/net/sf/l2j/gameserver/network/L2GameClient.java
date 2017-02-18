@@ -44,7 +44,7 @@ import net.sf.l2j.gameserver.datatables.CharNameTable;
 import net.sf.l2j.gameserver.datatables.ClanTable;
 import net.sf.l2j.gameserver.model.CharSelectInfoPackage;
 import net.sf.l2j.gameserver.model.L2Clan;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.network.clientpackets.RequestMagicSkillUse;
 import net.sf.l2j.gameserver.network.serverpackets.ActionFailed;
@@ -52,7 +52,6 @@ import net.sf.l2j.gameserver.network.serverpackets.GameGuardQuery;
 import net.sf.l2j.gameserver.network.serverpackets.L2GameServerPacket;
 import net.sf.l2j.gameserver.network.serverpackets.ServerClose;
 import net.sf.l2j.gameserver.util.FloodProtectors;
-
 
 /**
  * Represents a client connected on Game Server
@@ -149,7 +148,6 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>> i
 	@Override
 	public boolean decrypt(ByteBuffer buf, int size)
 	{
-		//
 		_crypt.decrypt(buf.array(), buf.position(), size);
 		return true;
 	}
@@ -490,7 +488,7 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>> i
 		if (objId < 0)
 			return null;
 		
-		L2PcInstance character = L2World.getInstance().getPlayer(objId);
+		L2PcInstance character = World.getInstance().getPlayer(objId);
 		if (character != null)
 		{
 			// exploit prevention, should not happens in normal way

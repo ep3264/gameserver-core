@@ -22,12 +22,14 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 import net.sf.l2j.gameserver.datatables.CharNameTable;
+import net.sf.l2j.gameserver.datatables.SpawnTable;
+import net.sf.l2j.gameserver.model.actor.L2Npc;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.model.actor.instance.L2PetInstance;
 
-public final class L2World
+public final class World
 {
-	private static Logger _log = Logger.getLogger(L2World.class.getName());
+	private static Logger _log = Logger.getLogger(World.class.getName());
 	
 	// Geodata min/max tiles
 	public static final int TILE_X_MIN = 16;
@@ -53,14 +55,14 @@ public final class L2World
 	private final Map<Integer, L2PetInstance> _pets = new ConcurrentHashMap<>();
 	private final Map<Integer, L2PcInstance> _players = new ConcurrentHashMap<>();
 	
-	private final L2WorldRegion[][] _worldRegions = new L2WorldRegion[REGIONS_X + 1][REGIONS_Y + 1];
+	private final WorldRegion[][] _worldRegions = new WorldRegion[REGIONS_X + 1][REGIONS_Y + 1];
 	
-	protected L2World()
+	protected World()
 	{
 		for (int i = 0; i <= REGIONS_X; i++)
 		{
 			for (int j = 0; j <= REGIONS_Y; j++)
-				_worldRegions[i][j] = new L2WorldRegion(i, j);
+				_worldRegions[i][j] = new WorldRegion(i, j);
 		}
 		
 		for (int x = 0; x <= REGIONS_X; x++)
@@ -165,7 +167,7 @@ public final class L2World
 	 * @param object L2object to add in the world
 	 * @param newRegion L2WorldRegion in wich the object will be add (not used)
 	 */
-	public void addVisibleObject(L2Object object, L2WorldRegion newRegion)
+	public void addVisibleObject(L2Object object, WorldRegion newRegion)
 	{
 		if (object instanceof L2PcInstance)
 		{
@@ -235,7 +237,7 @@ public final class L2World
 	 * @param object L2object to remove from the world
 	 * @param oldRegion L2WorldRegion in wich the object was before removing
 	 */
-	public void removeVisibleObject(L2Object object, L2WorldRegion oldRegion)
+	public void removeVisibleObject(L2Object object, WorldRegion oldRegion)
 	{
 		if (object == null || oldRegion == null)
 			return;
@@ -247,9 +249,9 @@ public final class L2World
 		final boolean objectHasKnownlist = (object.getKnownList() != null);
 		
 		// Go through all surrounding L2WorldRegion L2Characters
-		for (L2WorldRegion reg : oldRegion.getSurroundingRegions())
+		for (WorldRegion reg : oldRegion.getSurroundingRegions())
 		{
-			for (L2Object obj : reg.getVisibleObjects().values())
+			for (L2Object obj : reg.getObjects())
 			{
 				if (obj.getKnownList() != null)
 					obj.getKnownList().removeKnownObject(object);
@@ -295,10 +297,10 @@ public final class L2World
 		List<L2Object> result = new ArrayList<>();
 		
 		// Go through the FastList of region
-		for (L2WorldRegion regi : object.getRegion().getSurroundingRegions())
+		for (WorldRegion regi : object.getRegion().getSurroundingRegions())
 		{
 			// Go through visible objects of the selected region
-			for (L2Object _object : regi.getVisibleObjects().values())
+			for (L2Object _object : regi.getObjects())
 			{
 				if (_object == null || _object.equals(object))
 					continue; // skip our own character
@@ -332,12 +334,12 @@ public final class L2World
 	 * @param point position of the object.
 	 * @return the current L2WorldRegion of the object according to its position (x,y).
 	 */
-	public L2WorldRegion getRegion(Location point)
+	public WorldRegion getRegion(Location point)
 	{
 		return getRegion(point.getX(), point.getY());
 	}
 	
-	public L2WorldRegion getRegion(int x, int y)
+	public WorldRegion getRegion(int x, int y)
 	{
 		return _worldRegions[(x - WORLD_X_MIN) / REGION_SIZE][(y - WORLD_Y_MIN) / REGION_SIZE];
 	}
@@ -345,7 +347,7 @@ public final class L2World
 	/**
 	 * @return the whole 2d array containing the world regions used by ZoneData.java to setup zones inside the world regions
 	 */
-	public L2WorldRegion[][] getWorldRegions()
+	public WorldRegion[][] getWorldRegions()
 	{
 		return _worldRegions;
 	}
@@ -370,7 +372,22 @@ public final class L2World
 		for (int i = 0; i <= REGIONS_X; i++)
 		{
 			for (int j = 0; j <= REGIONS_Y; j++)
-				_worldRegions[i][j].deleteVisibleNpcSpawns();
+			{
+				for (L2Object obj : _worldRegions[i][j].getObjects())
+				{
+					if (obj instanceof L2Npc)
+					{
+						((L2Npc) obj).deleteMe();
+						
+						final L2Spawn spawn = ((L2Npc) obj).getSpawn();
+						if (spawn != null)
+						{
+							spawn.setRespawnState(false);
+							SpawnTable.getInstance().deleteSpawn(spawn, false);
+						}
+					}
+				}
+			}
 		}
 		_log.info("All visibles NPCs are now deleted.");
 	}
@@ -387,13 +404,13 @@ public final class L2World
 		return _players.values();
 	}
 
-	public static L2World getInstance()
+	public static World getInstance()
 	{
 		return SingletonHolder._instance;
 	}
 	
 	private static class SingletonHolder
 	{
-		protected static final L2World _instance = new L2World();
+		protected static final World _instance = new World();
 	}
 }

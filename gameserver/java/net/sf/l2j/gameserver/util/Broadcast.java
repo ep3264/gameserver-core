@@ -15,10 +15,10 @@
 package net.sf.l2j.gameserver.util;
 
 import net.sf.l2j.gameserver.instancemanager.ZoneManager;
-import net.sf.l2j.gameserver.model.L2World;
-import net.sf.l2j.gameserver.model.L2WorldRegion;
+import net.sf.l2j.gameserver.model.L2Object;
+import net.sf.l2j.gameserver.model.World;
+import net.sf.l2j.gameserver.model.WorldRegion;
 import net.sf.l2j.gameserver.model.actor.L2Character;
-import net.sf.l2j.gameserver.model.actor.L2Playable;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.model.zone.L2ZoneType;
 import net.sf.l2j.gameserver.network.clientpackets.Say2;
@@ -159,7 +159,7 @@ public final class Broadcast
 	 */
 	public static void toAllOnlinePlayers(L2GameServerPacket mov)
 	{
-		for (L2PcInstance player : L2World.getInstance().getPlayers())
+		for (L2PcInstance player : World.getInstance().getPlayers())
 		{
 			if (player.isOnline())
 				player.sendPacket(mov);
@@ -171,14 +171,15 @@ public final class Broadcast
 	 * @param region : The region to send packets.
 	 * @param packets : The packets to send.
 	 */
-	public static void toAllPlayersInRegion(L2WorldRegion region, L2GameServerPacket... packets)
+	public static void toAllPlayersInRegion(WorldRegion region, L2GameServerPacket... packets)
 	{
-		for (L2Playable playable : region.getVisiblePlayable().values())
+		for (L2Object object : region.getObjects())
 		{
-			if (playable instanceof L2PcInstance)
+			if (object instanceof L2PcInstance)
 			{
+				final L2PcInstance player = (L2PcInstance) object;
 				for (L2GameServerPacket packet : packets)
-					playable.sendPacket(packet);
+					player.sendPacket(packet);
 			}
 		}
 	}

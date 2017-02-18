@@ -26,7 +26,7 @@ import java.util.logging.Logger;
 import net.sf.l2j.L2DatabaseFactory;
 import net.sf.l2j.gameserver.datatables.NpcTable;
 import net.sf.l2j.gameserver.idfactory.IdFactory;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.model.actor.instance.L2SiegeGuardInstance;
 import net.sf.l2j.gameserver.model.actor.template.NpcTemplate;
@@ -712,7 +712,7 @@ public class MercTicketManager
 							dropticket.setLocation(ItemInstance.ItemLocation.INVENTORY);
 							dropticket.setDestroyProtected(true);
 							dropticket.dropMe(null, x, y, z);
-							L2World.getInstance().addObject(dropticket);
+							World.getInstance().addObject(dropticket);
 							_droppedTickets.add(dropticket);
 						}
 						break;
@@ -842,7 +842,7 @@ public class MercTicketManager
 				dropticket.setLocation(ItemInstance.ItemLocation.INVENTORY);
 				dropticket.setDestroyProtected(true);
 				dropticket.dropMe(activeChar, x, y, z);
-				L2World.getInstance().addObject(dropticket); // add to the world
+				World.getInstance().addObject(dropticket); // add to the world
 				// and keep track of this ticket in the list
 				_droppedTickets.add(dropticket);
 				
@@ -880,7 +880,7 @@ public class MercTicketManager
 			if (item != null && getTicketCastleId(item.getItemId()) == castleId)
 			{
 				item.decayMe();
-				L2World.getInstance().removeObject(item);
+				World.getInstance().removeObject(item);
 				it.remove();
 			}
 		}

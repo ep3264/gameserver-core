@@ -35,7 +35,7 @@ import net.sf.l2j.gameserver.instancemanager.CastleManager;
 import net.sf.l2j.gameserver.instancemanager.ClanHallManager;
 import net.sf.l2j.gameserver.model.L2Clan;
 import net.sf.l2j.gameserver.model.L2Object;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.L2Summon;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.model.actor.instance.L2PetInstance;
@@ -91,7 +91,7 @@ public class AdminEditChar implements IAdminCommandHandler
 		{
 			try
 			{
-				final L2PcInstance target = L2World.getInstance().getPlayer(command.substring(21));
+				final L2PcInstance target = World.getInstance().getPlayer(command.substring(21));
 				if (target != null)
 					showCharacterInfo(activeChar, target);
 				else
@@ -430,7 +430,7 @@ public class AdminEditChar implements IAdminCommandHandler
 			L2Object target;
 			try
 			{
-				target = L2World.getInstance().getPet(Integer.parseInt(command.substring(19)));
+				target = World.getInstance().getPet(Integer.parseInt(command.substring(19)));
 			}
 			catch (Exception e)
 			{
@@ -459,7 +459,7 @@ public class AdminEditChar implements IAdminCommandHandler
 			L2Object target;
 			try
 			{
-				target = L2World.getInstance().getPlayer(command.substring(17));
+				target = World.getInstance().getPlayer(command.substring(17));
 				if (target == null)
 					target = activeChar.getTarget();
 			}
@@ -482,7 +482,7 @@ public class AdminEditChar implements IAdminCommandHandler
 		{
 			try
 			{
-				final L2PcInstance player = L2World.getInstance().getPlayer(command.substring(16));
+				final L2PcInstance player = World.getInstance().getPlayer(command.substring(16));
 				if (player == null)
 				{
 					activeChar.sendPacket(SystemMessageId.TARGET_CANT_FOUND);
@@ -529,7 +529,7 @@ public class AdminEditChar implements IAdminCommandHandler
 				boolean changeCreateExpiryTime = st.nextToken().equalsIgnoreCase("create");
 				String playerName = st.nextToken();
 				
-				L2PcInstance player = L2World.getInstance().getPlayer(playerName);
+				L2PcInstance player = World.getInstance().getPlayer(playerName);
 				if (player == null)
 				{
 					try (Connection con = L2DatabaseFactory.getInstance().getConnection())
@@ -561,7 +561,7 @@ public class AdminEditChar implements IAdminCommandHandler
 	
 	private static void listCharacters(L2PcInstance activeChar, int page)
 	{
-		List<L2PcInstance> players = new ArrayList<>(L2World.getInstance().getPlayers());
+		List<L2PcInstance> players = new ArrayList<>(World.getInstance().getPlayers());
 		
 		final int max = MathUtil.countPagesNumber(players.size(), PAGE_LIMIT);
 		
@@ -715,7 +715,7 @@ public class AdminEditChar implements IAdminCommandHandler
 		final StringBuilder sb = new StringBuilder();
 		
 		// First use of sb, add player info into new Table row
-		for (L2PcInstance player : L2World.getInstance().getPlayers())
+		for (L2PcInstance player : World.getInstance().getPlayers())
 		{
 			String name = player.getName();
 			if (name.toLowerCase().contains(characterToFind.toLowerCase()))
@@ -774,7 +774,7 @@ public class AdminEditChar implements IAdminCommandHandler
 		html.setFile("data/html/admin/ipfind.htm");
 		
 		final StringBuilder sb = new StringBuilder(1000);
-		for (L2PcInstance player : L2World.getInstance().getPlayers())
+		for (L2PcInstance player : World.getInstance().getPlayers())
 		{
 			L2GameClient client = player.getClient();
 			if (client.isDetached())
@@ -834,7 +834,7 @@ public class AdminEditChar implements IAdminCommandHandler
 			return;
 		}
 		
-		final L2PcInstance player = L2World.getInstance().getPlayer(characterName);
+		final L2PcInstance player = World.getInstance().getPlayer(characterName);
 		if (player == null)
 		{
 			activeChar.sendPacket(SystemMessageId.TARGET_CANT_FOUND);
@@ -861,7 +861,7 @@ public class AdminEditChar implements IAdminCommandHandler
 		
 		final Map<String, Integer> dualboxIPs = new HashMap<>();
 		
-		for (L2PcInstance player : L2World.getInstance().getPlayers())
+		for (L2PcInstance player : World.getInstance().getPlayers())
 		{
 			L2GameClient client = player.getClient();
 			if (client == null || client.isDetached())

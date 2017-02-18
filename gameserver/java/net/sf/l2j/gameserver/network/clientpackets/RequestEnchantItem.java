@@ -20,7 +20,7 @@ import net.sf.l2j.Config;
 import net.sf.l2j.gameserver.datatables.ArmorSetsTable;
 import net.sf.l2j.gameserver.datatables.SkillTable;
 import net.sf.l2j.gameserver.model.L2Skill;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.model.item.ArmorSet;
 import net.sf.l2j.gameserver.model.item.instance.ItemInstance;
@@ -303,7 +303,7 @@ public final class RequestEnchantItem extends AbstractEnchantPacket
 					else
 						activeChar.sendPacket(SystemMessage.getSystemMessage(SystemMessageId.ENCHANTMENT_FAILED_S1_EVAPORATED).addItemName(item.getItemId()));
 					
-					L2World.getInstance().removeObject(destroyItem);
+					World.getInstance().removeObject(destroyItem);
 					if (crystalId == 0)
 						activeChar.sendPacket(EnchantResult.UNK_RESULT_4);
 					else

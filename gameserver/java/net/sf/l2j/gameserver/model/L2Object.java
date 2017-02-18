@@ -49,7 +49,7 @@ public abstract class L2Object
 	private int _polyId;
 	
 	private SpawnLocation _position = new SpawnLocation(0, 0, 0, 0);
-	private L2WorldRegion _region;
+	private WorldRegion _region;
 	
 	private boolean _isVisible;
 	
@@ -57,7 +57,7 @@ public abstract class L2Object
 	{
 		_objectId = objectId;
 		
-		setRegion(L2World.getInstance().getRegion(_position));
+		setRegion(World.getInstance().getRegion(_position));
 	}
 	
 	public void onAction(L2PcInstance player)
@@ -86,7 +86,7 @@ public abstract class L2Object
 	{
 		assert _region != null;
 		
-		final L2WorldRegion region = _region;
+		final WorldRegion region = _region;
 		
 		synchronized (this)
 		{
@@ -95,13 +95,13 @@ public abstract class L2Object
 		}
 		
 		// Out of synchronized to avoid deadlocks
-		L2World.getInstance().removeVisibleObject(this, region);
-		L2World.getInstance().removeObject(this);
+		World.getInstance().removeVisibleObject(this, region);
+		World.getInstance().removeObject(this);
 	}
 	
 	public void refreshID()
 	{
-		L2World.getInstance().removeObject(this);
+		World.getInstance().removeObject(this);
 		IdFactory.getInstance().releaseId(getObjectId());
 		_objectId = IdFactory.getInstance().getNextId();
 	}
@@ -117,17 +117,17 @@ public abstract class L2Object
 		{
 			// Set the x,y,z position of the L2Object spawn and update its _worldregion
 			_isVisible = true;
-			setRegion(L2World.getInstance().getRegion(_position));
+			setRegion(World.getInstance().getRegion(_position));
 		}
 		
 		// Add the L2Object spawn in the _allobjects of L2World
-		L2World.getInstance().addObject(this);
+		World.getInstance().addObject(this);
 		
 		// Add the L2Object spawn to _visibleObjects and if necessary to _allplayers of its L2WorldRegion
 		_region.addVisibleObject(this);
 		
 		// Add the L2Object spawn in the world as a visible object -- out of synchronized to avoid deadlocks
-		L2World.getInstance().addVisibleObject(this, _region);
+		World.getInstance().addVisibleObject(this, _region);
 		
 		onSpawn();
 	}
@@ -141,27 +141,27 @@ public abstract class L2Object
 			// Set the x,y,z position of the L2Object spawn and update its _worldregion
 			_isVisible = true;
 			
-			if (x > L2World.WORLD_X_MAX)
-				x = L2World.WORLD_X_MAX - 5000;
-			if (x < L2World.WORLD_X_MIN)
-				x = L2World.WORLD_X_MIN + 5000;
-			if (y > L2World.WORLD_Y_MAX)
-				y = L2World.WORLD_Y_MAX - 5000;
-			if (y < L2World.WORLD_Y_MIN)
-				y = L2World.WORLD_Y_MIN + 5000;
+			if (x > World.WORLD_X_MAX)
+				x = World.WORLD_X_MAX - 5000;
+			if (x < World.WORLD_X_MIN)
+				x = World.WORLD_X_MIN + 5000;
+			if (y > World.WORLD_Y_MAX)
+				y = World.WORLD_Y_MAX - 5000;
+			if (y < World.WORLD_Y_MIN)
+				y = World.WORLD_Y_MIN + 5000;
 			
 			_position.set(x, y, z);
-			setRegion(L2World.getInstance().getRegion(_position));
+			setRegion(World.getInstance().getRegion(_position));
 		}
 		
 		// Add the L2Object spawn in the _allobjects of L2World
-		L2World.getInstance().addObject(this);
+		World.getInstance().addObject(this);
 		
 		// Add the L2Object spawn to _visibleObjects and if necessary to _allplayers of its L2WorldRegion
 		_region.addVisibleObject(this);
 		
 		// Add the L2Object spawn in the world as a visible object
-		L2World.getInstance().addVisibleObject(this, _region);
+		World.getInstance().addVisibleObject(this, _region);
 		
 		onSpawn();
 	}
@@ -352,7 +352,7 @@ public abstract class L2Object
 			if (!isVisible())
 				return;
 			
-			final L2WorldRegion region = L2World.getInstance().getRegion(_position);
+			final WorldRegion region = World.getInstance().getRegion(_position);
 			if (region != _region)
 			{
 				_region.removeVisibleObject(this);
@@ -387,14 +387,14 @@ public abstract class L2Object
 	{
 		assert _region == null;
 		
-		if (x > L2World.WORLD_X_MAX)
-			x = L2World.WORLD_X_MAX - 5000;
-		if (x < L2World.WORLD_X_MIN)
-			x = L2World.WORLD_X_MIN + 5000;
-		if (y > L2World.WORLD_Y_MAX)
-			y = L2World.WORLD_Y_MAX - 5000;
-		if (y < L2World.WORLD_Y_MIN)
-			y = L2World.WORLD_Y_MIN + 5000;
+		if (x > World.WORLD_X_MAX)
+			x = World.WORLD_X_MAX - 5000;
+		if (x < World.WORLD_X_MIN)
+			x = World.WORLD_X_MIN + 5000;
+		if (y > World.WORLD_Y_MAX)
+			y = World.WORLD_Y_MAX - 5000;
+		if (y < World.WORLD_Y_MIN)
+			y = World.WORLD_Y_MIN + 5000;
 		
 		_position.set(x, y, z);
 		setIsVisible(false);
@@ -435,12 +435,12 @@ public abstract class L2Object
 		return _position;
 	}
 	
-	public final L2WorldRegion getRegion()
+	public final WorldRegion getRegion()
 	{
 		return _region;
 	}
 	
-	public void setRegion(L2WorldRegion value)
+	public void setRegion(WorldRegion value)
 	{
 		_region = value;
 	}

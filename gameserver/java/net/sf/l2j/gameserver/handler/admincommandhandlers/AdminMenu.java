@@ -15,7 +15,7 @@
 package net.sf.l2j.gameserver.handler.admincommandhandlers;
 
 import net.sf.l2j.gameserver.handler.IAdminCommandHandler;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 
 public class AdminMenu implements IAdminCommandHandler
@@ -37,7 +37,7 @@ public class AdminMenu implements IAdminCommandHandler
 			if (data.length == 5)
 			{
 				String playerName = data[1];
-				L2PcInstance player = L2World.getInstance().getPlayer(playerName);
+				L2PcInstance player = World.getInstance().getPlayer(playerName);
 				if (player != null)
 					teleportCharacter(player, Integer.parseInt(data[2]), Integer.parseInt(data[3]), Integer.parseInt(data[4]), activeChar);
 			}

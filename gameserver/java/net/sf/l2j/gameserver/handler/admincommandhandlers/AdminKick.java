@@ -18,7 +18,7 @@ import java.util.StringTokenizer;
 
 import net.sf.l2j.gameserver.handler.IAdminCommandHandler;
 import net.sf.l2j.gameserver.model.L2Object;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 
 public class AdminKick implements IAdminCommandHandler
@@ -43,7 +43,7 @@ public class AdminKick implements IAdminCommandHandler
 			{
 				st.nextToken();
 				String player = st.nextToken();
-				L2PcInstance plyr = L2World.getInstance().getPlayer(player);
+				L2PcInstance plyr = World.getInstance().getPlayer(player);
 				if (plyr != null)
 				{
 					plyr.logout();
@@ -56,7 +56,7 @@ public class AdminKick implements IAdminCommandHandler
 		{
 			int counter = 0;
 			
-			for (L2PcInstance player : L2World.getInstance().getPlayers())
+			for (L2PcInstance player : World.getInstance().getPlayers())
 			{
 				if (player.isGM())
 					continue;

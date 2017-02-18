@@ -88,6 +88,8 @@ public class Heal implements ISkillHandler
 				}
 				
 				power += staticShotBonus + Math.sqrt(mAtkMul * activeChar.getMAtk(activeChar, null));
+            
+                if (!skill.isPotion())
 				activeChar.setChargedShot(bsps ? ShotType.BLESSED_SPIRITSHOT : ShotType.SPIRITSHOT, false);//Fix Redist skill.isStaticReuse()
 		}
 		

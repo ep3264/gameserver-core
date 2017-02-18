@@ -176,7 +176,7 @@ public class Blow implements ISkillHandler
 			}
 			else
 				activeChar.sendPacket(SystemMessage.getSystemMessage(SystemMessageId.ATTACK_FAILED));
-				
+			
 			// Possibility of a lethal strike
 			Formulas.calcLethalHit(activeChar, target, skill);
 			
@@ -187,7 +187,7 @@ public class Blow implements ISkillHandler
 					effect.exit();
 				
 				skill.getEffectsSelf(activeChar);
-			} 
+			}
 			activeChar.setChargedShot(ShotType.SOULSHOT, false);//Fix Redist skill.isStaticReuse()
 		}
 	}

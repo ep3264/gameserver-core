@@ -29,7 +29,7 @@ import net.sf.l2j.Config;
 import net.sf.l2j.L2DatabaseFactory;
 import net.sf.l2j.gameserver.datatables.ItemTable;
 import net.sf.l2j.gameserver.model.L2Object;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.L2Character;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.model.item.instance.ItemInstance;
@@ -509,7 +509,7 @@ public abstract class ItemContainer
 			for (ItemInstance item : _items)
 			{
 				item.updateDatabase();
-				L2World.getInstance().removeObject(item);
+				World.getInstance().removeObject(item);
 			}
 		}
 		_items.clear();
@@ -545,7 +545,7 @@ public abstract class ItemContainer
 				if (item == null)
 					continue;
 				
-				L2World.getInstance().addObject(item);
+				World.getInstance().addObject(item);
 				
 				L2PcInstance owner = (getOwner() == null) ? null : getOwner().getActingPlayer();
 				

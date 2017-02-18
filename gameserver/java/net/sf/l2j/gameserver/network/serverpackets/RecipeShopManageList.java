@@ -72,7 +72,7 @@ public class RecipeShopManageList extends L2GameServerPacket
 			for (RecipeList recipe : _recipes)
 			{
 				writeD(recipe.getId());
-				writeD(i + 1);
+				writeD(++i);
 			}
 		}
 		

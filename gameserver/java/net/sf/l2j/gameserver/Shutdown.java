@@ -30,6 +30,7 @@ import net.sf.l2j.L2DatabaseFactory;
 import net.sf.l2j.gameserver.datatables.BufferTable;
 import net.sf.l2j.gameserver.datatables.ServerMemo;
 import net.sf.l2j.gameserver.instancemanager.CastleManorManager;
+import net.sf.l2j.gameserver.instancemanager.CoupleManager;
 import net.sf.l2j.gameserver.instancemanager.FishingChampionshipManager;
 import net.sf.l2j.gameserver.instancemanager.FourSepulchersManager;
 import net.sf.l2j.gameserver.instancemanager.GrandBossManager;
@@ -37,7 +38,7 @@ import net.sf.l2j.gameserver.instancemanager.RaidBossSpawnManager;
 import net.sf.l2j.gameserver.instancemanager.SevenSigns;
 import net.sf.l2j.gameserver.instancemanager.SevenSignsFestival;
 import net.sf.l2j.gameserver.instancemanager.ZoneManager;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.model.entity.Hero;
 import net.sf.l2j.gameserver.model.olympiad.Olympiad;
@@ -200,6 +201,13 @@ public class Shutdown extends Thread
 			// Schemes save.
 			BufferTable.getInstance().saveSchemes();
 			_log.info("BufferTable data has been saved.");
+			
+			// Couples save.
+			if (Config.ALLOW_WEDDING)
+			{
+				CoupleManager.getInstance().save();
+				_log.info("CoupleManager data has been saved.");
+			}
 			
 			// Save server memos.
 			ServerMemo.getInstance().storeMe();
@@ -432,7 +440,7 @@ public class Shutdown extends Thread
 	 */
 	private static void disconnectAllCharacters()
 	{
-		for (L2PcInstance player : L2World.getInstance().getPlayers())
+		for (L2PcInstance player : World.getInstance().getPlayers())
 		{
 			try
 			{

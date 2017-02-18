@@ -15,7 +15,7 @@
 package net.sf.l2j.gameserver.network.clientpackets;
 
 import net.sf.l2j.gameserver.model.BlockList;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.network.SystemMessageId;
 import net.sf.l2j.gameserver.network.serverpackets.FriendAddRequest;
@@ -38,7 +38,7 @@ public final class RequestFriendInvite extends L2GameClientPacket
 		if (activeChar == null)
 			return;
 		
-		final L2PcInstance friend = L2World.getInstance().getPlayer(_name);
+		final L2PcInstance friend = World.getInstance().getPlayer(_name);
 		
 		// can't use friend invite for locating invisible characters
 		if (friend == null || !friend.isOnline() || friend.getAppearance().getInvisible())

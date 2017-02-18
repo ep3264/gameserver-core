@@ -14,7 +14,7 @@
  */
 package net.sf.l2j.gameserver.network.clientpackets;
 
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.model.partymatching.PartyMatchRoom;
 import net.sf.l2j.gameserver.model.partymatching.PartyMatchRoomList;
@@ -47,7 +47,7 @@ public final class AnswerJoinPartyRoom extends L2GameClientPacket
 			return;
 		
 		final L2PcInstance partner = player.getActiveRequester();
-		if (partner == null || L2World.getInstance().getPlayer(partner.getObjectId()) == null)
+		if (partner == null || World.getInstance().getPlayer(partner.getObjectId()) == null)
 		{
 			// Partner hasn't be found, cancel the invitation
 			player.sendPacket(SystemMessageId.TARGET_IS_NOT_FOUND_IN_THE_GAME);

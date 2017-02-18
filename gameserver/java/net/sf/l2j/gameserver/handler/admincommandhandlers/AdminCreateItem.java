@@ -20,7 +20,7 @@ import java.util.StringTokenizer;
 import net.sf.l2j.gameserver.datatables.ArmorSetsTable;
 import net.sf.l2j.gameserver.datatables.ItemTable;
 import net.sf.l2j.gameserver.handler.IAdminCommandHandler;
-import net.sf.l2j.gameserver.model.L2World;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.model.item.ArmorSet;
 import net.sf.l2j.gameserver.model.item.kind.Item;
@@ -63,7 +63,7 @@ public class AdminCreateItem implements IAdminCommandHandler
 				final int id = Integer.parseInt(st.nextToken());
 				final int count = (st.hasMoreTokens()) ? Integer.parseInt(st.nextToken()) : 1;
 				
-				final Collection<L2PcInstance> players = L2World.getInstance().getPlayers();
+				final Collection<L2PcInstance> players = World.getInstance().getPlayers();
 				for (L2PcInstance player : players)
 					createItem(activeChar, player, id, count, 0, false);
 				
