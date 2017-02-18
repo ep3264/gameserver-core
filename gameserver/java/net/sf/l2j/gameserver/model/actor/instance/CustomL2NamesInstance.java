@@ -28,7 +28,7 @@ import net.sf.l2j.gameserver.network.serverpackets.SystemMessage;
  * @author Redist
  */
 public class CustomL2NamesInstance extends L2NpcInstance
-{	
+{
 	public CustomL2NamesInstance(int objectId, NpcTemplate template)
 	{
 		super(objectId, template);
@@ -38,7 +38,7 @@ public class CustomL2NamesInstance extends L2NpcInstance
 	public void showChatWindow(L2PcInstance player, int val)
 	{
 		NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
-		html.setFile(getHtmlPath(getNpcId(), val));
+		html.setFile(getHtmlPath(getNpcId(), val, player));
 		html.replace("%objectId%", getObjectId());
 		html.replace("%price%", Config.NAME_CHANGE_PRICE);
 		String itemName = ItemTable.getInstance().getTemplate(Config.NAME_CHANGE_ITEM).getName();
@@ -47,15 +47,9 @@ public class CustomL2NamesInstance extends L2NpcInstance
 	}
 	
 	@Override
-	public String getHtmlPath(int npcId, int val)
+	public String getHtmlFolder()
 	{
-		String filename;
-		if (val == 0)
-			filename = "data/html/mods/names/" + npcId + ".htm";
-		else
-			filename = "data/html/mods/names/" + npcId + "-" + val + ".htm";
-		
-		return filename;
+		return "/mods/names/";
 	}
 	
 	@Override
@@ -68,9 +62,9 @@ public class CustomL2NamesInstance extends L2NpcInstance
 			{
 				val = Integer.parseInt(command.substring(5));
 			}
-			
-			catch (NumberFormatException nfe)
+			catch (Exception e)
 			{
+				e.printStackTrace();
 			}
 			
 			showChatWindow(player, val);
@@ -82,8 +76,9 @@ public class CustomL2NamesInstance extends L2NpcInstance
 			{
 				name = command.substring(8);
 			}
-			catch (IndexOutOfBoundsException ioobe)
+			catch (Exception e)
 			{
+				e.printStackTrace();
 			}
 			setName(player, name);
 			showChatWindow(player, 0);

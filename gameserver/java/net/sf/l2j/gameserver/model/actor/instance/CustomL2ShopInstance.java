@@ -1,61 +1,37 @@
-/*
- * This program is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
- * 
- * You should have received a copy of the GNU General Public License along with
- * this program. If not, see <http://www.gnu.org/licenses/>.
- */
 package net.sf.l2j.gameserver.model.actor.instance;
 
 import com.l2je.extensions.casino.Roulette;
-
 import java.util.StringTokenizer;
 
-import net.sf.l2j.gameserver.cache.HtmCache;
+import net.sf.l2j.commons.lang.Language;
+import net.sf.l2j.commons.lang.StringUtil;
 import net.sf.l2j.gameserver.model.actor.template.NpcTemplate;
 import net.sf.l2j.gameserver.network.serverpackets.NpcHtmlMessage;
 
 /**
- * @author redist
- *
- */
-
-/**
- * @author user
+ * 
+ * @author evgeny64
+ * Official Website: http://l2je.com 
+ * @date 17 февр. 2017 г. 14:17:10
  */
 public class CustomL2ShopInstance extends L2NpcInstance
 {
 	public CustomL2ShopInstance(int objectId, NpcTemplate template)
 	{
 		super(objectId, template);
+	}	
+	@Override
+	public String getHtmlFolder()
+	{
+		return "/mods/shop/";		
 	}
-	
 	@Override
 	public void showChatWindow(L2PcInstance player, int val)
 	{
-		NpcHtmlMessage html = new NpcHtmlMessage(1);
-		html.setFile(getHtmlPath(getNpcId(), val));
+		NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
+		html.setFile(getHtmlPath(getNpcId(), val, player));
 		html.replace("%objectId%", getObjectId());
 		player.sendPacket(html);
-	}
-	
-	@Override
-	public String getHtmlPath(int npcId, int val)
-	{
-		String filename;		
-		if (val == 0)
-			filename = "data/html/mods/shop/" + npcId + ".htm";
-		else
-			filename = "data/html/mods/shop/" + npcId + "-" + val + ".htm";			
-		
-		return filename;	
 	}
 	
 	@Override

@@ -1,17 +1,15 @@
 package com.l2je.extensions.events;
 
-import com.l2je.extensions.events.commons.Util;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ScheduledFuture;
 import java.util.logging.Logger;
 import net.sf.l2j.commons.concurrent.ThreadPool;
 import net.sf.l2j.commons.lang.StringUtil;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
+import net.sf.l2j.gameserver.network.serverpackets.NpcHtmlMessage;
 
 public final class EventManager
 {
@@ -55,7 +53,7 @@ public final class EventManager
 	public AutoEventScheduler _autoEventScheduler;
 	private Event _currentEvent;
 	final List<Event> _events = new ArrayList<>();
-	public static final String HTML_FILE_PATH = "data/html/event_manager/";
+	public static final String HTML_PATH = "data/html/event_manager/";
 	
 	public static EventManager getInstance()
 	{
@@ -331,15 +329,15 @@ public final class EventManager
 						endCurrentEvent(true);
 					}
 				}
-				Map<String, String> variables = new HashMap<>();
+				NpcHtmlMessage html = new NpcHtmlMessage(0);
+				html.setFile("data/html/event_manager/index.htm");
 				StringBuffer sb = new StringBuffer();
 				for (Event event : _events)
 				{
 					StringUtil.append(sb, event.getId(), "_", event.getName(), ";");
 				}
-				variables.put("%eventsList%", sb.toString());
-				Util.sendHtml(player, HTML_FILE_PATH + "index.htm", variables);
-				
+				html.basicReplace("%eventsList%", sb.toString());
+				player.sendPacket(html);				
 			}
 		}, 0);
 	}

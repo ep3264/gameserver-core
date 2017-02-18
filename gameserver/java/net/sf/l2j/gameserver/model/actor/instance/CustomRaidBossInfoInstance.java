@@ -52,6 +52,11 @@ public class CustomRaidBossInfoInstance extends L2NpcInstance
 		29028,
 		29045,
 	};
+	@Override
+	public String getHtmlFolder()
+	{
+		return "/mods/rbinfo/";		
+	}
 	
 	public CustomRaidBossInfoInstance(int objectId, NpcTemplate template)
 	{
@@ -61,21 +66,21 @@ public class CustomRaidBossInfoInstance extends L2NpcInstance
 	@Override
 	public void showChatWindow(L2PcInstance player, int val)
 	{
-		NpcHtmlMessage html = new NpcHtmlMessage(1);
-		html.setFile(getHtmlPath(getNpcId(), val));
+		NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
+		html.setFile(getHtmlPath(getNpcId(), val, player));
 		html.replace("%objectId%", getObjectId());
 		if (val != 0)
 		{
-			String bossesList="";
+			String bossesList = "";
 			if (val == 1)
 			{
-				bossesList=generateBossList();
+				bossesList = generateBossList();
 			}
 			else if (val == 2)
 			{
-				bossesList=generateEpicBossList();
+				bossesList = generateEpicBossList();
 			}
-			html.replace("%bosslist%",bossesList);			
+			html.replace("%bosslist%", bossesList);
 		}
 		player.sendPacket(html);
 	}
@@ -92,7 +97,7 @@ public class CustomRaidBossInfoInstance extends L2NpcInstance
 			String level =Byte.toString(NpcTable.getInstance().getTemplate(rboss).getLevel());			
 			if (delay <= 0)
 			{
-				StringUtil.append(sb, "<font color=\"FFFFFF\">" , name ," ",level, "</font><font color=\"FFFF00\"> Жив!</font><br1>");				
+				StringUtil.append(sb, "<font color=\"FFFFFF\">" , name ," ",level, "</font><font color=\"FFFF00\"> Alive!</font><br1>");				
 			}
 			else
 			{	
@@ -113,7 +118,7 @@ public class CustomRaidBossInfoInstance extends L2NpcInstance
 			String level =Byte.toString(NpcTable.getInstance().getTemplate(rboss).getLevel());			
 			if (delay <= 0)
 			{
-				StringUtil.append(sb, "<font color=\"FFFFFF\">" , name ," ",level, "</font><font color=\"FFFF00\"> Жив!</font><br1>");
+				StringUtil.append(sb, "<font color=\"FFFFFF\">" , name ," ",level, "</font><font color=\"FFFF00\"> Alive!</font><br1>");
 			}
 			else
 			{				
@@ -137,19 +142,5 @@ public class CustomRaidBossInfoInstance extends L2NpcInstance
 		final StringBuilder sb = new StringBuilder();
 		StringUtil.append(sb,hours, ":", minutes, ":", seconds);
 		return sb.toString();
-	}
-	
-	@Override
-	public String getHtmlPath(int npcId, int val)
-	{
-		String filename;
-		
-		if (val == 0)
-			filename = "data/html/mods/rbinfo/" + npcId + ".htm";
-		else
-			filename = "data/html/mods/rbinfo/" + npcId + "-" + val + ".htm";
-			
-		
-		return filename;		
 	}
 }

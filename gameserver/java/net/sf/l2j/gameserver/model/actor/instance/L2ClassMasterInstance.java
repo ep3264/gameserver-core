@@ -16,6 +16,7 @@ package net.sf.l2j.gameserver.model.actor.instance;
 
 import java.util.List;
 
+import net.sf.l2j.commons.lang.Language;
 import net.sf.l2j.commons.lang.StringUtil;
 
 import net.sf.l2j.Config;
@@ -58,14 +59,14 @@ public final class L2ClassMasterInstance extends L2NpcInstance
 	@Override
 	public void showChatWindow(L2PcInstance player)
 	{
-		player.sendPacket(ActionFailed.STATIC_PACKET);
-		String filename = "data/html/classmaster/disabled.htm";
-		
+		String lang = (player.getLang()==Language.RU) ? "-ru" : "";
+		StringBuffer filename = new StringBuffer();		
 		if (Config.ALLOW_CLASS_MASTERS)
-			filename = "data/html/classmaster/" + getNpcId() + ".htm";
-		
+			StringUtil.append(filename, "data/html",lang,"/classmaster/" , getNpcId() , ".htm");
+		else
+			filename.append("data/html/classmaster/disabled.htm");
 		final NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
-		html.setFile(filename);
+		html.setFile(filename.toString());
 		html.replace("%objectId%", getObjectId());
 		html.replace("%price%", Config.CLASS_MASTER_BECOME_NOBLE_PRICE);
 		String itemName = ItemTable.getInstance().getTemplate(Config.CLASS_MASTER_BECOME_NOBLE_ITEM).getName();

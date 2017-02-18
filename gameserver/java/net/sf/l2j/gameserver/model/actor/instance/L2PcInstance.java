@@ -15,7 +15,6 @@
 package net.sf.l2j.gameserver.model.actor.instance;
 
 import com.l2je.extensions.ColorManager;
-import com.l2je.extensions.acp.AcpTask;
 import com.l2je.extensions.events.Event;
 import com.l2je.extensions.events.EventManager;
 import com.l2je.extensions.ghosts.GhostsPlayers;
@@ -42,6 +41,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 
 import net.sf.l2j.commons.concurrent.ThreadPool;
+import net.sf.l2j.commons.lang.Language;
 import net.sf.l2j.commons.random.Rnd;
 import net.sf.l2j.commons.util.MultiValueSet;
 import net.sf.l2j.Config;
@@ -10880,5 +10880,19 @@ public final class L2PcInstance extends L2Playable
 			return false;
 		}
 		return true;
+	}
+	
+	private Language _language;
+	public Language getLang()
+	{
+		if (_language == null)
+			_language = Language.valueOf(getAccountData().getString("lang","RU"));		
+		return _language;
+	}
+
+	public void setLang(Language lang)
+	{
+		_language = lang;
+		getAccountData().set("lang", lang.toString());
 	}
 }

@@ -224,7 +224,6 @@ public class EnchantWar extends CombatEvent
 		switch (_eventState)
 		{
 			case ACTIVE:
-				//updateScoreBoard(delay);
 				switch (delay)
 				{
 					case 600:

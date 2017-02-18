@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.logging.Level;
 
 import net.sf.l2j.commons.concurrent.ThreadPool;
+import net.sf.l2j.commons.lang.Language;
 import net.sf.l2j.commons.lang.StringUtil;
 import net.sf.l2j.commons.random.Rnd;
 
@@ -848,19 +849,42 @@ public class L2Npc extends L2Character
 	 */
 	public String getHtmlPath(int npcId, int val)
 	{
-		String filename;
+		StringBuffer filename = new StringBuffer();
 		
 		if (val == 0)
-			filename = "data/html/default/" + npcId + ".htm";
+			StringUtil.append(filename, "data/html/default/" , npcId , ".htm");
 		else
-			filename = "data/html/default/" + npcId + "-" + val + ".htm";
+			StringUtil.append(filename , "data/html/default/" , npcId , "-" , val , ".htm");
 		
-		//FIX REDIST if (HtmCache.getInstance().isLoadable(filename))
-			return filename;
-		
-		// Fix REDIST return "data/html/npcdefault.htm";
+		return filename.toString();
 	}
 	
+	/**
+	 * Мультиязычная версия метода
+	 * @param npcId
+	 * @param val номер чата
+	 * @param talker игрок
+	 * @return путь к файлу
+	 */
+	public String getHtmlPath(int npcId, int val, L2PcInstance talker)
+	{
+		StringBuffer filename = new StringBuffer();
+		
+		if (val == 0)
+			StringUtil.append(filename, "data/html",(talker.getLang()==Language.RU)?"-ru":"",getHtmlFolder(), npcId, ".htm");
+		else
+			StringUtil.append(filename, "data/html",(talker.getLang()==Language.RU)?"-ru":"",getHtmlFolder(), npcId, "-", val, ".htm");
+		
+		return filename.toString();		
+	}
+	/**
+	 * Поддержка мультиязычности
+	 * @return путь к файлам, корень data/html
+	 */
+	public String getHtmlFolder()
+	{
+		return "/default/";		
+	}
 	/**
 	 * Make the NPC speaks to his current knownlist.
 	 * @param message The String message to send.
@@ -1182,7 +1206,7 @@ public class L2Npc extends L2Character
 	 * @param type
 	 * @return boolean
 	 */
-	private boolean showPkDenyChatWindow(L2PcInstance player, String type)
+	protected boolean showPkDenyChatWindow(L2PcInstance player, String type)
 	{
 		String content = HtmCache.getInstance().getHtm("data/html/" + type + "/" + getNpcId() + "-pk.htm");
 		if (content != null)
@@ -1214,12 +1238,7 @@ public class L2Npc extends L2Character
 			{
 				if (showPkDenyChatWindow(player, "merchant"))
 					return;
-			}
-			else if (!Config.KARMA_PLAYER_CAN_USE_GK && this instanceof L2TeleporterInstance)
-			{
-				if (showPkDenyChatWindow(player, "teleporter"))
-					return;
-			}
+			}			
 			else if (!Config.KARMA_PLAYER_CAN_USE_WH && this instanceof L2WarehouseInstance)
 			{
 				if (showPkDenyChatWindow(player, "warehouse"))

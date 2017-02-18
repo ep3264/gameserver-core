@@ -44,7 +44,7 @@ public class CustomL2ColorsInstance extends L2NpcInstance
 	public void showChatWindow(L2PcInstance player, int val)
 	{
 		NpcHtmlMessage html = new NpcHtmlMessage(1);
-		html.setFile(getHtmlPath(getNpcId(), val));
+		html.setFile(getHtmlPath(getNpcId(), val, player));
 		html.replace("%objectId%", getObjectId());
 		if(val==1 || val==2)
 		{
@@ -56,15 +56,9 @@ public class CustomL2ColorsInstance extends L2NpcInstance
 	}
 	
 	@Override
-	public String getHtmlPath(int npcId, int val)
+	public String getHtmlFolder()
 	{
-		String filename;		
-		if (val == 0)
-			filename = "data/html/mods/colors/" + npcId + ".htm";
-		else
-			filename = "data/html/mods/colors/" + npcId + "-" + val + ".htm";
-			
-		return filename;		
+		return "/mods/colors/";
 	}
 	
 	@Override
@@ -77,13 +71,10 @@ public class CustomL2ColorsInstance extends L2NpcInstance
 			{
 				val = Integer.parseInt(command.substring(5));
 			}
-			catch (IndexOutOfBoundsException ioobe)
+			catch (Exception e)
 			{
-			}
-			catch (NumberFormatException nfe)
-			{
-			}
-			
+				e.printStackTrace();
+			}			
 			showChatWindow(player, val);
 		}
 		else if (command.startsWith("SetNameColor"))
@@ -97,12 +88,10 @@ public class CustomL2ColorsInstance extends L2NpcInstance
 					color = Integer.decode("0x" + choice);
 				}
 			}
-			catch (IndexOutOfBoundsException ioobe)
+			catch (Exception e)
 			{
-			}
-			catch (NumberFormatException nfe)
-			{
-			}
+				e.printStackTrace();
+			}	
 			if (pay(player))
 			{
 				setNameColor(player, color);
@@ -120,12 +109,10 @@ public class CustomL2ColorsInstance extends L2NpcInstance
 					color = Integer.decode("0x" + choice);
 				}
 			}
-			catch (IndexOutOfBoundsException ioobe)
+			catch (Exception e)
 			{
-			}
-			catch (NumberFormatException nfe)
-			{
-			}
+				e.printStackTrace();
+			}	
 			if (pay(player))
 			{
 				setTitleColor(player, color);

@@ -11,6 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 import net.sf.l2j.L2DatabaseFactory;
+import net.sf.l2j.commons.lang.Language;
 import net.sf.l2j.commons.lang.StringUtil;
 import net.sf.l2j.gameserver.cache.HtmCache;
 import net.sf.l2j.gameserver.datatables.ItemTable;
@@ -103,7 +104,8 @@ public class Auction
 	
 	public String getMainPage(L2PcInstance player, int page, int type)
 	{
-		String html = HtmCache.getInstance().getHtm("data/html/mods/auction/Auction.htm");
+		String path = (player.getLang()==Language.RU)?"data/html-ru/mods/auction/Auction.htm":"data/html/mods/auction/Auction.htm";
+		String html = HtmCache.getInstance().getHtm(path);
 		ArrayList<AuctionItem> auctionItems = getItems(player, type);
 		html = html.replace("%products%", getPage(auctionItems, page));
 		html = html.replace("%pages%", getPagesNum(player, page, type, auctionItems.size()));
@@ -112,21 +114,24 @@ public class Auction
 	
 	public String getItemInformationPage(L2PcInstance player, AuctionItem item)
 	{
-		String html = HtmCache.getInstance().getHtm("data/html/mods/auction/ShowItemInfo.htm");
+		String path = (player.getLang()==Language.RU)?"data/html-ru/mods/auction/ShowItemInfo.htm":"data/html/mods/auction/ShowItemInfo.htm";
+		String html = HtmCache.getInstance().getHtm(path);
 		html = html.replace("%information%", item.getAcceptPage(player.getObjectId() == item.trader_objId));
 		return html;
 	}
 	
 	public String getCreateProductPage(L2PcInstance player, int page)
 	{
-		String html = HtmCache.getInstance().getHtm("data/html/mods/auction/CreateProduct.htm");
+		String path = (player.getLang()==Language.RU)?"data/html-ru/mods/auction/CreateProduct.htm":"data/html/mods/auction/CreateProduct.htm";
+		String html = HtmCache.getInstance().getHtm(path);
 		html = html.replace("%page%", this.getPageAddProduct(player, page));
 		return html;
 	}
 	
 	public String getChoseProductPage(L2PcInstance player, ItemInstance item)
 	{
-		String html = HtmCache.getInstance().getHtm("data/html/mods/auction/ChoseProduct.htm");
+		String path = (player.getLang()==Language.RU)?"data/html-ru/mods/auction/ChoseProduct.htm":"data/html/mods/auction/ChoseProduct.htm";
+		String html = HtmCache.getInstance().getHtm(path);
 		if (AuctionConfig.AUCTION_PERCENTAGE)
 		{
 			html = html.replace("%item_a%", String.valueOf(AuctionConfig.AUCTION_GET_PERCENT));

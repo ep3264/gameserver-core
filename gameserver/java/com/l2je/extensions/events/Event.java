@@ -2,7 +2,7 @@ package com.l2je.extensions.events;
 
 import com.l2je.extensions.events.commons.Fence;
 import com.l2je.extensions.events.commons.Reward;
-import com.l2je.extensions.events.commons.Util;
+
 import com.l2je.extensions.events.tvt.Team;
 
 
@@ -17,6 +17,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.logging.Logger;
 
 import net.sf.l2j.commons.concurrent.ThreadPool;
+import net.sf.l2j.commons.lang.Language;
 import net.sf.l2j.commons.lang.StringUtil;
 import net.sf.l2j.gameserver.datatables.FenceTable;
 import net.sf.l2j.gameserver.model.L2Effect;
@@ -35,6 +36,7 @@ import net.sf.l2j.gameserver.model.item.instance.ItemInstance;
 import net.sf.l2j.gameserver.network.clientpackets.Say2;
 import net.sf.l2j.gameserver.network.serverpackets.CreatureSay;
 import net.sf.l2j.gameserver.network.serverpackets.ExShowScreenMessage;
+import net.sf.l2j.gameserver.network.serverpackets.NpcHtmlMessage;
 import net.sf.l2j.gameserver.util.Broadcast;
 
 public abstract class Event
@@ -47,51 +49,7 @@ public abstract class Event
 	};
 	
 	protected static final String EVENT_COMMANDS = ".join -присоединиться   .info-информация   .leave- покинуть";
-	protected static final Logger _log = Logger.getLogger(Event.class.getName());
-	protected class EventScheduler implements Runnable
-	{
-		private ScheduledFuture<?> _task = null;
-		private int _delay;
-		
-		public void schedule(int delay)
-		{
-			_delay = delay;
-			if (_task != null)
-			{
-				cancel();
-			}
-			run();
-		}
-		
-		public int getDelay()
-		{
-			return _delay / 1000;
-		}
-		
-		@Override
-		public void run()
-		{
-			if (_delay < 1000)
-			{
-				trigger();
-				_task = null;
-				return;
-			}
-			handleCounter(_delay / 1000);
-			_task = ThreadPool.schedule(this, 1000);
-			_delay = _delay - 1000;
-		}
-		
-		public void cancel()
-		{
-			if (_task != null)
-			{
-				_task.cancel(false);
-			}
-			_task = null;
-		}
-	}
-	
+	protected static final Logger _log = Logger.getLogger(Event.class.getName());	
 	protected EventScheduler _eventScheduler = new EventScheduler();
 	protected HashSet<L2PcInstance> _players = new HashSet<>();
 	protected Map<L2PcInstance, Integer> _scores = new HashMap<>();
@@ -560,32 +518,34 @@ public abstract class Event
 	
 	public void showInfo(L2PcInstance player)
 	{
-		Map<String, String> variables = new HashMap<>();
-		variables.put("%name%", getName());
-		variables.put("%state%", eventStateToString());
+		String path = (player.getLang()==Language.RU)?"data/html-ru/event_manager/eventInfo.htm":"data/html/event_manager/eventInfo.htm";
+		NpcHtmlMessage html = new NpcHtmlMessage(0);
+		html.setFile(path);
+		html.basicReplace("%name%", getName());
+		html.basicReplace("%state%", eventStateToString());
 		int seconds = _eventScheduler.getDelay();
 		int mins = seconds / 60;
 		int secs = seconds - (mins * 60);
-		variables.put("%mins%", String.valueOf(mins));
-		variables.put("%secs%", (secs < 10 ? "0" + secs : String.valueOf(secs)));
-		variables.put("%players%", String.valueOf(_players.size()));
-		variables.put("%minPlayers%", String.valueOf(getMinPlayers()));
-		variables.put("%maxPlayers%", String.valueOf(getMaxPlayers()));
-		variables.put("%description%", getDesription());
+		html.basicReplace("%mins%", String.valueOf(mins));
+		html.basicReplace("%secs%", (secs < 10 ? "0" + secs : String.valueOf(secs)));
+		html.basicReplace("%players%", String.valueOf(_players.size()));
+		html.basicReplace("%minPlayers%", String.valueOf(getMinPlayers()));
+		html.basicReplace("%maxPlayers%", String.valueOf(getMaxPlayers()));
+		html.basicReplace("%description%", getDesription());
 		String userCommands = "";
 		if (containsPlayer(player))
 		{
 			userCommands = "<button value=\"Leave\" action=\"bypass -h event_leave\" width=65 height=19 back=\"L2UI_ch3.smallbutton2_over\" fore=\"L2UI_ch3.smallbutton2\">";
-			variables.put("%action%", userCommands);
+			html.basicReplace("%action%", userCommands);
 		}
 		else
 		{
 			userCommands = "<button value=\"Join\" action=\"bypass -h event_join\" width=65 height=19 back=\"L2UI_ch3.smallbutton2_over\" fore=\"L2UI_ch3.smallbutton2\">";
-			variables.put("%action%", userCommands);
+			html.basicReplace("%action%", userCommands);
 		}
 		userCommands = "<button value=\"Refresh\" action=\"bypass -h event_info\" width=65 height=19 back=\"L2UI_ch3.smallbutton2_over\" fore=\"L2UI_ch3.smallbutton2\">";
-		variables.put("%userCommands%", userCommands);
-		Util.sendHtml(player, EventManager.HTML_FILE_PATH + "eventInfo.htm", variables);
+		html.basicReplace("%userCommands%", userCommands);	
+		player.sendPacket(html);
 	}
 	
 	protected void handleCounter(int delay)
@@ -667,6 +627,55 @@ public abstract class Event
 			{
 				player.addItem("EventReward", reward.getItemid(), reward.getCount(), player, true);
 			}
+		}
+	}
+	/**
+	 * Класс, переключает состояния ивента
+	 * @author evgeny64
+	 * Official Website: http://l2je.com 
+	 * @date 16 февр. 2017 г. 16:05:21
+	 */
+	protected class EventScheduler implements Runnable
+	{
+		private ScheduledFuture<?> _task = null;
+		private int _delay;
+		private static final int PERIOD = 1000;
+		public void schedule(int delay)
+		{
+			_delay = delay;
+			if (_task != null)
+			{
+				cancel();
+			}
+			run();
+		}
+		
+		public int getDelay()
+		{
+			return _delay / 1000;
+		}
+		
+		@Override
+		public void run()
+		{
+			if (_delay < PERIOD)
+			{
+				trigger();
+				_task = null;
+				return;
+			}
+			handleCounter(getDelay());
+			_task = ThreadPool.schedule(this, PERIOD);
+			_delay = _delay - PERIOD;
+		}
+		
+		public void cancel()
+		{
+			if (_task != null)
+			{
+				_task.cancel(false);
+			}
+			_task = null;
 		}
 	}
 }

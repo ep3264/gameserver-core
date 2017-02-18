@@ -3,6 +3,7 @@ package com.l2je.extensions;
 import com.l2je.extensions.acp.AcpManager;
 import com.l2je.extensions.events.EventManager;
 
+import net.sf.l2j.commons.lang.Language;
 import net.sf.l2j.commons.lang.StringUtil;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.network.serverpackets.NpcHtmlMessage;
@@ -23,71 +24,86 @@ public class MenuManager
 		return SingletonHolder._instance;
 	}
 	
-	private static final String HTML_FILE_PATH = "data/html/commands/menu/Menu.htm";
+	private static final String HTML_PATH = "data/html/commands/menu/Menu.htm";
+	private static final String HTML_RU_PATH = "data/html-ru/commands/menu/Menu.htm";
 	
 	public void showChatWindow(L2PcInstance activeChar)
 	{
+		boolean ru = (activeChar.getLang() == Language.RU);
 		NpcHtmlMessage html = new NpcHtmlMessage(0);
-		html.setFile(HTML_FILE_PATH);
-		String premiumInfo = "<td><font color=\"ff0000\">Не активирован</font></td><td><button value=\"Активировать\" action=\"bypass -h menu_premium\" width=75 height=20 back=\"L2UI_CH3.Btn1_normalDisable\" fore=\"L2UI_CH3.Btn1_normalDisable\"></td>";
+		if (ru)
+			html.setFile(HTML_RU_PATH);
+		else
+			html.setFile(HTML_PATH);
+		
+		html.basicReplace("%lang%", activeChar.getLang().toString());
+		String premiumInfo = ru ? "<td><font color=\"ff0000\">Не активирован</font></td><td><button value=\"Активировать\" action=\"bypass -h menu_premium\" width=75 height=20 back=\"L2UI_CH3.Btn1_normalDisable\" fore=\"L2UI_CH3.Btn1_normalDisable\"></td>" : "<td><font color=\"ff0000\">Not activated</font></td><td><button value=\"Activate\" action=\"bypass -h menu_premium\" width=75 height=20 back=\"L2UI_CH3.Btn1_normalDisable\" fore=\"L2UI_CH3.Btn1_normalDisable\"></td>";
 		if (activeChar.isPremium())
 		{
 			StringBuffer sb = new StringBuffer();
-			StringUtil.append(sb, "<td><font color=\"LEVEL\">до ", PremiumManager.getPremiumEndDate(activeChar), "</font></td>");
+			StringUtil.append(sb, "<td><font color=\"LEVEL\"> ", PremiumManager.getPremiumEndDate(activeChar), "</font></td>");
 			premiumInfo = sb.toString();
 		}
 		html.basicReplace("%premium%", premiumInfo);
-		html.basicReplace("%exp%", stateToString(!activeChar.getStopExp()));
+		html.basicReplace("%exp%", stateToString(!activeChar.getStopExp(), ru));
 		StringBuffer sbAcp = new StringBuffer();
-		String acp = "<font color=\"ff0000\">Выкл</font></td>";
+		String acp = ru ? "<font color=\"ff0000\">Выкл</font></td>" : "<font color=\"ff0000\">Off</font></td>";
 		boolean status = false;
 		sbAcp.append("<font color=\"LEVEL\">");
-		if(activeChar.isAcp(AcpManager.CP_ID))
+		if (activeChar.isAcp(AcpManager.CP_ID))
 		{
 			sbAcp.append("CP");
 			status = true;
 		}
-		if(activeChar.isAcp(AcpManager.HP_ID))
+		if (activeChar.isAcp(AcpManager.HP_ID))
 		{
-			if(status)
+			if (status)
 				sbAcp.append("/");
 			sbAcp.append("HP");
 			status = true;
 		}
-		if(activeChar.isAcp(AcpManager.MP_ID))
+		if (activeChar.isAcp(AcpManager.MP_ID))
 		{
-			if(status)
+			if (status)
 				sbAcp.append("/");
 			sbAcp.append("MP ");
 			status = true;
 		}
-		if(status)
+		if (status)
 		{
 			sbAcp.append("</font>");
 			acp = sbAcp.toString();
 		}
-		html.basicReplace("%acp%",acp);
+		html.basicReplace("%acp%", acp);
 		html.basicReplace("%ip%", activeChar.getClient().getConnection().getInetAddress().getHostAddress());
-		html.basicReplace("%ipon%", stateToString(activeChar.isIpBlock()));
-		String eventInfo = "<td><font color=\"ff0000\">Нет доступных ивентов</font></td>";
+		html.basicReplace("%ipon%", stateToString(activeChar.isIpBlock(), ru));
+		String eventInfo = ru ? "<td><font color=\"ff0000\">Нет доступных ивентов</font></td>" : "<td><font color=\"ff0000\">No events</font></td>";
 		if (EventManager.getInstance().getCurrentEvent() != null)
 		{
 			StringBuffer sb = new StringBuffer();
-			StringUtil.append(sb, "<td><font color=\"LEVEL\">", EventManager.getInstance().getCurrentEvent().getName(), "</font></td><td><button value=\"Информация\" action=\"bypass -h event_info\" width=75 height=20 back=\"L2UI_CH3.Btn1_normalDisable\" fore=\"L2UI_CH3.Btn1_normalDisable\"></td>");
+			StringUtil.append(sb, "<td><font color=\"LEVEL\">", EventManager.getInstance().getCurrentEvent().getName(), "</font></td><td><button value=\"", (ru ? "Информация" : "Information"), "\" action=\"bypass -h event_info\" width=75 height=20 back=\"L2UI_CH3.Btn1_normalDisable\" fore=\"L2UI_CH3.Btn1_normalDisable\"></td>");
 			eventInfo = sb.toString();
 		}
 		html.basicReplace("%event%", eventInfo);
 		activeChar.sendPacket(html);
 	}
 	
-	private static String stateToString(boolean state)
+	private static String stateToString(boolean state, boolean ru)
 	{
-		return state ? "<font color=\"LEVEL\">Вкл</font>" : "<font color=\"ff0000\">Выкл</font>";
+		return ru ? (state ? "<font color=\"LEVEL\">Вкл</font>" : "<font color=\"ff0000\">Выкл</font>") : (state ? "<font color=\"LEVEL\">On</font>" : "<font color=\"ff0000\">Off</font>");
 	}
 	
 	public void onBypassFeedback(L2PcInstance activeChar, String command)
 	{
-		if (command.equals("expon") && activeChar.getStopExp())
+		if (command.equals("en"))
+		{
+			activeChar.setLang(Language.EN);
+		}
+		else if (command.equals("ru"))
+		{
+			activeChar.setLang(Language.RU);
+		}
+		else if (command.equals("expon") && activeChar.getStopExp())
 		{
 			activeChar.setStopExp(false);
 			activeChar.sendMessage("Опыт включен.");

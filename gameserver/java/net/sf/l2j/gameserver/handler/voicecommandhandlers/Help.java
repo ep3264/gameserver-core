@@ -14,6 +14,7 @@
  */
 package net.sf.l2j.gameserver.handler.voicecommandhandlers;
 
+import net.sf.l2j.commons.lang.Language;
 import net.sf.l2j.gameserver.handler.IVoicedCommandHandler;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.network.serverpackets.NpcHtmlMessage;
@@ -24,7 +25,8 @@ import net.sf.l2j.gameserver.network.serverpackets.NpcHtmlMessage;
  */
 public class Help  implements IVoicedCommandHandler
 {
-	private static final String HTML_FILE_PATH = "data/html/commands/help/Help.htm";
+	private static final String HTML_PATH = "data/html/commands/help/Help.htm";
+	private static final String HTML_RU_PATH = "data/html-ru/commands/help/Help.htm";
 	private final String[] _voicedCommands =
 	{
 		"help"
@@ -34,7 +36,10 @@ public class Help  implements IVoicedCommandHandler
 	public boolean useVoicedCommand(String command, L2PcInstance activeChar, String params)
 	{
 		NpcHtmlMessage html = new NpcHtmlMessage(0);
-		html.setFile(HTML_FILE_PATH);		
+		if (activeChar.getLang() == Language.RU)
+			html.setFile(HTML_RU_PATH);
+		else
+			html.setFile(HTML_PATH);
 		activeChar.sendPacket(html);
 		return true;
 	}

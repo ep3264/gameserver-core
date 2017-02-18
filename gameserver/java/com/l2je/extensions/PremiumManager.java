@@ -8,6 +8,7 @@ import java.util.Calendar;
 
 import net.sf.l2j.Config;
 import net.sf.l2j.L2DatabaseFactory;
+import net.sf.l2j.commons.lang.Language;
 import net.sf.l2j.gameserver.datatables.ItemTable;
 import net.sf.l2j.gameserver.model.L2World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
@@ -21,7 +22,8 @@ import net.sf.l2j.gameserver.network.serverpackets.SystemMessage;
  */
 public class PremiumManager
 {
-	private static final String HTML_FILE_PATH = "data/html/mods/Premium.htm";
+	private static final String HTML_PATH = "data/html/mods/Premium.htm";
+	private static final String HTML_RU_PATH = "data/html-ru/mods/Premium.htm";
 	
 	/**
 	 * @param activeChar игрок
@@ -37,6 +39,7 @@ public class PremiumManager
 		}
 		return "n/a";
 	}
+	
 	/**
 	 * Купить премиум
 	 * @param player
@@ -71,7 +74,7 @@ public class PremiumManager
 		}
 		if (buy(player, countDays))
 		{
-			addPremiumServices(player,player.getAccountName(),countDays);
+			addPremiumServices(player, player.getAccountName(), countDays);
 			player.sendMessage("Премиум активирован");
 			MenuManager.getInstance().showChatWindow(player);
 		}
@@ -85,7 +88,10 @@ public class PremiumManager
 	public static void showChatWindow(L2PcInstance player)
 	{
 		NpcHtmlMessage html = new NpcHtmlMessage(0);
-		html.setFile(HTML_FILE_PATH);
+		if (player.getLang() == Language.RU)
+			html.setFile(HTML_RU_PATH);
+		else
+			html.setFile(HTML_PATH);
 		html.replace("%price%", Config.PREMIUM_PRICE);
 		String itemName = ItemTable.getInstance().getTemplate(Config.PREMIUM_ITEM).getName();
 		html.replace("%item%", itemName);

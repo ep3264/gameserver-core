@@ -28,8 +28,8 @@ import net.sf.l2j.gameserver.datatables.SkillTable;
 import net.sf.l2j.gameserver.model.L2Effect;
 import net.sf.l2j.gameserver.model.actor.L2Character;
 import net.sf.l2j.gameserver.model.actor.template.NpcTemplate;
+import net.sf.l2j.gameserver.network.serverpackets.ActionFailed;
 import net.sf.l2j.gameserver.network.serverpackets.NpcHtmlMessage;
-
 
 /**
  * @author user
@@ -45,21 +45,17 @@ public class CustomL2BufferInstance extends L2NpcInstance
 	public void showChatWindow(L2PcInstance player, int val)
 	{
 		NpcHtmlMessage html = new NpcHtmlMessage(1);
-		html.setFile(getHtmlPath(getNpcId(), val));
+		html.setFile(getHtmlPath(getNpcId(), val, player));
 		html.replace("%objectId%", getObjectId());
 		player.sendPacket(html);
+		
+		player.sendPacket(ActionFailed.STATIC_PACKET);
 	}
 	
 	@Override
-	public String getHtmlPath(int npcId, int val)
+	public String getHtmlFolder()
 	{
-		String filename;
-		if (val == 0)
-			filename = "data/html/mods/custom_buffer/" + npcId + ".htm";
-		else
-			filename = "data/html/mods/custom_buffer/" + npcId + "-" + val + ".htm";
-		
-		return filename;
+		return "/mods/custom_buffer/";
 	}
 	
 	@Override
@@ -209,7 +205,7 @@ public class CustomL2BufferInstance extends L2NpcInstance
 		final List<Integer> skills = BufferTable.getInstance().getScheme(player.getObjectId(), schemeName);
 		L2Effect l2Effects[] = player.getAllEffects();
 		for (L2Effect l2Effect : l2Effects)
-		{	
+		{
 			if (Buffer.ALLOWED_PLAYER_BUFFS.contains(Integer.valueOf(l2Effect.getSkill().getId())))
 			{
 				if (skills.size() < Config.BUFFER_MAX_SKILLS)
@@ -241,7 +237,7 @@ public class CustomL2BufferInstance extends L2NpcInstance
 		}
 		
 		final NpcHtmlMessage html = new NpcHtmlMessage(0);
-		html.setFile(getHtmlPath(getNpcId(), 7));
+		html.setFile(getHtmlPath(getNpcId(), 7, player));
 		html.replace("%schemes%", sb.toString());
 		html.replace("%max_schemes%", Config.BUFFER_MAX_SCHEMES);
 		html.replace("%objectId%", getObjectId());
@@ -264,31 +260,19 @@ public class CustomL2BufferInstance extends L2NpcInstance
 		{
 			for (Map.Entry<String, ArrayList<Integer>> scheme : schemes.entrySet())
 			{
-				final int cost = 100000;// getFee(scheme.getValue());
+				final int cost = getCost();
 				StringUtil.append(sb, "<font color=\"LEVEL\"><a action=\"bypass -h npc_%objectId%_givebuffs ", targetType, " ", scheme.getKey(), " ", cost, "\">", scheme.getKey(), " (", scheme.getValue().size(), " skill(s))</a>", ((cost > 0) ? " - Стоимость Adena: " + cost : ""), "</font><br1>");
 			}
-		}		
+		}
 		final NpcHtmlMessage html = new NpcHtmlMessage(0);
-		html.setFile(getHtmlPath(getNpcId(), 8));
+		html.setFile(getHtmlPath(getNpcId(), 8, player));
 		html.replace("%schemes%", sb.toString());
 		html.replace("%targettype%", (targetType.equals("pet") ? "&nbsp;<a action=\"bypass -h npc_%objectId%_LoadList player\">Вы</a>&nbsp;|&nbsp;Ваш питомец" : "Вы&nbsp;|&nbsp;<a action=\"bypass -h npc_%objectId%_LoadList pet\">Ваш питомец</a>"));
 		html.replace("%objectId%", getObjectId());
 		player.sendPacket(html);
 	}
-	
-	/**
-	 * @param list : A list of skill ids.
-	 * @return a global fee for all skills contained in list.
-	 */
-	private static int getFee(ArrayList<Integer> list)
+	private static int getCost()
 	{
-		if (Config.BUFFER_STATIC_BUFF_COST >= 0)
-			return (list.size() * Config.BUFFER_STATIC_BUFF_COST);
-		
-		int fee = 0;
-		for (int sk : list)
-			fee += Config.BUFFER_BUFFLIST.get(sk).getValue();
-		
-		return fee;
+		return 100000;
 	}
 }

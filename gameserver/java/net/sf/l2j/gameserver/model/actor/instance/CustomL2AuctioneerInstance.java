@@ -5,14 +5,11 @@ import com.l2je.extensions.auction.AuctionConfig;
 import com.l2je.extensions.auction.AuctionItem;
 
 import java.util.StringTokenizer;
-
-import net.sf.l2j.Config;
 import net.sf.l2j.gameserver.cache.HtmCache;
 import net.sf.l2j.gameserver.model.actor.template.NpcTemplate;
 import net.sf.l2j.gameserver.model.item.instance.ItemInstance;
-import net.sf.l2j.gameserver.network.SystemMessageId;
 import net.sf.l2j.gameserver.network.serverpackets.NpcHtmlMessage;
-import net.sf.l2j.gameserver.network.serverpackets.SystemMessage;
+
 
 /**
  * @author evgeny64 Official Website: http://l2je.com
@@ -41,18 +38,6 @@ public class CustomL2AuctioneerInstance extends L2NpcInstance
 			String html = HtmCache.getInstance().getHtm("data/html/mods/auction/Disable.htm");
 			showWindow(player, html);
 		}
-	}
-	
-	@Override
-	public String getHtmlPath(int npcId, int val)
-	{
-		String filename;
-		if (val == 0)
-			filename = "data/html/mods/auction/" + npcId + ".htm";
-		else
-			filename = "data/html/mods/auction/" + npcId + "-" + val + ".htm";
-		
-		return filename;
 	}
 	
 	public void showWindow(L2PcInstance player, String text)

@@ -16,19 +16,17 @@ package net.sf.l2j.gameserver.model.actor.instance;
 
 import com.l2je.extensions.PremiumManager;
 
-
 import java.util.StringTokenizer;
 
 import net.sf.l2j.commons.lang.StringUtil;
 import net.sf.l2j.gameserver.model.actor.template.NpcTemplate;
 import net.sf.l2j.gameserver.network.serverpackets.NpcHtmlMessage;
 
-
 /**
  * @author user
  */
 public class CustomL2DonateShopInstance extends L2NpcInstance
-{	
+{
 	/**
 	 * @param objectId
 	 * @param template
@@ -39,22 +37,16 @@ public class CustomL2DonateShopInstance extends L2NpcInstance
 	}
 	
 	@Override
-	public String getHtmlPath(int npcId, int val)
+	public String getHtmlFolder()
 	{
-		String filename;
-		if (val == 0)
-			filename = "data/html/mods/donate_shop/" + npcId + ".htm";
-		else
-			filename = "data/html/mods/donate_shop/" + npcId + "-" + val + ".htm";
-		
-		return filename;
+		return "/mods/donate_shop/";
 	}
 	
 	@Override
 	public void showChatWindow(L2PcInstance player, int val)
 	{
 		NpcHtmlMessage html = new NpcHtmlMessage(1);
-		html.setFile(getHtmlPath(getNpcId(), val));
+		html.setFile(getHtmlPath(getNpcId(), val, player));
 		html.replace("%objectId%", getObjectId());
 		player.sendPacket(html);
 	}
@@ -71,13 +63,10 @@ public class CustomL2DonateShopInstance extends L2NpcInstance
 			{
 				val = Integer.parseInt(command.substring(5));
 			}
-			catch (IndexOutOfBoundsException ioobe)
+			catch (Exception e)
 			{
+				e.printStackTrace();
 			}
-			catch (NumberFormatException nfe)
-			{
-			}
-			
 			showChatWindow(player, val);
 		}
 		else if (currentCommand.startsWith("Premium"))
@@ -89,7 +78,7 @@ public class CustomL2DonateShopInstance extends L2NpcInstance
 				player.sendMessage(sb.toString());
 				return;
 			}
-			PremiumManager.showChatWindow(player);			
+			PremiumManager.showChatWindow(player);
 		}
 		else
 		{

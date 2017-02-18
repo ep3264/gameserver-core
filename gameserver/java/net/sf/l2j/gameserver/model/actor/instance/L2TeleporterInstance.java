@@ -18,6 +18,7 @@ import java.util.Calendar;
 import java.util.StringTokenizer;
 
 import net.sf.l2j.Config;
+import net.sf.l2j.commons.lang.StringUtil;
 import net.sf.l2j.gameserver.cache.HtmCache;
 import net.sf.l2j.gameserver.datatables.MapRegionTable;
 import net.sf.l2j.gameserver.datatables.TeleportLocationTable;
@@ -95,13 +96,14 @@ public final class L2TeleporterInstance extends L2NpcInstance
 	@Override
 	public String getHtmlPath(int npcId, int val)
 	{
-		String filename = "";
-		if (val == 0)
-			filename = "" + npcId;
-		else
-			filename = npcId + "-" + val;
+		StringBuffer filename = new StringBuffer();
 		
-		return "data/html/teleporter/" + filename + ".htm";
+		if (val == 0)
+			StringUtil.append(filename, "data/html/teleporter/", npcId, ".htm");
+		else
+			StringUtil.append(filename, "data/html/teleporter/", npcId, "-", val, ".htm");
+		
+		return filename.toString();
 	}
 	
 	private void showHalfPriceHtml(L2PcInstance player)
@@ -120,7 +122,11 @@ public final class L2TeleporterInstance extends L2NpcInstance
 		html.replace("%npcname%", getName());
 		player.sendPacket(html);
 	}
-	
+	@Override
+	public String getHtmlFolder()
+	{
+		return "/teleporter/";
+	}
 	@Override
 	public void showChatWindow(L2PcInstance player)
 	{
@@ -129,8 +135,17 @@ public final class L2TeleporterInstance extends L2NpcInstance
 		int condition = validateCondition(player);
 		if (condition == COND_REGULAR)
 		{
-			super.showChatWindow(player);
-			return;
+			if (player.getKarma() > 0)
+			{
+				if (!Config.KARMA_PLAYER_CAN_USE_GK)
+				{
+					if (showPkDenyChatWindow(player, "teleporter"))
+						return;
+				}				
+			}
+			filename = getHtmlPath(getNpcId(), 0, player);
+			//super.showChatWindow(player); FIX Redist
+			//return;
 		}
 		else if (condition > COND_ALL_FALSE)
 		{

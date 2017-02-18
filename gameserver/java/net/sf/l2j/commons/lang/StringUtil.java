@@ -61,7 +61,7 @@ public final class StringUtil
 			sb.append((obj == null) ? null : obj.toString());
 	}
 	/**
-	 * Appends objects to an existing StringBuilder.
+	 * Appends objects to an existing StringBuffer.
 	 * @param sb : the StringBuffer to edit.
 	 * @param content : parameters to append.
 	 */
@@ -139,7 +139,7 @@ public final class StringUtil
 		}
 		catch (PatternSyntaxException e) // case of illegal pattern
 		{
-			pattern = Pattern.compile(".*");
+			pattern = Pattern.compile("^[A-Za-z0-9]{3,16}$");
 			LOG.warning(e.toString()); //FIX REDIST
 		}
 		
@@ -186,13 +186,14 @@ public final class StringUtil
 		time %= 60;
 		
 		String result = "";
+		StringBuilder  sb = new StringBuilder();
 		if (hours > 0)
-			result += hours + "h";
+			StringUtil.append(sb, hours , "h");
 		if (minutes > 0)
-			result += " " + minutes + "m";
+			StringUtil.append(sb, " " , minutes , "m");
 		if (time > 0 || result.length() == 0)
-			result += " " + time + "s";
+			StringUtil.append(sb," ", time , "s");
 		
-		return result;
+		return sb.toString();
 	}
 }
