@@ -141,6 +141,7 @@ import net.sf.l2j.gameserver.taskmanager.WaterTaskManager;
 import net.sf.l2j.gameserver.xmlfactory.XMLDocumentFactory;
 import net.sf.l2j.util.DeadLockDetector;
 import net.sf.l2j.util.IPv4Filter;
+import net.sf.l2j.util.Util;
 
 public class GameServer
 {
@@ -271,7 +272,7 @@ public class GameServer
 		SpawnTable.getInstance();
 		RaidBossSpawnManager.getInstance();
 		GrandBossManager.getInstance();
-		DayNightSpawnManager.getInstance();
+		DayNightSpawnManager.getInstance().notifyChangeMode();
 		DimensionalRiftManager.getInstance();
 		
 		StringUtil.printSection("Olympiads & Heroes");
@@ -381,7 +382,7 @@ public class GameServer
 		}
 		
 		System.gc();
-		
+		Util.printGeneralSystemInfo();
 		long usedMem = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1048576;
 		long totalMem = Runtime.getRuntime().maxMemory() / 1048576;
 		
