@@ -16,6 +16,7 @@ package net.sf.l2j.gameserver.model.actor.instance;
 
 import java.util.StringTokenizer;
 
+import net.sf.l2j.commons.lang.Language;
 import net.sf.l2j.commons.lang.StringUtil;
 
 import net.sf.l2j.Config;
@@ -63,18 +64,30 @@ public class L2WeddingManagerInstance extends L2NpcInstance
 				
 				// Shouldn't be able to see wedding content if the mod isn't activated on configs
 				if (!Config.ALLOW_WEDDING)
-					sendHtmlMessage(player, "data/html/mods/wedding/disabled.htm");
+				{
+					String path = (player.getLang() == Language.RU) ? "data/html-ru/mods/wedding/disabled.htm" : "data/html/mods/wedding/disabled.htm";
+					sendHtmlMessage(player, path);
+				}
 				else
 				{
 					// Married people got access to another menu
 					if (player.getCoupleId() > 0)
-						sendHtmlMessage(player, "data/html/mods/wedding/start2.htm");
+					{
+						String path = (player.getLang() == Language.RU) ? "data/html-ru/mods/wedding/start2.htm" : "data/html/mods/wedding/start2.htm";
+						sendHtmlMessage(player, path);
+					}
 					// "Under marriage acceptance" people go to this one
 					else if (player.isUnderMarryRequest())
-						sendHtmlMessage(player, "data/html/mods/wedding/waitforpartner.htm");
+					{
+						String path = (player.getLang() == Language.RU) ? "data/html-ru/mods/wedding/waitforpartner.htm" : "data/html/mods/wedding/waitforpartner.htm";
+						sendHtmlMessage(player, path);
+					}
 					// And normal players go here :)
 					else
-						sendHtmlMessage(player, "data/html/mods/wedding/start.htm");
+					{
+						String path = (player.getLang() == Language.RU) ? "data/html-ru/mods/wedding/start.htm" : "data/html/mods/wedding/start.htm";
+						sendHtmlMessage(player, path);
+					}
 				}
 			}
 		}
@@ -93,7 +106,8 @@ public class L2WeddingManagerInstance extends L2NpcInstance
 				final L2PcInstance partner = World.getInstance().getPlayer(st.nextToken());
 				if (partner == null)
 				{
-					sendHtmlMessage(player, "data/html/mods/wedding/notfound.htm");
+					String path = (player.getLang() == Language.RU) ? "data/html-ru/mods/wedding/notfound.htm" : "data/html/mods/wedding/notfound.htm";
+					sendHtmlMessage(player, path);
 					return;
 				}
 				
@@ -110,7 +124,10 @@ public class L2WeddingManagerInstance extends L2NpcInstance
 				partner.sendPacket(new ConfirmDlg(1983).addString(player.getName() + " asked you to marry. Do you want to start a new relationship ?"));
 			}
 			else
-				sendHtmlMessage(player, "data/html/mods/wedding/notfound.htm");
+			{
+				String path = (player.getLang() == Language.RU) ? "data/html-ru/mods/wedding/notfound.htm" : "data/html/mods/wedding/notfound.htm";
+				sendHtmlMessage(player, path);
+			}
 		}
 		else if (command.startsWith("Divorce"))
 			CoupleManager.getInstance().deleteCouple(player.getCoupleId());
@@ -173,42 +190,48 @@ public class L2WeddingManagerInstance extends L2NpcInstance
 		// Check if player target himself
 		if (partner.getObjectId() == requester.getObjectId())
 		{
-			sendHtmlMessage(requester, "data/html/mods/wedding/error_wrongtarget.htm");
+			String path = (requester.getLang() == Language.RU) ? "data/html-ru/mods/wedding/error_wrongtarget.htm" : "data/html/mods/wedding/error_wrongtarget.htm";
+			sendHtmlMessage(requester, path);
 			return false;
 		}
 		
 		// Sex check
 		if (!Config.WEDDING_SAMESEX && partner.getAppearance().getSex() == requester.getAppearance().getSex())
 		{
-			sendHtmlMessage(requester, "data/html/mods/wedding/error_sex.htm");
+			String path = (requester.getLang() == Language.RU) ? "data/html-ru/mods/wedding/error_sex.htm" : "data/html/mods/wedding/error_sex.htm";
+			sendHtmlMessage(requester, path);
 			return false;
 		}
 		
 		// Check if player has the target on friendlist
 		if (!requester.getFriendList().contains(partner.getObjectId()))
 		{
-			sendHtmlMessage(requester, "data/html/mods/wedding/error_friendlist.htm");
+			String path = (requester.getLang() == Language.RU) ? "data/html-ru/mods/wedding/error_friendlist.htm" : "data/html/mods/wedding/error_friendlist.htm";
+			sendHtmlMessage(requester, path);
 			return false;
 		}
 		
 		// Target mustn't be already married
 		if (partner.getCoupleId() > 0)
 		{
-			sendHtmlMessage(requester, "data/html/mods/wedding/error_alreadymarried.htm");
+			String path = (requester.getLang() == Language.RU) ? "data/html-ru/mods/wedding/error_alreadymarried.htm" : "data/html/mods/wedding/error_alreadymarried.htm";
+			sendHtmlMessage(requester, path);
 			return false;
 		}
 		
 		// Check for Formal Wear
 		if (Config.WEDDING_FORMALWEAR && !wearsFormalWear(requester, partner))
 		{
-			sendHtmlMessage(requester, "data/html/mods/wedding/error_noformal.htm");
+			String path = (requester.getLang() == Language.RU) ? "data/html-ru/mods/wedding/error_noformal.htm" : "data/html/mods/wedding/error_noformal.htm";
+			sendHtmlMessage(requester, path);
 			return false;
 		}
 		
 		// Check and reduce wedding price
 		if (requester.getAdena() < Config.WEDDING_PRICE || partner.getAdena() < Config.WEDDING_PRICE)
 		{
-			sendHtmlMessage(requester, "data/html/mods/wedding/error_adena.htm");
+			String path = (requester.getLang() == Language.RU) ? "data/html-ru/mods/wedding/error_adena.htm" : "data/html/mods/wedding/error_adena.htm";
+			sendHtmlMessage(requester, path);
 			return false;
 		}
 		
