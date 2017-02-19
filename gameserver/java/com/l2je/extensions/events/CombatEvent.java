@@ -158,7 +158,7 @@ public abstract class CombatEvent extends Event
 		_locations.clear();
 		_resurrectors.clear();
 		_scores.clear();
-		_players.clear();
+		_members.clear();
 		_eventState = EventState.IDLE;
 		if (inform)
 		{

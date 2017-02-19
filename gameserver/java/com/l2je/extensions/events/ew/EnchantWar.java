@@ -174,7 +174,7 @@ public class EnchantWar extends CombatEvent
 	
 	private void spawnNpc()
 	{
-		if (_players.size() >= getMinPlayers() && _spawn == null)
+		if (_members.size() >= getMinPlayers() && _spawn == null)
 		{
 			Location loc = null;
 			if (_currentTownId == 13)

@@ -13,6 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
 import java.util.logging.Logger;
 
@@ -51,7 +52,7 @@ public abstract class Event
 	protected static final String EVENT_COMMANDS = ".join -присоединиться   .info-информация   .leave- покинуть";
 	protected static final Logger _log = Logger.getLogger(Event.class.getName());	
 	protected EventScheduler _eventScheduler = new EventScheduler();
-	protected HashSet<L2PcInstance> _players = new HashSet<>();
+	protected ConcurrentHashMap<Integer, L2PcInstance> _members = new ConcurrentHashMap<>();
 	protected Map<L2PcInstance, Integer> _scores = new HashMap<>();
 	protected Map<L2PcInstance, int[]> _locations = new HashMap<>();
 	protected Map<L2PcInstance, L2Effect[]> _effects = new HashMap<>();
@@ -185,20 +186,20 @@ public abstract class Event
 	
 	public boolean addPlayer(L2PcInstance player)
 	{
-		if (getMaxPlayers() == _players.size())
+		if (getMaxPlayers() == _members.size())
 		{
 			return false;
 		}
-		for (L2PcInstance p : _players)
+		for (L2PcInstance p : _members.values())
 		{
 			if (!p.isOnline())
 			{
-				_players.remove(p);
+				_members.remove(p.getObjectId());
 				p.setEvent(null);
 			}
 		}
 		player.setEvent(this);
-		_players.add(player);
+		_members.put(player.getObjectId(),player);
 		_scores.put(player, 0);		
 		_locations.put(player, new int[]
 		{
@@ -269,7 +270,7 @@ public abstract class Event
 	public boolean removePlayer(L2PcInstance player)
 	{
 		 player.setEvent(null);
-		_players.remove(player);
+		_members.remove(player.getObjectId());
 		if (isRunning())
 		{
 			restorePlayer(player);
@@ -277,7 +278,7 @@ public abstract class Event
 			if (team != null)
 				team.removeMember(player);
 			teleportPlayerFromEvent(player);			
-			if (_players.size() < getMinPlayers())
+			if (_members.size() < getMinPlayers())
 			{
 				announce("Слишком много игроков покинуло event.");
 				announce("Event отменен.");
@@ -311,7 +312,7 @@ public abstract class Event
 	 */
 	protected void removeAllPlayersFromEvent()
 	{
-		for (L2PcInstance player : _players)
+		for (L2PcInstance player : _members.values())
 		{
 			player.setEvent(null);
 			restorePlayer(player);
@@ -407,7 +408,7 @@ public abstract class Event
 		}
 		int position = 3;
 		ExShowScreenMessage screenMessage = new ExShowScreenMessage(1, 0, position, false, 1, 0, 0, false, 700, true, sb.toString());
-		for (L2PcInstance player : _players)
+		for (L2PcInstance player : _members.values())
 		{
 			player.sendPacket(screenMessage);
 		}
@@ -528,7 +529,7 @@ public abstract class Event
 		int secs = seconds - (mins * 60);
 		html.basicReplace("%mins%", String.valueOf(mins));
 		html.basicReplace("%secs%", (secs < 10 ? "0" + secs : String.valueOf(secs)));
-		html.basicReplace("%players%", String.valueOf(_players.size()));
+		html.basicReplace("%players%", String.valueOf(_members.size()));
 		html.basicReplace("%minPlayers%", String.valueOf(getMinPlayers()));
 		html.basicReplace("%maxPlayers%", String.valueOf(getMaxPlayers()));
 		html.basicReplace("%description%", getDesription());
@@ -559,7 +560,7 @@ public abstract class Event
 	
 	protected void sendMessageToAllPlayers(String message)
 	{
-		for (L2PcInstance player : _players)
+		for (L2PcInstance player : _members.values())
 		{
 			player.sendMessage(message);
 		}

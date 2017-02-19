@@ -108,7 +108,7 @@ public class TvT extends CombatEvent
 				break;
 			case REGISTERING:
 				announce("TVT: Регистрация игроков закончена.");
-				if (_players.size() >= getMinPlayers())
+				if (_members.size() >= getMinPlayers())
 				{
 					_eventState = EventState.PRE_ACTIVE;
 					schedule(EventConfig.TVT_TELEPORT_TIME);
@@ -174,8 +174,8 @@ public class TvT extends CombatEvent
 	{
 		spawnFences();
 		if (EventConfig.EVENT_MANAGER_DEBUG)
-			_log.info("Teleporting " + _players.size() + " to the event.");
-		for (L2PcInstance player : _players)
+			_log.info("Teleporting " + _members.size() + " to the event.");
+		for (L2PcInstance player : _members.values())
 		{
 			addPlayerToTeam(player);
 			teleportPlayerToEvent(player);
@@ -243,7 +243,7 @@ public class TvT extends CombatEvent
 			if (isTie && EventConfig.TVT_REWARD_TIE)
 			{
 				announce("Ничья!");
-				for (L2PcInstance player : _players)
+				for (L2PcInstance player : _members.values())
 				{
 					rewardPlayer(player);
 				}
