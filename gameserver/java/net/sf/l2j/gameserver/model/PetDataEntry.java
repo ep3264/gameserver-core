@@ -21,7 +21,7 @@ public class PetDataEntry
 	private final long _maxExp;
 	
 	private final int _maxMeal;
-	private final int _expType;
+	private final float _expType;
 	private final int _mealInBattle;
 	private final int _mealInNormal;
 	
@@ -52,7 +52,7 @@ public class PetDataEntry
 		_maxExp = stats.getLong("exp");
 		
 		_maxMeal = stats.getInteger("maxMeal");
-		_expType = stats.getInteger("expType");
+		_expType = stats.getFloat("expType");
 		_mealInBattle = stats.getInteger("mealInBattle");
 		_mealInNormal = stats.getInteger("mealInNormal");
 		
@@ -101,7 +101,7 @@ public class PetDataEntry
 		return _maxMeal;
 	}
 	
-	public int getExpType()
+	public float getExpType()
 	{
 		return _expType;
 	}

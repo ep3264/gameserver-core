@@ -77,7 +77,7 @@ public class PcStat extends PlayableStat
 		// GM check concerning canGainExp().
 		if (!getActiveChar().getAccessLevel().canGainExp())
 			return false;
-		
+		//Fix Redist
 		// If this player has a pet, give the xp to the pet now (if any).
 		if (getActiveChar().hasPet())
 		{
@@ -86,16 +86,16 @@ public class PcStat extends PlayableStat
 			{
 				if (Util.checkIfInShortRadius(Config.ALT_PARTY_RANGE, pet, getActiveChar(), true))
 				{
-					int ratio = pet.getPetData().getExpType(); // FIXME
+					float ratio = pet.getPetData().getExpType(); // FIXME
 					if (ratio > 0 && !pet.isDead())
-						pet.addExpAndSp(addToExp * ratio / 100, addToSp * ratio / 100);
+						pet.addExpAndSp((long)(addToExp * ratio) , (int)(addToSp * ratio) );
 					
 					// now adjust the max ratio to avoid the owner earning negative exp/sp
 					if (ratio > 1)
 						ratio = 1;
 					
-					addToExp = addToExp * (1 - ratio / 100);
-					addToSp = addToSp * (1 - ratio / 100);
+					addToExp = (long)(addToExp * (1 - ratio));
+					addToSp = (int)(addToSp * (1 - ratio ));
 				}
 			}
 		}
