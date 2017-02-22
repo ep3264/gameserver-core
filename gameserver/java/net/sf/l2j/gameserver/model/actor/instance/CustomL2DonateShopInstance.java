@@ -73,7 +73,7 @@ public class CustomL2DonateShopInstance extends L2NpcInstance
 		{
 			if (player.isPremium())
 			{
-				StringBuffer sb = new StringBuffer();
+				StringBuilder sb = new StringBuilder();
 				StringUtil.append(sb, "Премиум уже активирован до: ", PremiumManager.getPremiumEndDate(player));
 				player.sendMessage(sb.toString());
 				return;

@@ -51,7 +51,7 @@ public class AuctionItem
 	
 	public String getItemInfo(boolean head)
 	{
-		StringBuffer itemInfo = new StringBuffer();
+		StringBuilder itemInfo = new StringBuilder();
 		StringUtil.append(itemInfo, "<table width=300><tr><td width=32><img src=\"", ItemIcons.getInstance().getIcon(this.item.getItemId()), "\" width=32 height=32 align=left></td><td width=250><table width=250><tr><td>");
 		if (head)
 		{
@@ -76,14 +76,14 @@ public class AuctionItem
 	
 	public String getAcceptPage(boolean owner)
 	{
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		StringUtil.append(sb, getItemInfo(false), getTextForAcceptPage(owner), getButtonsForAcceptPage(owner));
 		return sb.toString();
 	}
 	
 	public String getButtonsForAcceptPage(boolean owner)
 	{
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		StringUtil.append(sb, "<table width=290><tr><td width=270><table width=290><tr>");
 		if (!owner)
 		{
@@ -103,7 +103,7 @@ public class AuctionItem
 	
 	public String getTextForAcceptPage(boolean owner)
 	{
-		StringBuffer sb = new StringBuffer("<table width=270><tr><td width=270>");
+		StringBuilder sb = new StringBuilder("<table width=270><tr><td width=270>");
 		if (!owner)
 		{
 			StringUtil.append(sb,"Вы уверены, что хотите купить этот предмет по цене <font color=LEVEL>",
@@ -135,9 +135,9 @@ public class AuctionItem
 	
 	public String getPrice()
 	{
-		StringBuffer stringBuffer = new StringBuffer();
-		StringUtil.append(stringBuffer, price, " ", ItemTable.getInstance().getTemplate(id_price).getName());
-		return stringBuffer.toString();
+		StringBuilder sb = new StringBuilder();
+		StringUtil.append(sb, price, " ", ItemTable.getInstance().getTemplate(id_price).getName());
+		return sb.toString();
 	}
 	
 	public int getId()

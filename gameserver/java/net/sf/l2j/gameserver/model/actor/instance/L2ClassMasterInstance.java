@@ -57,7 +57,7 @@ public final class L2ClassMasterInstance extends L2NpcInstance
 	public void showChatWindow(L2PcInstance player)
 	{
 		String lang = (player.getLang()==Language.RU) ? "-ru" : "";
-		StringBuffer filename = new StringBuffer();		
+		StringBuilder filename = new StringBuilder();		
 		if (Config.ALLOW_CLASS_MASTERS)
 			StringUtil.append(filename, "data/html",lang,"/classmaster/" , getNpcId() , ".htm");
 		else

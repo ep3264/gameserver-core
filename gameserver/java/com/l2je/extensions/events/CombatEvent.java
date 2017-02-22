@@ -210,9 +210,9 @@ public abstract class CombatEvent extends Event
 		public EventResurrector(L2PcInstance player, int delay)
 		{
 			_player = player;
-			StringBuffer stringBuffer = new StringBuffer();
-			StringUtil.append(stringBuffer, "Вы будете воскрешенны через ", delay, " секунд(ы).");
-			_player.sendMessage(stringBuffer.toString());
+			StringBuilder sb = new StringBuilder();
+			StringUtil.append(sb, "Вы будете воскрешенны через ", delay, " секунд(ы).");
+			_player.sendMessage(sb.toString());
 			_task = ThreadPool.schedule(this, delay * 1000);
 		}
 		

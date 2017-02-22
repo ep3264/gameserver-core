@@ -96,7 +96,7 @@ public final class L2TeleporterInstance extends L2NpcInstance
 	@Override
 	public String getHtmlPath(int npcId, int val)
 	{
-		StringBuffer filename = new StringBuffer();
+		StringBuilder filename = new StringBuilder();
 		
 		if (val == 0)
 			StringUtil.append(filename, "data/html/teleporter/", npcId, ".htm");

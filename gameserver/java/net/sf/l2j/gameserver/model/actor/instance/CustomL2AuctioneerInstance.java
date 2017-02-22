@@ -153,7 +153,7 @@ public class CustomL2AuctioneerInstance extends L2NpcInstance
 					{
 						itemId = Integer.parseInt(st.nextToken());
 						price = Integer.parseInt(st.nextToken());
-						StringBuffer str = new StringBuffer();
+						StringBuilder str = new StringBuilder();
 						while (st.hasMoreTokens())
 						{
 							str.append(st.nextToken());

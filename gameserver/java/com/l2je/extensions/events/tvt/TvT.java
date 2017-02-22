@@ -150,7 +150,7 @@ public class TvT extends CombatEvent
 		eventTeam.addMember(player);
 		if (EventConfig.EVENT_MANAGER_DEBUG)
 		{
-			StringBuffer sb = new StringBuffer();
+			StringBuilder sb = new StringBuilder();
 			StringUtil.append(sb, "Attmepting to add ", player.getName(), " to a team ", eventTeam.getName());
 			_log.info(sb.toString());
 		}

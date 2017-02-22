@@ -849,7 +849,7 @@ public class L2Npc extends L2Character
 	 */
 	public String getHtmlPath(int npcId, int val)
 	{
-		StringBuffer filename = new StringBuffer();
+		StringBuilder filename = new StringBuilder();
 		
 		if (val == 0)
 			StringUtil.append(filename, "data/html/default/" , npcId , ".htm");
@@ -868,7 +868,7 @@ public class L2Npc extends L2Character
 	 */
 	public String getHtmlPath(int npcId, int val, L2PcInstance talker)
 	{
-		StringBuffer filename = new StringBuffer();
+		StringBuilder filename = new StringBuilder();
 		
 		if (val == 0)
 			StringUtil.append(filename, "data/html",(talker.getLang()==Language.RU)?"-ru":"",getHtmlFolder(), npcId, ".htm");

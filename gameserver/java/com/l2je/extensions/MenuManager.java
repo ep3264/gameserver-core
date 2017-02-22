@@ -40,13 +40,13 @@ public class MenuManager
 		String premiumInfo = ru ? "<td><font color=\"ff0000\">Не активирован</font></td><td><button value=\"Активировать\" action=\"bypass -h menu_premium\" width=75 height=20 back=\"L2UI_CH3.Btn1_normalDisable\" fore=\"L2UI_CH3.Btn1_normalDisable\"></td>" : "<td><font color=\"ff0000\">Not activated</font></td><td><button value=\"Activate\" action=\"bypass -h menu_premium\" width=75 height=20 back=\"L2UI_CH3.Btn1_normalDisable\" fore=\"L2UI_CH3.Btn1_normalDisable\"></td>";
 		if (activeChar.isPremium())
 		{
-			StringBuffer sb = new StringBuffer();
+			StringBuilder sb = new StringBuilder();
 			StringUtil.append(sb, "<td><font color=\"LEVEL\"> ", PremiumManager.getPremiumEndDate(activeChar), "</font></td>");
 			premiumInfo = sb.toString();
 		}
 		html.basicReplace("%premium%", premiumInfo);
 		html.basicReplace("%exp%", stateToString(!activeChar.getStopExp(), ru));
-		StringBuffer sbAcp = new StringBuffer();
+		StringBuilder sbAcp = new StringBuilder();
 		String acp = ru ? "<font color=\"ff0000\">Выкл</font></td>" : "<font color=\"ff0000\">Off</font></td>";
 		boolean status = false;
 		sbAcp.append("<font color=\"LEVEL\">");
@@ -80,7 +80,7 @@ public class MenuManager
 		String eventInfo = ru ? "<td><font color=\"ff0000\">Нет доступных ивентов</font></td>" : "<td><font color=\"ff0000\">No events</font></td>";
 		if (EventManager.getInstance().getCurrentEvent() != null)
 		{
-			StringBuffer sb = new StringBuffer();
+			StringBuilder sb = new StringBuilder();
 			StringUtil.append(sb, "<td><font color=\"LEVEL\">", EventManager.getInstance().getCurrentEvent().getName(), "</font></td><td><button value=\"", (ru ? "Информация" : "Information"), "\" action=\"bypass -h event_info\" width=75 height=20 back=\"L2UI_CH3.Btn1_normalDisable\" fore=\"L2UI_CH3.Btn1_normalDisable\"></td>");
 			eventInfo = sb.toString();
 		}

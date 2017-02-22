@@ -331,7 +331,7 @@ public final class EventManager
 				}
 				NpcHtmlMessage html = new NpcHtmlMessage(0);
 				html.setFile("data/html/event_manager/index.htm");
-				StringBuffer sb = new StringBuffer();
+				StringBuilder sb = new StringBuilder();
 				for (Event event : _events)
 				{
 					StringUtil.append(sb, event.getId(), "_", event.getName(), ";");

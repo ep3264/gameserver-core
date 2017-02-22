@@ -320,7 +320,7 @@ public class EnchantWar extends CombatEvent
 	@Override
 	protected String getDesription()
 	{
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		StringUtil.append(sb, DESCRIPTION,  MapRegionTable.getInstance().getClosestTownName(_currentTownId));
 		return sb.toString();
 	}

@@ -83,7 +83,7 @@ public class HWIDManager
 			if (!ipBlock.equals(client.getConnection().getInetAddress().getHostAddress()))
 			{
 				client.closeNow();
-				StringBuffer sb = new StringBuffer();
+				StringBuilder sb = new StringBuilder();
 				StringUtil.append(sb, "Bad ip for:", client.getAccountName(), " ", client.getConnection().getInetAddress().getHostAddress(), ". Must be - " + ipBlock);
 				_log.warning(sb.toString());
 			}

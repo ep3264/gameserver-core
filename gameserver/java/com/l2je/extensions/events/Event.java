@@ -395,7 +395,7 @@ public abstract class Event
 	{
 		int mins = seconds / 60;
 		int secs = seconds - (mins * 60);
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		StringUtil.append(sb, "До окончания ивента: ",String.valueOf(mins),"-");
 		if(secs>9)
 		{

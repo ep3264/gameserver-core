@@ -213,7 +213,7 @@ public class Auction
 		{
 			return "Товары отсутствуют.";
 		}
-		StringBuffer stringBuffer =  new StringBuffer();
+		StringBuilder sb =  new StringBuilder();
 		String string="";
 		try
 		{
@@ -224,9 +224,9 @@ public class Auction
 			for (int i = (page-1) * AuctionConfig.AUCTION_SEE_COUNT_PRODUCTS_ON_PAGE; i < page * AuctionConfig.AUCTION_SEE_COUNT_PRODUCTS_ON_PAGE && i < auctionItems.size(); ++i)
 			{
 				AuctionItem auctionItem = auctionItems.get(i);
-				stringBuffer.append(auctionItem.getItemInfo(true));
+				sb.append(auctionItem.getItemInfo(true));
 			}
-			string = stringBuffer.toString();
+			string = sb.toString();
 			if(string.isEmpty())
 			{
 				return "Товары отсутствуют.";
@@ -242,7 +242,7 @@ public class Auction
 	
 	private static String getPagesNum(L2PcInstance player, int page, int type, int countItems)
 	{
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		sb.append("<table width=270><tr><td align=center><table><tr>");
 		int countPages = (int) Math.ceil((double) countItems / (double) AuctionConfig.AUCTION_SEE_COUNT_PRODUCTS_ON_PAGE);
 		
@@ -264,7 +264,7 @@ public class Auction
 	
 	private String getPageAddProduct(L2PcInstance player, int page)
 	{	
-		StringBuffer stringBuffer = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		String string= "";
 		try
 		{
@@ -287,11 +287,11 @@ public class Auction
 				ItemInstance itemInstance = quaItems.get(i);
 				if (itemInstance != null)
 				{
-					stringBuffer.append(getItemInfoForAddProduct(itemInstance, true));
+					sb.append(getItemInfoForAddProduct(itemInstance, true));
 				}
 			}
-			stringBuffer.append(getPagesForAddProduct(quaItems.size(), page));
-			string = stringBuffer.toString();
+			sb.append(getPagesForAddProduct(quaItems.size(), page));
+			string = sb.toString();
 			if (string.isEmpty())
 			{
 				return "Товары отсутствуют.";
@@ -307,7 +307,7 @@ public class Auction
 	
 	private static String getItemInfoForAddProduct(ItemInstance item, boolean urlSell)
 	{
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		StringUtil.append(sb, "<table width=300><tr>","<td width=32><img src=\"",
 			ItemIcons.getInstance().getIcon(item.getItemId()),
 			"\" width=32 height=32 align=left></td><td width=250><table width=250><tr><td> ",item.getName()," ");
@@ -327,7 +327,7 @@ public class Auction
 	
 	static String getAugment(ItemInstance item)
 	{
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		if (AuctionConfig.ALLOW_AUGMENT_ITEMS)
 		{
 			if (item.getAugmentation() != null && item.getAugmentation().getSkill() != null)
@@ -361,7 +361,7 @@ public class Auction
 	
 	private static String getPagesForAddProduct(int size, int page)
 	{
-		StringBuffer sb =  new StringBuffer("<table width=270><tr><td align=center><table><tr>");
+		StringBuilder sb =  new StringBuilder("<table width=270><tr><td align=center><table><tr>");
 		
 		for (int i = 1; i <= Math.ceil((double) size / (double) AuctionConfig.AUCTION_SEE_COUNT_PRODUCTS_ON_PAGE); ++i)
 		{
@@ -381,7 +381,7 @@ public class Auction
 
 	private static String getChoseAddProduct(ItemInstance item)
 	{
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		StringUtil.append(sb, "<table width=250><tr><td width=40 align=right><img src=\"",
 			ItemIcons.getInstance().getIcon(item.getItemId()),"\" width=32 height=32 align=right></td><td width=230><table width=230><tr><td> ",
 			item.getName(), " ");
@@ -399,7 +399,7 @@ public class Auction
 	
 	private static String getAvailablePrice()
 	{
-		StringBuffer rewards = new StringBuffer();
+		StringBuilder rewards = new StringBuilder();
 		int[] arr = AuctionConfig.AUCTION_ALLOWED_ITEM_ID;
 		
 		for (int i = 0; i < arr.length; ++i)
@@ -607,7 +607,7 @@ public class Auction
 			{				
 				e.printStackTrace();
 			}
-			StringBuffer message = new StringBuffer();
+			StringBuilder message = new StringBuilder();
 			StringUtil.append(message, "Auctioneer: ",item.getName()," выставлен на продажу!");
 			Broadcast.toAllOnlinePlayers(new CreatureSay(0, Say2.CRITICAL_ANNOUNCE, "", message.toString()));
 		}

@@ -21,7 +21,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import net.sf.l2j.commons.concurrent.ThreadPool;
-
+import net.sf.l2j.commons.lang.StringUtil;
 import net.sf.l2j.gameserver.ai.CtrlIntention;
 import net.sf.l2j.gameserver.model.actor.L2Attackable;
 import net.sf.l2j.gameserver.model.actor.L2Character;
@@ -57,7 +57,9 @@ public final class WorldRegion
 	@Override
 	public String toString()
 	{
-		return "WorldRegion [_tileX=" + _tileX + ", _tileY=" + _tileY + ", _active=" + _active + ", _playersCount=" + _playersCount + "]";
+		StringBuilder sb = new StringBuilder();
+		StringUtil.append(sb, "WorldRegion [_tileX=" , _tileX , ", _tileY=" , _tileY , ", _active=", _active, ", _playersCount=", _playersCount, "]");
+		return sb.toString();
 	}
 	
 	public List<L2Object> getObjects()
