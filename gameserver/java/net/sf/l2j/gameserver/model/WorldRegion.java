@@ -15,11 +15,12 @@
 package net.sf.l2j.gameserver.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
+import java.util.concurrent.atomic.AtomicInteger;
 import net.sf.l2j.commons.concurrent.ThreadPool;
 import net.sf.l2j.commons.lang.StringUtil;
 import net.sf.l2j.gameserver.ai.CtrlIntention;
@@ -35,18 +36,17 @@ import net.sf.l2j.gameserver.model.zone.type.L2TownZone;
 
 public final class WorldRegion
 {
-	private final List<L2Object> _objects = new ArrayList<>();
+	private final  Map <Integer, L2Object> _objects = new ConcurrentHashMap<>();
 	private final List<WorldRegion> _surroundingRegions = new ArrayList<>();
 	private final List<L2ZoneType> _zones = new ArrayList<>();
 	
 	private final int _tileX;
 	private final int _tileY;
 	
-	private final Lock _lock = new ReentrantLock();
 	
 	private boolean _active;
 	private ScheduledFuture<?> _activateTask;
-	private int _playersCount;
+	private AtomicInteger _playersCount = new AtomicInteger();
 	
 	public WorldRegion(int x, int y)
 	{
@@ -58,13 +58,13 @@ public final class WorldRegion
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder();
-		StringUtil.append(sb, "WorldRegion [_tileX=" , _tileX , ", _tileY=" , _tileY , ", _active=", _active, ", _playersCount=", _playersCount, "]");
+		StringUtil.append(sb, "WorldRegion [_tileX=" , _tileX , ", _tileY=" , _tileY , ", _active=", _active, ", _playersCount=", _playersCount.get(), "]");
 		return sb.toString();
 	}
 	
-	public List<L2Object> getObjects()
+	public Collection<L2Object> getObjects()
 	{
-		return _objects;
+		return _objects.values();
 	}
 	
 	public void addSurroundingRegion(WorldRegion region)
@@ -164,7 +164,7 @@ public final class WorldRegion
 	
 	public int getPlayersCount()
 	{
-		return _playersCount;
+		return _playersCount.get();
 	}
 	
 	/**
@@ -174,7 +174,7 @@ public final class WorldRegion
 	public boolean areNeighborsEmpty()
 	{
 		// if this region is occupied, return false.
-		if (isActive() && _playersCount != 0)
+		if (isActive() && _playersCount.get() != 0)
 			return false;
 		
 		// if any one of the neighbors is occupied, return false
@@ -202,7 +202,7 @@ public final class WorldRegion
 		// turn the AI on or off to match the region's activation.
 		if (!value)
 		{
-			for (L2Object o : _objects)
+			for (L2Object o : _objects.values())
 			{
 				if (o instanceof L2Attackable)
 				{
@@ -234,7 +234,7 @@ public final class WorldRegion
 		}
 		else
 		{
-			for (L2Object o : _objects)
+			for (L2Object o : _objects.values())
 			{
 				if (o instanceof L2Attackable)
 					((L2Attackable) o).getStatus().startHpMpRegeneration();
@@ -249,32 +249,25 @@ public final class WorldRegion
 		if (object == null)
 			return;
 		
-		_lock.lock();
-		try
+		_objects.put(object.getObjectId(), object);
+		
+		if (object instanceof L2PcInstance)
 		{
-			_objects.add(object);
-			
-			if (object instanceof L2PcInstance)
+			// if this is the first player to enter the region, activate self & neighbors
+			if (_playersCount.getAndIncrement() == 0)
 			{
-				// if this is the first player to enter the region, activate self & neighbors
-				if (_playersCount++ == 0)
-				{
-					// first set self to active and do self-tasks...
-					setActive(true);
-					
-					// if the timer to deactivate neighbors is running, cancel it.
-					if (_activateTask != null)
-						_activateTask.cancel(true);
-					
-					// then, set a timer to activate the neighbors
-					_activateTask = ThreadPool.schedule(new ActivateTask(true), 1000);
-				}
+				// first set self to active and do self-tasks...
+				setActive(true);
+				
+				// if the timer to deactivate neighbors is running, cancel it.
+				if (_activateTask != null)
+					_activateTask.cancel(true);
+				
+				// then, set a timer to activate the neighbors
+				_activateTask = ThreadPool.schedule(new ActivateTask(true), 1000);
 			}
 		}
-		finally
-		{
-			_lock.unlock();
-		}
+		
 	}
 	
 	public void removeVisibleObject(L2Object object)
@@ -282,29 +275,22 @@ public final class WorldRegion
 		if (object == null)
 			return;
 		
-		_lock.lock();
-		try
+		_objects.remove(object.getObjectId());
+		
+		if (object instanceof L2PcInstance)
 		{
-			_objects.remove(object);
-			
-			if (object instanceof L2PcInstance)
+			if (_playersCount.decrementAndGet() == 0)
 			{
-				if (--_playersCount == 0)
-				{
-					// if the timer to activate neighbors is running, cancel it.
-					if (_activateTask != null)
-						_activateTask.cancel(true);
+				// if the timer to activate neighbors is running, cancel it.
+				if (_activateTask != null)
+					_activateTask.cancel(true);
 					
-					// start a timer to "suggest" a deactivate to self and neighbors.
-					// suggest means: first check if a neighbor has L2PcInstances in it. If not, deactivate.
-					_activateTask = ThreadPool.schedule(new ActivateTask(false), 60000);
-				}
+				// start a timer to "suggest" a deactivate to self and neighbors.
+				// suggest means: first check if a neighbor has L2PcInstances in it. If not, deactivate.
+				_activateTask = ThreadPool.schedule(new ActivateTask(false), 60000);
 			}
 		}
-		finally
-		{
-			_lock.unlock();
-		}
+		
 	}
 	
 	public class ActivateTask implements Runnable
