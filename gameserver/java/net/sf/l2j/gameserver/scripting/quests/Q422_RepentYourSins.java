@@ -91,7 +91,7 @@ public class Q422_RepentYourSins extends Quest
 				st.set("cond", "4");
 			}
 			else
-			{
+			{			
 				htmltext = "30981-06.htm";
 				st.set("cond", "5");
 			}

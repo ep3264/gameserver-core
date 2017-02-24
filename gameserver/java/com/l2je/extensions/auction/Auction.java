@@ -224,7 +224,7 @@ public class Auction
 			for (int i = (page-1) * AuctionConfig.AUCTION_SEE_COUNT_PRODUCTS_ON_PAGE; i < page * AuctionConfig.AUCTION_SEE_COUNT_PRODUCTS_ON_PAGE && i < auctionItems.size(); ++i)
 			{
 				AuctionItem auctionItem = auctionItems.get(i);
-				sb.append(auctionItem.getItemInfo(true));
+				auctionItem.getItemInfo(sb, true);
 			}
 			string = sb.toString();
 			if(string.isEmpty())
@@ -287,10 +287,10 @@ public class Auction
 				ItemInstance itemInstance = quaItems.get(i);
 				if (itemInstance != null)
 				{
-					sb.append(getItemInfoForAddProduct(itemInstance, true));
+					getItemInfoForAddProduct(sb, itemInstance, true);
 				}
 			}
-			sb.append(getPagesForAddProduct(quaItems.size(), page));
+			getPagesForAddProduct(sb, quaItems.size(), page);
 			string = sb.toString();
 			if (string.isEmpty())
 			{
@@ -305,9 +305,8 @@ public class Auction
 		return string;
 	}
 	
-	private static String getItemInfoForAddProduct(ItemInstance item, boolean urlSell)
-	{
-		StringBuilder sb = new StringBuilder();
+	private static void getItemInfoForAddProduct(StringBuilder sb, ItemInstance item, boolean urlSell)
+	{		
 		StringUtil.append(sb, "<table width=300><tr>","<td width=32><img src=\"",
 			ItemIcons.getInstance().getIcon(item.getItemId()),
 			"\" width=32 height=32 align=left></td><td width=250><table width=250><tr><td> ",item.getName()," ");
@@ -315,19 +314,18 @@ public class Auction
 		{
 			StringUtil.append(sb,"<font color=LEVEL> +",item.getEnchantLevel(),"</font>");
 		}
-		StringUtil.append(sb, "</td></tr>", getAugment(item));
+		sb.append("</td></tr>");
+		getAugment(sb,item);
 		if (urlSell)
 		{
 			StringUtil.append(sb,"<tr><td><a action=\"bypass -h npc_%objectId%_auction chose ",
 				item.getObjectId(),"\">Продать</a></td></tr>");
 		}		
 		sb.append("</table></td></tr></table>");
-		return sb.toString();
 	}
 	
-	static String getAugment(ItemInstance item)
-	{
-		StringBuilder sb = new StringBuilder();
+	static void getAugment(StringBuilder sb, ItemInstance item)
+	{		
 		if (AuctionConfig.ALLOW_AUGMENT_ITEMS)
 		{
 			if (item.getAugmentation() != null && item.getAugmentation().getSkill() != null)
@@ -355,14 +353,11 @@ public class Auction
 				sb.append("<tr><td><font color=603ca9>Аугмент:</font> <font color=3caa3c>нет</font></td></tr>");
 			}
 		}
-		
-		return sb.toString();
 	}
 	
-	private static String getPagesForAddProduct(int size, int page)
+	private static void getPagesForAddProduct(StringBuilder sb, int size, int page)
 	{
-		StringBuilder sb =  new StringBuilder("<table width=270><tr><td align=center><table><tr>");
-		
+		sb.append("<table width=270><tr><td align=center><table><tr>");		
 		for (int i = 1; i <= Math.ceil((double) size / (double) AuctionConfig.AUCTION_SEE_COUNT_PRODUCTS_ON_PAGE); ++i)
 		{
 			if (i != page)
@@ -372,11 +367,10 @@ public class Auction
 			}
 			else
 			{
-				StringUtil.append(sb, "<td width=12 align=center>",i, "</td>");
+				StringUtil.append(sb, "<td width=12 align=center>", i, "</td>");
 			}
 		}
 		sb.append( "</tr></table></td></tr></table>");
-		return sb.toString();
 	}	
 
 	private static String getChoseAddProduct(ItemInstance item)
@@ -389,33 +383,31 @@ public class Auction
 		{
 			StringUtil.append(sb,"<font color=LEVEL> +",item.getEnchantLevel(),"</font>");		
 		}
-		StringUtil.append(sb, "</td></tr>",getAugment(item),
-			"</table></td></tr></table><br><table width=300><tr><tr><td align=\"right\">Валюта: </td><td align=\"left\"><combobox width=100 var=\"reward\" list=\"",
-			getAvailablePrice(), "\"></td></tr><tr><td align=\"right\">Цена: </td><td align=\"left\"><edit var=\"count\" width=100 height=10></td></tr></tr></table><br><table width=300><tr><td align=center width=132><button value=\"Выставить на продажу\" action=\"bypass -h npc_%objectId%_auction chose_accept ",
+		sb.append("</td></tr>");
+		getAugment(sb, item);
+		sb.append("</table></td></tr></table><br><table width=300><tr><tr><td align=\"right\">Валюта: </td><td align=\"left\"><combobox width=100 var=\"reward\" list=\"");
+		getAvailablePrice(sb);
+		StringUtil.append(sb, "\"></td></tr><tr><td align=\"right\">Цена: </td><td align=\"left\"><edit var=\"count\" width=100 height=10></td></tr></tr></table><br><table width=300><tr><td align=center width=132><button value=\"Выставить на продажу\" action=\"bypass -h npc_%objectId%_auction chose_accept ",
 			item.getObjectId(),
 			" $count $reward\" width=135 height=24 back=\"L2UI_CH3.bigbutton3_down\" fore=\"L2UI_CH3.bigbutton3\"></td><td align=center width=132><button value=\"Отказаться\" action=\"bypass -h npc_%objectId%_auction page 1 0\" width=135 height=24 back=\"L2UI_CH3.bigbutton3_down\" fore=\"L2UI_CH3.bigbutton3\"></td></tr></table>");
 		return sb.toString();
 	}
 	
-	private static String getAvailablePrice()
-	{
-		StringBuilder rewards = new StringBuilder();
-		int[] arr = AuctionConfig.AUCTION_ALLOWED_ITEM_ID;
-		
+	private static void getAvailablePrice(StringBuilder sb)
+	{		
+		int[] arr = AuctionConfig.AUCTION_ALLOWED_ITEM_ID;		
 		for (int i = 0; i < arr.length; ++i)
 		{
 			int id = arr[i];
 			if (i == 0)
 			{
-				rewards.append(ItemTable.getInstance().getTemplate(id).getName());
+				sb.append(ItemTable.getInstance().getTemplate(id).getName());
 			}
 			else
 			{
-				StringUtil.append(rewards, ";", ItemTable.getInstance().getTemplate(id).getName());
+				StringUtil.append(sb, ";", ItemTable.getInstance().getTemplate(id).getName());
 			}
 		}
-		
-		return rewards.toString();
 	}
 	
 	private static boolean checkItem(L2PcInstance player, AuctionItem item, int type)
@@ -494,7 +486,7 @@ public class Auction
 	
 	private void storeItem(AuctionItem item, boolean insertToBD) throws SQLException
 	{
-		this._products.put(Integer.valueOf(item.getObjectId()), item);
+		_products.put(item.getObjectId(), item);
 		Connection con = null;
 		PreparedStatement statement = null;
 		if (insertToBD)
