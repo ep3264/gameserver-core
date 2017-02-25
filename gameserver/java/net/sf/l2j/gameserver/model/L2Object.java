@@ -42,7 +42,7 @@ public abstract class L2Object
 	public static final Logger _log = Logger.getLogger(L2Object.class.getName());
 	
 	private String _name;
-	private int _objectId;
+	private Integer _objectId;
 	
 	private NpcTemplate _polyTemplate;
 	private PolyType _polyType = PolyType.DEFAULT;
@@ -216,8 +216,9 @@ public abstract class L2Object
 	{
 		_name = value;
 	}
+
 	
-	public final int getObjectId()
+	public final Integer getObjectId()
 	{
 		return _objectId;
 	}
@@ -451,7 +452,7 @@ public abstract class L2Object
 	@Override
 	public int hashCode()
 	{		
-		return _objectId;
+		return _objectId.intValue();
 	}
 
 	/**

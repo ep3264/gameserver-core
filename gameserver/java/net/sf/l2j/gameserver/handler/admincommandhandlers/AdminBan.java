@@ -109,7 +109,7 @@ public class AdminBan implements IAdminCommandHandler
 		
 		if (command.startsWith("admin_ban ") || command.equalsIgnoreCase("admin_ban"))
 		{
-			activeChar.sendMessage("Available ban commands: //ban_acc, //ban_char, //ban_chat");
+			activeChar.sendMessage("Available ban commands: //ban_acc, //ban_char, //ban_chat, //ban hwid, //ban_reloadhwids");
 			return false;
 		}
 		else if (command.startsWith("admin_ban_acc"))
@@ -169,23 +169,16 @@ public class AdminBan implements IAdminCommandHandler
 		}
 		else if(command.startsWith("admin_ban_hwid") && ProtectionConfig.HWID)
 		{
-			if ((targetPlayer == null) && player.equals(""))
+			if (targetPlayer == null || targetPlayer == activeChar || !ProtectionConfig.HWID)
 			{
-				activeChar.sendMessage("Usage: //ban_hwid <acc_name>");
+				activeChar.sendMessage("Usage: //ban_hwid <target>");
 				return false;
 			}
-			else if(targetPlayer == null){
-				activeChar.sendMessage( "Usage: //ban_hwid <target>");
-				return false;
-				//
-			}
-			else{
-				HWIDManager.getInstance().banHwid(targetPlayer.getClient());
-				targetPlayer.setPunishLevel(L2PcInstance.PunishLevel.ACC, 0);
-				activeChar.sendMessage( targetPlayer.getAccountName() + " account is now banned.");					
-			}
+			HWIDManager.getInstance().banHwid(targetPlayer.getClient());
+			targetPlayer.setPunishLevel(L2PcInstance.PunishLevel.ACC, 0);
+			activeChar.sendMessage(targetPlayer.getAccountName() + " account and hwid is now banned.");
 		}
-		else if(command.startsWith("admin_ban_reloadhwids")&& ProtectionConfig.HWID)
+		else if(command.startsWith("admin_ban_reloadhwids") && ProtectionConfig.HWID)
 		{
 			HWIDManager.getInstance().reloadBannedHwids();			
 			activeChar.sendMessage( "Banned hwids has been reloaded.");

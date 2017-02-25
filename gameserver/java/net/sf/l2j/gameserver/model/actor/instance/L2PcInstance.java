@@ -10839,6 +10839,28 @@ public final class L2PcInstance extends L2Playable
 		}
 		return true;
 	}
+	/**
+	 * Установить привязку по hwid
+	 * @param hwid - mac-адрес игрока
+	 */
+	public void setHwidBlock(String hwid)
+	{
+		getAccountData().set("mac", hwid);
+	}
+	
+	public String getHwidBlock()
+	{
+		return getAccountData().getString("mac", "0");
+	}
+	
+	public boolean isHwidBlock()
+	{
+		if (getHwidBlock().equals("0"))
+		{
+			return false;
+		}
+		return true;
+	}
 	
 	private Language _language;
 	public Language getLang()

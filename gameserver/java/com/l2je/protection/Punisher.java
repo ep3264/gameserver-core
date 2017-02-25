@@ -55,8 +55,8 @@ public class Punisher
 				char_name=player.getName();
 			}
 			statement.setString(2, char_name);
-			statement.setString(3, client.getConnection().getInetAddress().getHostAddress());			
-			statement.setString(4, client.getHWid());
+			statement.setString(3, client.getIp());			
+			statement.setString(4, client.getHwid().getHdd());
 			statement.setInt(5, reason);
 			statement.setString(6, descr);
 			statement.execute();
@@ -91,7 +91,7 @@ public class Punisher
 		}
 		else
 		{
-			if (ProtectionConfig.ON_HACK_ATTEMP.equals("hwidban") && client.getHWid() != null)
+			if (ProtectionConfig.ON_HACK_ATTEMP.equals("hwidban") && client.getHwid() != null)
 			{
 				HWIDManager.getInstance().banHwid(client);
 			}

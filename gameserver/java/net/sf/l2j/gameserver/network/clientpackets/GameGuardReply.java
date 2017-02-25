@@ -35,7 +35,7 @@ public class GameGuardReply extends L2GameClientPacket
 	@Override
 	protected void runImpl()
 	{
-		if(ProtectionConfig.HWID && getClient().getHWid() == null)
+		if(ProtectionConfig.HWID && getClient().getHwid() == null)
 		{
 		  HWIDManager.getInstance().initSession(getClient(), b);			
 		}

@@ -620,14 +620,17 @@ public class AdminEditChar implements IAdminCommandHandler
 	{
 		String ip = "N/A";
 		String account = "N/A";		
-		try
-		{	final String clientInfo = player.getClient().toString();		
-			account = player.getAccountName();
-			ip = clientInfo.substring(clientInfo.indexOf(" - IP: ") + 7, clientInfo.lastIndexOf("]"));
-		}
-		catch (Exception e)
+		String mac ="N/A";
+		String hdd = "N/A";
+		if(!player.isGhost() && player.getClient()!=null)
 		{
-			e.printStackTrace();
+			account = player.getAccountName();
+			ip = player.getClient().getIp();
+			if(player.getClient().getHwid()!=null)
+			{
+				mac = player.getClient().getHwid().getMac();
+				hdd = player.getClient().getHwid().getHdd();
+			}
 		}
 		final NpcHtmlMessage html = new NpcHtmlMessage(0);
 		html.setFile("data/html/admin/" + filename);
@@ -668,6 +671,8 @@ public class AdminEditChar implements IAdminCommandHandler
 		html.replace("%matkspd%", player.getMAtkSpd());
 		html.replace("%account%", account);
 		html.replace("%ip%", ip);
+		html.replace("%mac%", mac);
+		html.replace("%hdd%", hdd);
 		html.replace("%ai%", player.getAI().getIntention().name());
 		activeChar.sendPacket(html);
 	}

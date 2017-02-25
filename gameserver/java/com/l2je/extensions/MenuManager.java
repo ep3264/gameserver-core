@@ -77,6 +77,7 @@ public class MenuManager
 		html.basicReplace("%acp%", acp);
 		html.basicReplace("%ip%", activeChar.getClient().getConnection().getInetAddress().getHostAddress());
 		html.basicReplace("%ipon%", stateToString(activeChar.isIpBlock(), ru));
+		html.basicReplace("%hwidon%", stateToString(activeChar.isHwidBlock(), ru));
 		String eventInfo = ru ? "<td><font color=\"ff0000\">Нет доступных ивентов</font></td>" : "<td><font color=\"ff0000\">No events</font></td>";
 		if (EventManager.getInstance().getCurrentEvent() != null)
 		{
@@ -132,6 +133,28 @@ public class MenuManager
 		else if (command.equals("ipoff"))
 		{
 			activeChar.setIpBlock("0");
+		}
+		else if (command.equals("hwidon"))
+		{
+			try
+			{
+				if (activeChar.getClient().getHwid() != null && !activeChar.getClient().getHwid().getMac().equals("N/A"))
+				{
+					activeChar.setHwidBlock(activeChar.getClient().getHwid().getMac());
+				}
+				else
+				{
+					activeChar.sendMessage("Не доступно. Обратитесь к администратору.");
+				}
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+		else if (command.equals("hwidoff"))
+		{
+			activeChar.setHwidBlock("0");
 		}
 		else if (command.equals("premium"))
 		{

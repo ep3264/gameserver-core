@@ -16,6 +16,7 @@ package net.sf.l2j.gameserver.network;
 
 import com.l2je.protection.ProtectionConfig;
 import com.l2je.protection.crypt.Blowfish;
+import com.l2je.protection.hwid.Hwid;
 
 import java.net.InetAddress;
 import java.nio.ByteBuffer;
@@ -170,7 +171,7 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>> i
 		_activeChar = pActiveChar;
 		if (_activeChar != null)
 		{
-			if (getHWid() == null && !_activeChar.isGhost())
+			if (_hwid == null && !_activeChar.isGhost())
 			{
 				_log.warning("Bad HWID. Account:" + getAccountName());
 			}
@@ -927,20 +928,24 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>> i
 		return true;
 	}
 	
-	private String _hwid = null;
-	private boolean _bannedHwid = false;
+    private Hwid _hwid = null;
+	private boolean _bannedHwid = false;	
+
+	public String getIp()
+	{
+		return getConnection().getInetAddress().getHostAddress();
+	}
 	
-	public void setHWID(String hwid)
+	public void setHwid(Hwid hwid)
 	{
 		_hwid = hwid;
 	}
-	
-	public String getHWid()
+	public Hwid getHwid()
 	{
 		return _hwid;
-	}
+	}	
 	
-	public void banByHwid()
+	public void setBanHwid()
 	{
 		_bannedHwid = true;
 	}

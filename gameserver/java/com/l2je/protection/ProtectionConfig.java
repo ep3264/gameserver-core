@@ -12,6 +12,9 @@ public final class ProtectionConfig
 	public static boolean HWID;
 	public static boolean PUNISHER;
 	public static String ON_HACK_ATTEMP;
+	public static boolean HWID_BAN_IP;
+	public static boolean HWID_BAN_MAC;
+	public static boolean HWID_BAN_HDD;
 	
 	public static void init()
 	{
@@ -22,7 +25,10 @@ public final class ProtectionConfig
 			BLOWFISH = Boolean.parseBoolean(protection.getProperty("BLOWFISH", "true"));
 			HWID = Boolean.parseBoolean(protection.getProperty("HWID", "true"));
 			PUNISHER = Boolean.parseBoolean(protection.getProperty("PUNISHER", "true"));
-			ON_HACK_ATTEMP = protection.getProperty("OnHackAttempt", "kick");
+			ON_HACK_ATTEMP = protection.getProperty("ON_HACK_ATTEMP", "kick");
+			HWID_BAN_IP =protection.getProperty("HWID_BAN_IP", false);
+			HWID_BAN_MAC =protection.getProperty("HWID_BAN_MAC", false);
+			HWID_BAN_HDD =protection.getProperty("HWID_BAN_HDD", false);
 		}
 		catch (Exception e)
 		{
