@@ -52,8 +52,11 @@ public class AdminBan implements IAdminCommandHandler
 		"admin_ban_char",
 		"admin_ban_chat",
 		
-		"admin_ban_hwid",
-		"admin_ban_reloadhwids",
+		"admin_ban_ip",
+		"admin_ban_mac",
+		"admin_ban_hdd",
+		"admin_ban_reloadhwids", // загрузить с бд забаненые hwids
+		"admin_ban_savehwids", //сохранить в бд новые hwids
 		
 		"admin_unban", // returns unban commands
 		"admin_unban_acc",
@@ -167,21 +170,45 @@ public class AdminBan implements IAdminCommandHandler
 			else
 				banChatOfflinePlayer(activeChar, player, duration, true);
 		}
-		else if(command.startsWith("admin_ban_hwid") && ProtectionConfig.HWID)
+		else if(command.startsWith("admin_ban_ip") && ProtectionConfig.HWID)
 		{
-			if (targetPlayer == null || targetPlayer == activeChar || !ProtectionConfig.HWID)
+			if (targetPlayer == null || !ProtectionConfig.HWID)
 			{
-				activeChar.sendMessage("Usage: //ban_hwid <target>");
+				activeChar.sendMessage("Usage: //ban_ip <target>");
 				return false;
 			}
-			HWIDManager.getInstance().banHwid(targetPlayer.getClient());
-			targetPlayer.setPunishLevel(L2PcInstance.PunishLevel.ACC, 0);
-			activeChar.sendMessage(targetPlayer.getAccountName() + " account and hwid is now banned.");
+			HWIDManager.getInstance().banIP(targetPlayer.getClient());			
+			activeChar.sendMessage(targetPlayer.getAccountName() + " account IP is now banned.");
+		}
+		else if(command.startsWith("admin_ban_mac") && ProtectionConfig.HWID)
+		{
+			if (targetPlayer == null  || !ProtectionConfig.HWID)
+			{
+				activeChar.sendMessage("Usage: //ban_mac <target>");
+				return false;
+			}
+			HWIDManager.getInstance().banMAC(targetPlayer.getClient());			
+			activeChar.sendMessage(targetPlayer.getAccountName() + " account MAC is now banned.");
+		}
+		else if(command.startsWith("admin_ban_hdd") && ProtectionConfig.HWID)
+		{
+			if (targetPlayer == null  || !ProtectionConfig.HWID)
+			{
+				activeChar.sendMessage("Usage: //ban_hdd <target>");
+				return false;
+			}
+			HWIDManager.getInstance().banHDD(targetPlayer.getClient());		
+			activeChar.sendMessage(targetPlayer.getAccountName() + " account HDD is now banned.");
 		}
 		else if(command.startsWith("admin_ban_reloadhwids") && ProtectionConfig.HWID)
 		{
 			HWIDManager.getInstance().reloadBannedHwids();			
 			activeChar.sendMessage( "Banned hwids has been reloaded.");
+		}
+		else if(command.startsWith("admin_ban_savehwids") && ProtectionConfig.HWID)
+		{
+			HWIDManager.getInstance().saveHwidsToDB();			
+			activeChar.sendMessage( "Hwids has been saved.");
 		}
 		else if (command.startsWith("admin_unban ") || command.equalsIgnoreCase("admin_unban"))
 		{

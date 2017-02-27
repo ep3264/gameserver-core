@@ -348,14 +348,14 @@ public class GameServer
 			_log.info("HWIDManager: Enable.");
 			HWIDManager.getInstance();			
 		}
-		if (ProtectionConfig.RC5)
+		if (ProtectionConfig.CRYPT)
 		{	
-			_log.info("RC5: Enable.");       
+			_log.info("Traffic encryption: Enable.");       
 			RC5.getInstance();			
 		}
-		if (ProtectionConfig.BLOWFISH)
+		if (ProtectionConfig.BLOWFISH_KEY)
 		{
-			_log.info("BLOWFISH: Enable.");
+			_log.info("BLOWFISH KEY: Enable.");
 			Blowfish.getInstance();			
 		}
 		if (ProtectionConfig.PUNISHER)

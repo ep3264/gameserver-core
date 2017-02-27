@@ -6,37 +6,47 @@ import java.util.HashSet;
  * @author evgeny64 Official Website: http://l2je.com
  * @date 24 февр. 2017 г. 20:00:56
  */
-public class BannedHwids
+public class BannedHWIDs
 {
 	private HashSet<String> _ips;
 	private HashSet<String> _hdds;
 	private HashSet<String> _macs;
 	
-	public BannedHwids()
+	public BannedHWIDs()
 	{
 		_ips = new HashSet<>();
 		_hdds = new HashSet<>();
 		_macs = new HashSet<>();
 	}
-	
-	public void add(String ip, String mac, String hdd)
+		
+	public void addIP(String ip)
 	{
 		_ips.add(ip);
+	}
+	
+	public void addMAC(String mac)
+	{
 		_macs.add(mac);
+	}
+	
+	public void addHDD(String hdd)
+	{
 		_hdds.add(hdd);
 	}
 	
-	public void add(Hwid hwid)
-	{
-		_ips.add(hwid.getIP());
-		_macs.add(hwid.getMac());
-		_hdds.add(hwid.getHdd());
-		
-	}
-	
-	public int size()
+	public int countIPs()
 	{
 		return _ips.size();
+	}
+	
+	public int countMACs()
+	{
+		return _macs.size();
+	}
+	
+	public int countHDDs()
+	{
+		return _hdds.size();
 	}
 	
 	public void clear()

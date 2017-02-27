@@ -2,6 +2,7 @@ package com.l2je.extensions;
 
 import com.l2je.extensions.acp.AcpManager;
 import com.l2je.extensions.events.EventManager;
+import com.l2je.protection.ProtectionConfig;
 
 import net.sf.l2j.commons.lang.Language;
 import net.sf.l2j.commons.lang.StringUtil;
@@ -138,9 +139,9 @@ public class MenuManager
 		{
 			try
 			{
-				if (activeChar.getClient().getHwid() != null && !activeChar.getClient().getHwid().getMac().equals("N/A"))
+				if (ProtectionConfig.HWID  && !activeChar.getClient().getHWID().getMAC().equals("N/A"))
 				{
-					activeChar.setHwidBlock(activeChar.getClient().getHwid().getMac());
+					activeChar.setHwidBlock(activeChar.getClient().getHWID().getMAC());
 				}
 				else
 				{

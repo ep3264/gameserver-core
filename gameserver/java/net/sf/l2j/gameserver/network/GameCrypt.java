@@ -25,7 +25,7 @@ public class GameCrypt
 	private final byte[] _outKey = new byte[16];
 	private boolean _isEnabled;
 	private final static int MAX_SIZE_K=12;
-	private byte[] _iv= { 123, -5, -12, -67, 122, 9, 98, 74, -32, -41, 13, -7 };
+	private byte[] _iv= { 122, -5, -12, -67, 122, 9, 98, 74, -32, -41, 13, -7 };
     private int index =0;
 	
 	public void setKey(byte[] key)
@@ -59,7 +59,7 @@ public class GameCrypt
 		_inKey[10] = (byte) (old >> 0x10 & 0xff);
 		_inKey[11] = (byte) (old >> 0x18 & 0xff);
 		
-		if (ProtectionConfig.RC5)
+		if (ProtectionConfig.CRYPT)
 		{
 			if (index == MAX_SIZE_K - 1)
 			{

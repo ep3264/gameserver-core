@@ -16,7 +16,7 @@ package net.sf.l2j.gameserver.network;
 
 import com.l2je.protection.ProtectionConfig;
 import com.l2je.protection.crypt.Blowfish;
-import com.l2je.protection.hwid.Hwid;
+import com.l2je.protection.hwid.HardwareID;
 
 import java.net.InetAddress;
 import java.nio.ByteBuffer;
@@ -115,7 +115,7 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>> i
 	{
 		byte[] key = BlowFishKeygen.getRandomKey();
 		_crypt.setKey(key);
-		if (com.l2je.protection.ProtectionConfig.BLOWFISH)
+		if (ProtectionConfig.BLOWFISH_KEY)
 		{
 			key = Blowfish.getInstance().getKey(key);
 		}
@@ -170,12 +170,8 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>> i
 	{
 		_activeChar = pActiveChar;
 		if (_activeChar != null)
-		{
-			if (_hwid == null && !_activeChar.isGhost())
-			{
-				_log.warning("Bad HWID. Account:" + getAccountName());
-			}
-			if (_bannedHwid)
+		{			
+			if (_isBannedHWID)
 			{
 				_activeChar.closeNetConnection(true);
 			}
@@ -928,26 +924,26 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>> i
 		return true;
 	}
 	
-    private Hwid _hwid = null;
-	private boolean _bannedHwid = false;	
+    private HardwareID _hardwareID = null;
+	private boolean _isBannedHWID = false;	
 
 	public String getIp()
 	{
 		return getConnection().getInetAddress().getHostAddress();
 	}
 	
-	public void setHwid(Hwid hwid)
+	public void setHwid(HardwareID hardwareID)
 	{
-		_hwid = hwid;
+		_hardwareID = hardwareID;
 	}
-	public Hwid getHwid()
+	public HardwareID getHWID()
 	{
-		return _hwid;
+		return _hardwareID;
 	}	
 	
-	public void setBanHwid()
+	public void setBanHWID()
 	{
-		_bannedHwid = true;
+		_isBannedHWID = true;
 	}
 	
 	public void stopAutoSave()

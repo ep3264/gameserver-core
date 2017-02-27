@@ -626,10 +626,10 @@ public class AdminEditChar implements IAdminCommandHandler
 		{
 			account = player.getAccountName();
 			ip = player.getClient().getIp();
-			if(player.getClient().getHwid()!=null)
+			if(player.getClient().getHWID()!=null)
 			{
-				mac = player.getClient().getHwid().getMac();
-				hdd = player.getClient().getHwid().getHdd();
+				mac = player.getClient().getHWID().getMAC();
+				hdd = player.getClient().getHWID().getHDD();
 			}
 		}
 		final NpcHtmlMessage html = new NpcHtmlMessage(0);

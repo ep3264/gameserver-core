@@ -2,7 +2,7 @@ package com.l2je.protection.hwid;
 
 import net.sf.l2j.commons.lang.StringUtil;
 
-public class Hwid
+public class HardwareID
 {
 	private String _login;
 	private String _hdd;
@@ -10,7 +10,7 @@ public class Hwid
 	private String _mac;
 	private int _hash = 0;
 	
-	public Hwid(String login, String ip, String mac, String hdd)
+	public HardwareID(String login, String ip, String mac, String hdd)
 	{
 		_login = login;
 		_ip = ip;
@@ -18,12 +18,12 @@ public class Hwid
 		_hdd = hdd;
 	}
 	
-	public String getHdd()
+	public String getHDD()
 	{
 		return _hdd;
 	}
 	
-	public String getMac()
+	public String getMAC()
 	{
 		return _mac;
 	}
@@ -63,7 +63,7 @@ public class Hwid
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Hwid other = (Hwid) obj;
+		HardwareID other = (HardwareID) obj;
 		if (_ip == null)
 		{
 			if (other._ip != null)

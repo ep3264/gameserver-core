@@ -30,24 +30,18 @@ public class IllegalAction extends L2GameClientPacket
 {
 	private byte[] b ;
 
-	/* (non-Javadoc)
-	 * @see net.sf.l2j.gameserver.network.clientpackets.L2GameClientPacket#readImpl()
-	 */
+
 	@Override
 	protected void readImpl()
-	{
-		// TODO Auto-generated method stub
+	{		
 		b= new byte[_buf.remaining()];
 		readB(b);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.l2j.gameserver.network.clientpackets.L2GameClientPacket#runImpl()
-	 */
+
 	@Override
 	protected void runImpl()
-	{
-		// TODO Auto-generated method stub
+	{		
 		if(ProtectionConfig.PUNISHER)
 		{
 			Punisher.getInstance().illegalAction(getClient(), b[0]);
