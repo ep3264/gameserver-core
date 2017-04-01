@@ -7,14 +7,14 @@ public final class ProtectionConfig
 {
 	private static final String FILE = "./config/protection.properties";
 	
-	public static boolean CRYPT;
-	public static boolean BLOWFISH_KEY;
-	public static boolean HWID;
-	public static boolean PUNISHER;
-	public static String ON_HACK_ATTEMP;
+	public static boolean CRYPT = true;
+	public static boolean BLOWFISH_KEY = true;
+	public static boolean HWID = true;
+	public static boolean PUNISHER = true;
+	public static String ON_HACK_ATTEMP = "kick";
 	
 	public static void init()
-	{
+	{/*
 		try
 		{
 			final ExProperties protection = Config.initProperties(FILE);			
@@ -27,6 +27,6 @@ public final class ProtectionConfig
 		catch (Exception e)
 		{
 			e.printStackTrace();
-		}
+		} */
 	}
 }
