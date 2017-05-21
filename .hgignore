@@ -1,0 +1,4 @@
+syntax: glob
+gameserver/build/
+gameserver/bin/
+gameserver/dist/

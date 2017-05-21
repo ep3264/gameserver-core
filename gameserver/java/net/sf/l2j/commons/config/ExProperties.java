@@ -20,9 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-/**
- * @author G1ta0
- */
+
 public class ExProperties extends Properties
 {
 	private static final long serialVersionUID = 1L;
