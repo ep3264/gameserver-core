@@ -14,6 +14,7 @@
  */
 package net.sf.l2j.gameserver;
 
+import com.l2je.extensions.Validator;
 import com.l2je.extensions.auction.Auction;
 import com.l2je.extensions.auction.AuctionConfig;
 import com.l2je.extensions.events.EventConfig;
@@ -165,6 +166,10 @@ public class GameServer
 	
 	public GameServer() throws Exception
 	{
+		if(!Validator.run()) {
+			System.exit(0);
+		}
+			
 		gameServer = this;
 		new File("./data/crests").mkdirs();
 		
