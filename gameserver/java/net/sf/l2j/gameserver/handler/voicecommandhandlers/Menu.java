@@ -6,7 +6,7 @@ import net.sf.l2j.gameserver.handler.IVoicedCommandHandler;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 
 /**
- * @author evgeny64
+ * @author dbg
  * Official Website: http://l2je.com 
  * @date 14 февр. 2017 г. 8:24:14 
  */

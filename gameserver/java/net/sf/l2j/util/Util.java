@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.logging.Logger;
 
 /**
- * @author evgeny64 Official Website: http://l2je.com
+ * @author dbg Official Website: http://l2je.com
  * @date 18 февр. 2017 г. 9:18:58
  */
 public class Util

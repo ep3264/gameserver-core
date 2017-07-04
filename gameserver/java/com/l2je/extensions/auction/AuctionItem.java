@@ -10,7 +10,7 @@ import net.sf.l2j.gameserver.model.item.instance.ItemInstance;
 
 /**
  * @className:custom.auction.AuctionItem.java
- * @author evgeny64 Official Website: http://l2je.com
+ * @author dbg Official Website: http://l2je.com
  * @date 26 янв. 2017 г. 19:56:07
  */
 public class AuctionItem

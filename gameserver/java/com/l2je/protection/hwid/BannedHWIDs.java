@@ -3,7 +3,7 @@ package com.l2je.protection.hwid;
 import java.util.HashSet;
 
 /**
- * @author evgeny64 Official Website: http://l2je.com
+ * @author dbgbg Official Website: http://l2je.com
  * @date 24 февр. 2017 г. 20:00:56
  */
 public class BannedHWIDs

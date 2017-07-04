@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * Developers: L2JE Team<br>
  * <br>
  * <br>
- * Author: evgeny64<br>
+ * Author: dbg<br>
  * Date: 21 февр. 2016 г.<br>
  * Time: 2:01:05<br>
  * <br>

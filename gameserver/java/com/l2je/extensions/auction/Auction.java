@@ -32,7 +32,7 @@ import net.sf.l2j.gameserver.util.Broadcast;
 
 /**
  * @className:custom.auction.Auction.java
- * @author evgeny64 Official Website: http://l2je.com
+ * @author dbg Official Website: http://l2je.com
  * @date 24 янв. 2017 г. 19:59:42
  */
 public class Auction
@@ -149,6 +149,7 @@ public class Auction
 		html = html.replace("%page%", getChoseAddProduct(item));
 		return html;
 	}
+	
 	public void acceptBuy(L2PcInstance player, int itemId)
 	{
 		AuctionItem auctionItem = Auction.getInstance()._products.get(itemId);
@@ -394,8 +395,8 @@ public class Auction
 	}
 	
 	private static void getAvailablePrice(StringBuilder sb)
-	{		
-		int[] arr = AuctionConfig.AUCTION_ALLOWED_ITEM_ID;		
+	{
+		int[] arr = AuctionConfig.AUCTION_ALLOWED_ITEM_ID;
 		for (int i = 0; i < arr.length; ++i)
 		{
 			int id = arr[i];
@@ -416,8 +417,7 @@ public class Auction
 		if (ok)
 		{
 			Item itm = ItemTable.getInstance().getTemplate(item.getId());
-			ok = ok && itm != null;
-			if (ok)
+			if (itm != null)
 			{
 				switch (type)
 				{
@@ -449,8 +449,7 @@ public class Auction
 			rset = statement.executeQuery();
 			
 			int count;
-			for (count = 0; rset.next(); ++count)
-			{
+			for (count = 0; rset.next(); ++count) {
 				int trader_objId = rset.getInt("trader_objId");
 				int objId = rset.getInt("objId");
 				int id_price = rset.getInt("id_price");
@@ -459,10 +458,8 @@ public class Auction
 				boolean alreadySell = rset.getBoolean("alreadySell");
 				AuctionItem item = new AuctionItem(trader_objId, id_price, price, addTime, objId, alreadySell);
 				this.storeItem(item, false);
-			}
+			}			
 			
-			rset.close();
-			statement.close();
 			_log.info("Auction: Loaded " + count + " items in Auction.");
 		}
 		catch (Exception e)
@@ -473,11 +470,12 @@ public class Auction
 		{
 			try
 			{
+				rset.close();
+				statement.close();
 				con.close();
 			}
-			catch (SQLException e)
+			catch (Exception e)
 			{
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -502,7 +500,7 @@ public class Auction
 				statement.setLong(5, item.addTime);
 				statement.setBoolean(6, item.alreadySell);
 				statement.execute();
-				statement.close();
+				
 			}
 			catch (Exception ex)
 			{
@@ -511,7 +509,13 @@ public class Auction
 			}
 			finally
 			{
-				con.close();
+				try {
+					statement.close();
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
 			}
 		}
 		
@@ -553,6 +557,7 @@ public class Auction
 			ex.printStackTrace();
 		}
 	}
+	
 	private static boolean payAuctioneer(L2PcInstance player, ItemInstance item, int id_price, int price)
 	{
 		int auction_priceId;
@@ -578,6 +583,7 @@ public class Auction
 		}
 		return false;
 	}
+	
 	/**
 	 * Выставить айтем на продажу
 	 * @param player
@@ -604,6 +610,7 @@ public class Auction
 			Broadcast.toAllOnlinePlayers(new CreatureSay(0, Say2.CRITICAL_ANNOUNCE, "", message.toString()));
 		}
 	}
+	
 	/**
 	 * Перенести айтем с инвентаря продавца в инветарь аукциона
 	 * @param src
@@ -647,6 +654,7 @@ public class Auction
 	{
 		return player.getInventory().getItemByItemId(item_id) != null ? player.getInventory().getItemByItemId(item_id).getCount() : 0;
 	}
+	
 	/**
 	 * Оплатить айтем
 	 * @param player покупайтель

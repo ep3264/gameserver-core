@@ -632,7 +632,7 @@ public abstract class Event
 	}
 	/**
 	 * Класс, переключает состояния ивента
-	 * @author evgeny64
+	 * @author dbg
 	 * Official Website: http://l2je.com 
 	 * @date 16 февр. 2017 г. 16:05:21
 	 */

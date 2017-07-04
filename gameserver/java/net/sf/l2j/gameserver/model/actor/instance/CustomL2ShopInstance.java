@@ -10,7 +10,7 @@ import net.sf.l2j.gameserver.network.serverpackets.NpcHtmlMessage;
 
 /**
  * 
- * @author evgeny64
+ * @author dbg
  * Official Website: http://l2je.com 
  * @date 17 февр. 2017 г. 14:17:10
  */

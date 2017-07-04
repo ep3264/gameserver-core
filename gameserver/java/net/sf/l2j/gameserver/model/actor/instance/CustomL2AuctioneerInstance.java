@@ -12,7 +12,7 @@ import net.sf.l2j.gameserver.network.serverpackets.NpcHtmlMessage;
 
 
 /**
- * @author evgeny64 Official Website: http://l2je.com
+ * @author dbg Official Website: http://l2je.com
  */
 public class CustomL2AuctioneerInstance extends L2NpcInstance
 {
@@ -47,6 +47,7 @@ public class CustomL2AuctioneerInstance extends L2NpcInstance
 		html.replace("%objectId%", getObjectId());
 		player.sendPacket(html);
 	}
+	
 	@Override
 	public void onBypassFeedback(L2PcInstance player, String command)
 	{

@@ -7,12 +7,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- * @author evgeny64 Official Website: http://l2je.com
+ * @author dbgbg Official Website: http://l2je.com
  * @date 27 мая 2017 г. 22:35:01
  */
 public class Validator
 {
-	private static String ID = "Donate La2Nika";
+	private static String ID = "APTuCT";
 	private static String URL_STR = "http://donov.net/clients.txt";
 	
 	public static boolean run()

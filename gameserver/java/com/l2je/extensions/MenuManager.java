@@ -10,7 +10,7 @@ import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.network.serverpackets.NpcHtmlMessage;
 
 /**
- * @author evgeny64 Official Website: http://l2je.com
+ * @author dbg Official Website: http://l2je.com
  * @date 14 февр. 2017 г. 10:57:13
  */
 public class MenuManager

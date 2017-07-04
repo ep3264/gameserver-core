@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 
 /**
  * @className:com.l2je.custom.events.EventConfig.java 
- * @author evgeny64
+ * @author dbg
  * Official Website: http://l2je.com 
  * @date 3 февр. 2017 г. 6:51:42 
  */

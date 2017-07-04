@@ -13,7 +13,7 @@ import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 
 /**
  * Абстрактный класс, который представляет общий механизм военных ивентов
- * @author evgeny64 Official Website: http://l2je.com
+ * @author dbg Official Website: http://l2je.com
  * @date 8 февр. 2017 г. 5:34:20
  */
 public abstract class CombatEvent extends Event
@@ -199,7 +199,7 @@ public abstract class CombatEvent extends Event
 	
 	/**
 	 * Класс поток, который воскрешает игроков
-	 * @author evgeny64 Official Website: http://l2je.com
+	 * @author dbg Official Website: http://l2je.com
 	 * @date 8 февр. 2017 г. 5:32:37
 	 */
 	protected class EventResurrector implements Runnable

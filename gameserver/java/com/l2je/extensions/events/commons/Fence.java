@@ -2,7 +2,7 @@ package com.l2je.extensions.events.commons;
 
 /**
  * Класс ограда
- * @author evgeny64
+ * @author dbg
  * Official Website: http://l2je.com 
  * @date 8 февр. 2017 г. 4:47:50 
  */

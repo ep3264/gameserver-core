@@ -11,7 +11,7 @@ import net.sf.l2j.L2DatabaseFactory;
 
 /**
  * @className:net.sf.l2j.gameserver.model.item.instance.ItemIcons.java 
- * @author evgeny64
+ * @author dbg
  * Official Website: http://l2je.com 
  * @date 26 янв. 2017 г. 21:07:47 
  */

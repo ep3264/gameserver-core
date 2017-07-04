@@ -421,12 +421,12 @@ public class BlowfishEngine
 		Bits32ToBytes(xl, dst, dstIndex + 4);
 	}
 
-	private int BytesTo32bits(byte[] b, int i)
+	private static int BytesTo32bits(byte[] b, int i)
 	{
 		return (b[i + 3] & 0xff) << 24 | (b[i + 2] & 0xff) << 16 | (b[i + 1] & 0xff) << 8 | b[i] & 0xff;
 	}
 
-	private void Bits32ToBytes(int in, byte[] b, int offset)
+	private static void Bits32ToBytes(int in, byte[] b, int offset)
 	{
 		b[offset] = (byte) in;
 		b[offset + 1] = (byte) (in >> 8);

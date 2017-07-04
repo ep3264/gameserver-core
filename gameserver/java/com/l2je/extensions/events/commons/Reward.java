@@ -1,7 +1,7 @@
 package com.l2je.extensions.events.commons;
 
 /**
- * @author evgeny64 Official Website: http://l2je.com
+ * @author dbg Official Website: http://l2je.com
  * @date 10 февр. 2017 г. 4:17:29
  */
 public class Reward

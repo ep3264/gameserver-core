@@ -47,13 +47,15 @@ public final class EventManager
 				_task = ThreadPool.schedule(this, delayBetweenEvents * 1000);
 			}
 		}
-	}
+	}	
 	
-	protected static final Logger _log = Logger.getLogger(EventManager.class.getName());
-	public AutoEventScheduler _autoEventScheduler;
 	private Event _currentEvent;
-	final List<Event> _events = new ArrayList<>();
+	private final List<Event> _events = new ArrayList<>();
+
+	protected static final Logger _log = Logger.getLogger(EventManager.class.getName());	
+	
 	public static final String HTML_PATH = "data/html/event_manager/";
+	public AutoEventScheduler _autoEventScheduler;
 	
 	public static EventManager getInstance()
 	{
@@ -258,6 +260,7 @@ public final class EventManager
 		
 		}
 	}
+	
 	public void onBypassFeedbackAdmin(L2PcInstance player, String command)
 	{
 		ThreadPool.schedule(new Runnable()

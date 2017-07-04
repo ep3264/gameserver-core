@@ -4,7 +4,7 @@ import net.sf.l2j.commons.concurrent.ThreadPool;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 
 /**
- * @author evgeny64
+ * @author dbg
  * Official Website: http://l2je.com 
  * @date 15 февр. 2017 г. 4:59:02 
  */

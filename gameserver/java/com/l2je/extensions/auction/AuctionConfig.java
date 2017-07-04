@@ -6,7 +6,7 @@ import net.sf.l2j.commons.config.ExProperties;
 
 /**
  * @className:AuctionConfig.AuctionConfig.java 
- * @author evgeny64
+ * @author dbg
  * Official Website: http://l2je.com 
  * @date 26 янв. 2017 г. 20:30:42 
  */

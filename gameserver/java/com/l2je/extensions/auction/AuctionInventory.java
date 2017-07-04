@@ -5,8 +5,7 @@ import net.sf.l2j.gameserver.model.item.instance.ItemInstance.ItemLocation;
 import net.sf.l2j.gameserver.model.itemcontainer.ItemContainer;
 
 /**
- * @className:custom.auction.AuctionInventory.java 
- * @author evgeny64
+ * @author dbg
  * Official Website: http://l2je.com 
  * @date 27 янв. 2017 г. 0:32:31 
  */
