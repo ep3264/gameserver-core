@@ -121,30 +121,43 @@ public abstract class AbstractEnchantPacket extends L2GameClientPacket
 			double chance = 0;			
 			
 			if (enchantItem.isArmor()) {
-				// Fix Redist New Armor formula 
-				if(Config.ALT_CHANGE_ENC_ARMOR)
-				{
-					chance = Config.ENCHANT_CHANCE_ARMOR;
-				}
-				else
+				chance = calculateChance(enchantItem, Config.ARMOR_ENCHANT_LEVEL);
+				if(!Config.ALT_CHANGE_ENC_ARMOR)
 				{
 					// Default Armor formula : 0.66^(current-2), chance is lower and lower for each enchant.
-					Math.pow(Config.ENCHANT_CHANCE_ARMOR, (enchantItem.getEnchantLevel() - 2));
-				}				
+					Math.pow(chance, (enchantItem.getEnchantLevel() - 2));
+				}
 			}
-			// Weapon formula is 70% for fighter weapon, 40% for mage weapon. Special rates after +14.
 			else if (enchantItem.isWeapon())
 			{
+				chance = calculateChance(enchantItem, Config.WEAPON_ENCHANT_LEVEL);
 				if (((Weapon) enchantItem.getItem()).isMagical())
-					chance = (enchantItem.getEnchantLevel() > 14) ? Config.ENCHANT_CHANCE_WEAPON_MAGIC_15PLUS : Config.ENCHANT_CHANCE_WEAPON_MAGIC;
-				else
-					chance = (enchantItem.getEnchantLevel() > 14) ? Config.ENCHANT_CHANCE_WEAPON_NONMAGIC_15PLUS : Config.ENCHANT_CHANCE_WEAPON_NONMAGIC;
+					chance *= Config.MAGIC_WEAPON_ENCHANT_MULTIPLIER;
 			}
-			
+			return chance;
+		}
+
+		/**
+		 * @param enchantItem
+		 * @param chancesMap 
+		 * @return
+		 */
+		private static double calculateChance(ItemInstance enchantItem, Map<Integer, Float> chancesMap)
+		{
+			double chance;
+			if (enchantItem.getEnchantLevel() + 1 > chancesMap.size())
+			{
+				chance = chancesMap.get(chancesMap.size());
+			}
+			else
+			{
+				chance = chancesMap.get(enchantItem.getEnchantLevel() + 1);
+			}
 			return chance;
 		}
 	}
 	
+//1
 	/**
 	 * Format : itemId, (isWeapon, isBlessed, isCrystal, grade)<br>
 	 * Allowed items IDs must be sorted by ascending order.

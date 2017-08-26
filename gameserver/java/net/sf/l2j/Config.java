@@ -52,6 +52,7 @@ public final class Config
 	public static final String SERVER_FILE = "./config/server.properties";
 	public static final String SIEGE_FILE = "./config/siege.properties";
 	public static final String CUSTOM_FILE = "./config/extensions/other.ini";
+	public static final String ENCHANT_FILE = "./config/extensions/enchant.ini";
 	// --------------------------------------------------
 	// Clans settings
 	// --------------------------------------------------
@@ -408,17 +409,6 @@ public final class Config
 	public static boolean ALT_GAME_FREIGHTS;
 	public static int ALT_GAME_FREIGHT_PRICE;
 	
-	/** Enchant */
-	public static double ENCHANT_CHANCE_WEAPON_MAGIC;
-	public static double ENCHANT_CHANCE_WEAPON_MAGIC_15PLUS;
-	public static double ENCHANT_CHANCE_WEAPON_NONMAGIC;
-	public static double ENCHANT_CHANCE_WEAPON_NONMAGIC_15PLUS;
-	public static double ENCHANT_CHANCE_ARMOR;
-	public static int ENCHANT_MAX_WEAPON;
-	public static int ENCHANT_MAX_ARMOR;
-	public static int ENCHANT_SAFE_MAX;
-	public static int ENCHANT_SAFE_MAX_FULL;
-	
 	/** Augmentations */
 	public static int AUGMENTATION_NG_SKILL_CHANCE;
 	public static int AUGMENTATION_NG_GLOW_CHANCE;
@@ -506,9 +496,6 @@ public final class Config
 	public static boolean ENABLE_GHOSTS_PLAYERS;
 	public static boolean ENABLE_GHOSTS_SHOUTS;
 	public static boolean GHOSTS_PLAYERS_SIT;
-	// enchant
-	public static boolean ALT_FAILED_ENC_LEVEL;
-	public static boolean ALT_CHANGE_ENC_ARMOR;
 	
 	// oly
 	public static String ALT_OLY_DURATION_TYPES;
@@ -566,6 +553,21 @@ public final class Config
 	public static int PREMIUM_ITEM;
 	public static int PREMIUM_PRICE;
 	
+
+	// --------------------------------------------------
+	// Enchant
+	// --------------------------------------------------
+	public static int ENCHANT_MAX_WEAPON;
+	public static int ENCHANT_MAX_ARMOR;
+	public static int ENCHANT_SAFE_MAX;
+	public static int ENCHANT_SAFE_MAX_FULL;
+	
+	public static Map<Integer, Float> WEAPON_ENCHANT_LEVEL = new HashMap<>();
+	public static Map<Integer, Float> ARMOR_ENCHANT_LEVEL = new HashMap<>();
+	public static double MAGIC_WEAPON_ENCHANT_MULTIPLIER;
+	
+	public static boolean ALT_FAILED_ENC_LEVEL;
+	public static boolean ALT_CHANGE_ENC_ARMOR;
 	// --------------------------------------------------
 	// Server
 	// --------------------------------------------------
@@ -1195,16 +1197,6 @@ public final class Config
 		ALT_GAME_FREIGHTS = players.getProperty("AltGameFreights", false);
 		ALT_GAME_FREIGHT_PRICE = players.getProperty("AltGameFreightPrice", 1000);
 		
-		ENCHANT_CHANCE_WEAPON_MAGIC = players.getProperty("EnchantChanceMagicWeapon", 0.4);
-		ENCHANT_CHANCE_WEAPON_MAGIC_15PLUS = players.getProperty("EnchantChanceMagicWeapon15Plus", 0.2);
-		ENCHANT_CHANCE_WEAPON_NONMAGIC = players.getProperty("EnchantChanceNonMagicWeapon", 0.7);
-		ENCHANT_CHANCE_WEAPON_NONMAGIC_15PLUS = players.getProperty("EnchantChanceNonMagicWeapon15Plus", 0.35);
-		ENCHANT_CHANCE_ARMOR = players.getProperty("EnchantChanceArmor", 0.66);
-		ENCHANT_MAX_WEAPON = players.getProperty("EnchantMaxWeapon", 0);
-		ENCHANT_MAX_ARMOR = players.getProperty("EnchantMaxArmor", 0);
-		ENCHANT_SAFE_MAX = players.getProperty("EnchantSafeMax", 3);
-		ENCHANT_SAFE_MAX_FULL = players.getProperty("EnchantSafeMaxFull", 4);
-		
 		AUGMENTATION_NG_SKILL_CHANCE = players.getProperty("AugmentationNGSkillChance", 15);
 		AUGMENTATION_NG_GLOW_CHANCE = players.getProperty("AugmentationNGGlowChance", 0);
 		AUGMENTATION_MID_SKILL_CHANCE = players.getProperty("AugmentationMidSkillChance", 30);
@@ -1497,8 +1489,6 @@ public final class Config
 		ENABLE_GHOSTS_PLAYERS = Boolean.parseBoolean(custom.getProperty("GhostsPlayersEnable", "False"));
 		GHOSTS_PLAYERS_SIT = Boolean.parseBoolean(custom.getProperty("GhostsPlayersSit", "False"));
 		ENABLE_GHOSTS_SHOUTS=Boolean.parseBoolean(custom.getProperty("GhostsShoutsEnable", "False"));
-		ALT_FAILED_ENC_LEVEL = Boolean.parseBoolean(custom.getProperty("AltEncLvlAfterFail", "false"));
-		ALT_CHANGE_ENC_ARMOR= Boolean.parseBoolean(custom.getProperty("AltChangeEncArmor", "false"));
 		// oly
 		ALT_OLY_RESET_SKILL_TIME = Boolean.parseBoolean(custom.getProperty("AltOlyResetSkillTime", "true"));
 		ALT_OLY_DURATION_TYPES = custom.getProperty("OlympiadDurationType", "Month");
@@ -1545,6 +1535,55 @@ public final class Config
 		PREMIUM_PRICE =  Integer.parseInt(custom.getProperty("PremiumPrice", "1"));
 	}
 	
+	private static final void loadEnchant()
+	{
+		_log.info("Loading: " + ENCHANT_FILE);
+		final ExProperties enchant = initProperties(ENCHANT_FILE);
+		ALT_FAILED_ENC_LEVEL = Boolean.parseBoolean(enchant.getProperty("AltEncLvlAfterFail", "false"));
+		ALT_CHANGE_ENC_ARMOR = Boolean.parseBoolean(enchant.getProperty("AltChangeEncArmor", "false"));
+		ENCHANT_MAX_WEAPON = enchant.getProperty("EnchantMaxWeapon", 0);
+		ENCHANT_MAX_ARMOR = enchant.getProperty("EnchantMaxArmor", 0);
+		ENCHANT_SAFE_MAX = enchant.getProperty("EnchantSafeMax", 3);
+		ENCHANT_SAFE_MAX_FULL = enchant.getProperty("EnchantSafeMaxFull", 4);
+		MAGIC_WEAPON_ENCHANT_MULTIPLIER = enchant.getProperty("MagicWeaponEnchantMultiplier", 1.0);
+		
+		fillEnchantHashMap(WEAPON_ENCHANT_LEVEL, "WeaponEnchantLevel", enchant);
+		fillEnchantHashMap(ARMOR_ENCHANT_LEVEL, "ArmorEnchantLevel", enchant);
+	}
+	
+	private static final void fillEnchantHashMap(Map<Integer, Float> map, String propertyName, ExProperties enchant) {
+		try
+		{
+			String[] propertySplit = enchant.getProperty(propertyName, "").split(";");
+			for (String readData : propertySplit)
+			{
+				String[] writeData = readData.split(",");
+				if (writeData.length != 2)
+				{
+					_log.info("invalid config property " + propertyName);
+				}
+				else
+				{
+					try
+					{
+						map.put(Integer.parseInt(writeData[0]), Float.valueOf(Integer.parseInt(writeData[1]) / 100.0f));
+					} catch (NumberFormatException nfe)
+					{
+						if (!readData.equals(""))
+						{
+							_log.info("invalid config property " + propertyName);
+						}
+					}
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			_log.warning("Failed to Load " + ENCHANT_FILE + " File.");
+		}
+	}
+	
 	public static final void loadGameServer()
 	{
 		_log.info("Loading gameserver configuration files.");
@@ -1572,6 +1611,9 @@ public final class Config
 		
 		// custom settings
 		loadCustom();
+		
+		// load enchant
+		loadEnchant();
 	}
 	
 	public static final void loadLoginServer()
