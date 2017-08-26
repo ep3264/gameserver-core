@@ -1,0 +1,45 @@
+-injars 'D:\Lineage2\PrivateRelease\gameserver\libs\server.jar'
+-outjars 'D:\Lineage2\freerelease\ServerSide\gameserver\libs'
+
+-libraryjars 'C:\Program Files\Java\jre1.8.0_131\lib\jce.jar'
+-libraryjars 'C:\Program Files\Java\jdk1.8.0_131\jre\lib\rt.jar'
+-libraryjars 'D:\Lineage2\PrivateRelease\gameserver\libs\c3p0-0.9.5-pre5.jar'
+-libraryjars 'D:\Lineage2\PrivateRelease\gameserver\libs\mchange-commons-java-0.2.6.2.jar'
+-libraryjars 'D:\Lineage2\PrivateRelease\gameserver\libs\mysql-connector-java-5.1.26.jar'
+-libraryjars 'D:\Lineage2\PrivateRelease\gameserver\libs\nproperty.jar'
+
+-target 1.8
+-dontshrink
+-dontoptimize
+-allowaccessmodification
+-verbose
+
+
+-keep,allowshrinking class net.**
+
+# Keep - Library. Keep all public and protected classes, fields, and methods.
+-keep public class net.** {
+    public protected <fields>;
+    public protected <methods>;
+}
+
+# Also keep - Enumerations. Keep the special static methods that are required in
+# enumeration classes.
+-keepclassmembers enum  * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+
+# Also keep - Database drivers. Keep all implementations of java.sql.Driver.
+-keep class * extends java.sql.Driver
+
+# Also keep - Swing UI L&F. Keep all extensions of javax.swing.plaf.ComponentUI,
+# along with the special 'createUI' method.
+-keep class * extends javax.swing.plaf.ComponentUI {
+    public static javax.swing.plaf.ComponentUI createUI(javax.swing.JComponent);
+}
+
+# Keep names - Native method names. Keep all native class/method names.
+-keepclasseswithmembers,includedescriptorclasses,allowshrinking class * {
+    native <methods>;
+}

@@ -1,0 +1,15 @@
+#Fri Aug 18 02:35:11 EEST 2017
+override.workspace.settings=true
+connection.arguments=
+connection.jvm.arguments=
+build.commands=org.eclipse.jdt.core.javabuilder
+connection.project.dir=
+gradle.user.home=
+natures=org.eclipse.jdt.core.javanature
+offline.mode=false
+build.scans.enabled=false
+eclipse.preferences.version=1
+connection.java.home=null
+derived.resources=.gradle,build
+connection.gradle.distribution=GRADLE_DISTRIBUTION(WRAPPER)
+project.path=\:
