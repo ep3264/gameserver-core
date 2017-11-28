@@ -14,7 +14,7 @@
  */
 package net.sf.l2j.gameserver.network.clientpackets;
 
-import com.l2je.extensions.MenuManager;
+import com.l2je.extensions.Menu;
 import com.l2je.extensions.PremiumManager;
 import com.l2je.extensions.events.EventManager;
 
@@ -135,7 +135,7 @@ public final class RequestBypassToServer extends L2GameClientPacket
 			else if (_command.startsWith("menu_"))
 			{
 				String command =_command.substring(5).trim();
-				MenuManager.getInstance().onBypassFeedback(activeChar,command);
+				Menu.getInstance().onBypassFeedback(activeChar,command);
 			}
 			else if (_command.startsWith("player_help "))
 			{

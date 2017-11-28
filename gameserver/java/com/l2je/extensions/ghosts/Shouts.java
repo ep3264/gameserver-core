@@ -2,6 +2,7 @@ package com.l2je.extensions.ghosts;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import net.sf.l2j.commons.random.Rnd;
 import net.sf.l2j.gameserver.datatables.MapRegionTable;
@@ -12,19 +13,15 @@ import net.sf.l2j.gameserver.network.serverpackets.CreatureSay;
 /**
  * @author redist
  */
-public class GhostsShouts implements Runnable
+public class Shouts implements Runnable
 {
-	private static class SingletonHolder
+	protected ArrayList<L2PcInstance> ghosts = new ArrayList<>();
+	public Shouts(ArrayList<L2PcInstance> ghosts)
 	{
-		protected static final GhostsShouts _instance = new GhostsShouts();
+		super();
+		this.ghosts = ghosts;
 	}
-	
-	public static GhostsShouts getInstance()
-	{
-		return SingletonHolder._instance;
-		
-	}
-	
+
 	private static final String[] MESSAGES =
 	{		
 		"!!Набор в клан  !!!!",
@@ -998,7 +995,7 @@ public class GhostsShouts implements Runnable
 	{
 		try
 		{
-			CreatureSay cs = new CreatureSay(0, getRandomChat(), getRandomPlayer(), getRandomText());
+			CreatureSay cs = new CreatureSay(0, getRandomChat(), getRandomGhostName(), getRandomText());
 			
 			L2PcInstance player = null;
 			player = getNewFake();
@@ -1020,10 +1017,24 @@ public class GhostsShouts implements Runnable
 			t.printStackTrace();
 		}
 	}
-	
-	private static String getRandomPlayer()
+	private L2PcInstance getRandomGhost()
 	{
-		return GhostsPlayers.getInstance().getRandomGhostName();
+		Random random = new Random();
+		if (ghosts.size() > 0)
+		{
+			return ghosts.get(random.nextInt(ghosts.size()));
+		}
+		return null;
+	}
+	
+	private  String getRandomGhostName()
+	{ 
+		L2PcInstance l2PcInstance = getRandomGhost();
+		if (l2PcInstance == null)
+		{
+			return "superNagibator2001";
+		}
+		return l2PcInstance.getName();
 	}
 	
 	private static String getRandomText()

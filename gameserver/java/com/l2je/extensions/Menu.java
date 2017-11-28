@@ -13,14 +13,14 @@ import net.sf.l2j.gameserver.network.serverpackets.NpcHtmlMessage;
  * @author dbg Official Website: http://l2je.com
  * @date 14 февр. 2017 г. 10:57:13
  */
-public class MenuManager
+public class Menu
 {
 	private static class SingletonHolder
 	{
-		protected static final MenuManager _instance = new MenuManager();
+		protected static final Menu _instance = new Menu();
 	}
 	
-	public static final MenuManager getInstance()
+	public static final Menu getInstance()
 	{
 		return SingletonHolder._instance;
 	}

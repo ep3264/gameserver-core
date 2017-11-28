@@ -1,8 +1,8 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
 
-def pathPrivateRelease = 'D:/Lineage2/PrivateRelease/gameserver/libs'
-def proguardCommandLine = "java -jar D:/Tools/proguard5.3.2/lib/proguard.jar @D:/Lineage2/ServerSourceHg/proguardconfig"
+def pathPrivateRelease = 'D:/Lineage2/interlude/server_side/gameserver/libs'
+def proguardCommandLine = "java -jar D:/Tools/proguard5.3.2/lib/proguard.jar @D:/Lineage2/interlude/core/proguardconfig"
 compileJava.options.encoding = 'UTF-8'
 repositories {
     mavenCentral()

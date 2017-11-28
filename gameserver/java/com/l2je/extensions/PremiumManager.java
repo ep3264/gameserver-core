@@ -76,7 +76,7 @@ public class PremiumManager
 		{
 			addPremiumServices(player, player.getAccountName(), countDays);
 			player.sendMessage("Премиум активирован");
-			MenuManager.getInstance().showChatWindow(player);
+			Menu.getInstance().showChatWindow(player);
 		}
 		else
 		{

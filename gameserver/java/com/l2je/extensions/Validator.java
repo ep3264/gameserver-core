@@ -12,7 +12,7 @@ import java.net.URL;
  */
 public class Validator
 {
-	private static String ID = "Valery Podolkhov";
+	private static String ID = "123213123";
 	private static String URL_STR = "http://donov.net/clients.txt";
 	
 	public static boolean run()

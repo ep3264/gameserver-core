@@ -21,8 +21,8 @@ import com.l2je.extensions.events.EventConfig;
 import com.l2je.extensions.events.EventManager;
 import com.l2je.extensions.events.ew.EnchantWar;
 import com.l2je.extensions.events.tvt.TvT;
-import com.l2je.extensions.ghosts.GhostsPlayers;
-import com.l2je.extensions.ghosts.GhostsShouts;
+import com.l2je.extensions.ghosts.GhostsEngine;
+import com.l2je.extensions.ghosts.Shouts;
 import com.l2je.protection.ProtectionConfig;
 import com.l2je.protection.Punisher;
 import com.l2je.protection.crypt.Blowfish;
@@ -331,11 +331,7 @@ public class GameServer
 		StringUtil.printSection("Extensions");
 		if(Config.ENABLE_GHOSTS_PLAYERS)
 		{			
-			GhostsPlayers.getInstance().loadGhosts();
-		}		
-		if(Config.ENABLE_GHOSTS_SHOUTS){
-			_log.info("GhostsShouts: Activated.");
-		ThreadPool.scheduleAtFixedRate(GhostsShouts.getInstance(), GhostsShouts.getIntialDelay(), GhostsShouts.getShoutRndTime());
+			GhostsEngine.getInstance().init();
 		}		
 	
 		AuctionConfig.init();

@@ -18,13 +18,18 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.HashSet;
 
+import net.sf.l2j.Config;
 import net.sf.l2j.L2DatabaseFactory;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
+import net.sf.l2j.gameserver.model.item.instance.ItemInstance;
+import net.sf.l2j.gameserver.network.SystemMessageId;
+import net.sf.l2j.gameserver.network.serverpackets.SystemMessage;
 
 /**
- * @author Redist
- *
+ * @author HandOfGod
  */
 public class ColorManager
 {
@@ -38,14 +43,13 @@ public class ColorManager
 		return SingletonHolder._instance;
 	}
 	
-	private static final String INSERT_NAME_COLOR ="INSERT INTO character_colors (char_id, name_color, title_color) VALUES (?,?,?)"
-		+ "ON DUPLICATE KEY UPDATE name_color=VALUES(name_color)";
-	private static final String INSERT_TITLE_COLOR  ="INSERT INTO character_colors (char_id, name_color, title_color) VALUES (?,?,?)"
-		+ "ON DUPLICATE KEY UPDATE title_color=VALUES(title_color)";
-	private static final String SELECT_COLOR ="SELECT name_color, title_color FROM character_colors WHERE char_id=?";
+	private static final String INSERT_NAME_COLOR = "INSERT INTO character_colors (char_id, name_color, title_color) VALUES (?,?,?)" + "ON DUPLICATE KEY UPDATE name_color=VALUES(name_color)";
+	private static final String INSERT_TITLE_COLOR = "INSERT INTO character_colors (char_id, name_color, title_color) VALUES (?,?,?)" + "ON DUPLICATE KEY UPDATE title_color=VALUES(title_color)";
+	private static final String SELECT_COLOR = "SELECT name_color, title_color FROM character_colors WHERE char_id=?";
+	public static final HashSet<String> ALLOWED_COLORS = new HashSet<>(Arrays.asList("009900", "007fff", "ff00ff", "ffff00", "ff0000", "ff9900", "93db70", "9f9f9f", "00ffff"));
 	
-	public void restoreColors(L2PcInstance player) 
-	{		
+	public void restoreColors(L2PcInstance player)
+	{
 		try (Connection con = L2DatabaseFactory.getInstance().getConnection())
 		{
 			PreparedStatement statement = con.prepareStatement(SELECT_COLOR);
@@ -65,6 +69,7 @@ public class ColorManager
 			e.printStackTrace();
 		}
 	}
+	
 	public void storeNameColor(L2PcInstance player)
 	{
 		try (Connection con = L2DatabaseFactory.getInstance().getConnection())
@@ -77,10 +82,11 @@ public class ColorManager
 			statement.close();
 		}
 		catch (SQLException e)
-		{		
+		{
 			e.printStackTrace();
 		}
 	}
+	
 	public void storeTitleColor(L2PcInstance player)
 	{
 		try (Connection con = L2DatabaseFactory.getInstance().getConnection())
@@ -93,8 +99,83 @@ public class ColorManager
 			statement.close();
 		}
 		catch (SQLException e)
-		{		
+		{
 			e.printStackTrace();
+		}
+	}
+	
+	private static boolean payDyeing(L2PcInstance player)
+	{
+		ItemInstance item = player.getInventory().getItemByItemId(Config.COLOR_CHANGE_ITEM);
+		if (item == null || item.getCount() < Config.COLOR_CHANGE_PRICE)
+		{
+			player.sendPacket(SystemMessage.getSystemMessage(SystemMessageId.INCORRECT_ITEM_COUNT));
+			return false;
+		}
+		if (!player.destroyItem("Color Manager", item, Config.COLOR_CHANGE_PRICE, player, true))
+		{
+			return false;
+		}
+		return true;
+	}
+	
+	
+	public void setTitleColor(L2PcInstance player, String command)
+	{
+		int color = 0xFFFFFF;
+		try
+		{
+			String choice = command.substring(14);
+			if (ALLOWED_COLORS.contains(choice))
+			{
+				color = Integer.decode("0x" + choice);
+			}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	
+		setTitleColor(player, color);
+	}
+	
+	public void setTitleColor(L2PcInstance player, int color)
+	{
+		if (payDyeing(player))
+		{
+			player.getAppearance().setTitleColor(color);
+			storeTitleColor(player);
+			player.broadcastUserInfo();
+		}
+	}
+	
+	public void setNameColor(L2PcInstance player, String command)
+	{
+		int color = 0xFFFFFF;
+		try
+		{
+			String choice = command.substring(13);
+			if (ALLOWED_COLORS.contains(choice))
+			{
+				color = Integer.decode("0x" + choice);
+			}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	
+		setNameColor(player, color);
+	}
+	
+	
+	public void setNameColor(L2PcInstance player, int color)
+	{
+		if (payDyeing(player))
+		{
+			player.getAppearance().setNameColor(color);
+			storeNameColor(player);
+			player.broadcastUserInfo();
 		}
 	}
 }

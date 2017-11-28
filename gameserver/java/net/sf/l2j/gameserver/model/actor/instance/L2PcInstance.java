@@ -17,7 +17,7 @@ package net.sf.l2j.gameserver.model.actor.instance;
 import com.l2je.extensions.ColorManager;
 import com.l2je.extensions.events.Event;
 import com.l2je.extensions.events.EventManager;
-import com.l2je.extensions.ghosts.GhostsPlayers;
+import com.l2je.extensions.ghosts.GhostsEngine;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10696,7 +10696,7 @@ public final class L2PcInstance extends L2Playable
 	public void unsetGhost()
 	{
 		_isGhost=false;
-		GhostsPlayers.getInstance().deleteGhost(this);
+		GhostsEngine.getInstance().deleteGhost(this);
 	}
 	public void setGhost()
 	{
@@ -10707,7 +10707,7 @@ public final class L2PcInstance extends L2Playable
 		getClient().stopAutoSave();
 		store();
 		_isGhost=true;
-		GhostsPlayers.getInstance().addGhost(this);
+		GhostsEngine.getInstance().addGhost(this);
 		closeNetConnection(true);			
 	}
 	// Остановить опыт
@@ -10786,9 +10786,10 @@ public final class L2PcInstance extends L2Playable
 
 	public MultiValueSet<String> getAccountData()
 	{
-		if(getClient()!=null)
+		if (getClient() != null)
+		{
 			return getClient().getAccountData();
-
+		}
 		return _fakeAccData;
 	}
 	

@@ -3,15 +3,12 @@ package net.sf.l2j.gameserver.model.actor.instance;
 import com.l2je.extensions.casino.Roulette;
 import java.util.StringTokenizer;
 
-import net.sf.l2j.commons.lang.Language;
-import net.sf.l2j.commons.lang.StringUtil;
 import net.sf.l2j.gameserver.model.actor.template.NpcTemplate;
 import net.sf.l2j.gameserver.network.serverpackets.NpcHtmlMessage;
 
 /**
  * 
- * @author dbg
- * Official Website: http://l2je.com 
+ * @author HandOfGod
  * @date 17 февр. 2017 г. 14:17:10
  */
 public class CustomL2ShopInstance extends L2NpcInstance

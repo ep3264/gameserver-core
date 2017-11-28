@@ -15,7 +15,7 @@
 package net.sf.l2j.gameserver;
 
 import com.l2je.extensions.events.EventManager;
-import com.l2je.extensions.ghosts.GhostsPlayers;
+import com.l2je.extensions.ghosts.GhostsEngine;
 import com.l2je.protection.ProtectionConfig;
 import com.l2je.protection.hwid.HWIDManager;
 
@@ -196,7 +196,7 @@ public class Shutdown extends Thread
 			
 			if(Config.ENABLE_GHOSTS_PLAYERS)
 			{
-				GhostsPlayers.getInstance().saveGhosts();
+				GhostsEngine.getInstance().shutdown();
 			}
 			// Schemes save.
 			BufferTable.getInstance().saveSchemes();

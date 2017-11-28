@@ -31,7 +31,7 @@ public class VoicedCommandHandler
 		registerHandler(new Offline());	
 		registerHandler(new Ghost());
 		registerHandler(new Help());
-		registerHandler(new Menu());
+		registerHandler(new MenuCommand());
 	}
 	
 	
