@@ -1,4 +1,4 @@
-package com.l2je.extensions;
+package com.l2je.extensions.systems;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -15,27 +15,24 @@ import net.sf.l2j.gameserver.network.serverpackets.SystemMessage;
 
 
 /**
- * Developers: L2JE Team<br>
- * Official Website: http://l2je.com <br>
- * <br>
  * Author: dbg<br>
  * Date: 3 нояб. 2015 г.<br>
  * Time: 14:06:57<br>
  * <br>
  */
-public class Buffer
+public class BufferSystem extends BuyableSystem
 {
 	private static class SingletonHolder
 	{
-		protected static final Buffer _instance = new Buffer();
+		protected static final BufferSystem _instance = new BufferSystem();
 	}
 	
-	public static final Buffer getInstance()
+	public static final BufferSystem getInstance()
 	{
 		return SingletonHolder._instance;
 	}
-	protected static final Logger _log = Logger.getLogger(Buffer.class.getName());
-	public Buffer()
+	protected static final Logger _log = Logger.getLogger(BufferSystem.class.getName());
+	public BufferSystem()
 	{
 	}
 	public static final  HashSet <Integer> ALLOWED_PLAYER_BUFFS = new HashSet<>(
@@ -245,7 +242,7 @@ public class Buffer
 				{
 					getBuffSet(l2Character, VIP_FBUFF);
 				}
-				else if (pay(activeChar))
+				else if (buyVipBuff(activeChar))
 				{
 					getBuffSet(l2Character, VIP_FBUFF);
 				}
@@ -256,7 +253,7 @@ public class Buffer
 				{
 					getBuffSet(l2Character, VIP_MBUFF);
 				}
-				else if (pay(activeChar))
+				else if (buyVipBuff(activeChar))
 				{
 					getBuffSet(l2Character, VIP_MBUFF);
 				}
@@ -282,18 +279,8 @@ public class Buffer
 		}
 	}
 	
-	private static boolean pay(L2PcInstance player)
+	protected boolean buyVipBuff(L2PcInstance player)
 	{
-		ItemInstance item = player.getInventory().getItemByItemId(Config.VIP_BUFF_ITEM);
-		if (item == null || item.getCount() < Config.VIP_BUFF_PRICE)
-		{
-			player.sendPacket(SystemMessage.getSystemMessage(SystemMessageId.INCORRECT_ITEM_COUNT));
-			return false;
-		}
-		if (!player.destroyItem("Buffer", item, Config.VIP_BUFF_PRICE, player, true))
-		{
-			return false;
-		}
-		return true;
+		return buy(player, Config.VIP_BUFF_ITEM,  Config.VIP_BUFF_PRICE, "Buffer");
 	}
 }

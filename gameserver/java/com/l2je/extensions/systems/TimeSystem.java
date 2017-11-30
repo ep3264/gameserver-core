@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.l2je.extensions;
+package com.l2je.extensions.systems;
 
 /**
  * @author redist
@@ -21,11 +21,11 @@ package com.l2je.extensions;
 import java.util.concurrent.TimeUnit;
 
 
-public final class L2System
+public final class TimeSystem
 {
 	private static final long ZERO = System.nanoTime();
 
-	private L2System()
+	private TimeSystem()
 	{
 	}
 

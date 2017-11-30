@@ -14,7 +14,8 @@
  */
 package net.sf.l2j.gameserver.instancemanager;
 
-import com.l2je.extensions.RaidBossInfo;
+import com.l2je.extensions.systems.RaidBossInfoSystem;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -73,7 +74,7 @@ public class GrandBossManager
 				
 				_bossStatus.put(bossId, rset.getInt("status"));
 				_storedInfo.put(bossId, info);
-				RaidBossInfo.getInstance().setEpicRespawnDate(bossId,info.getLong("respawn_time"));
+				RaidBossInfoSystem.getInstance().setEpicRespawnDate(bossId,info.getLong("respawn_time"));
 			}
 			rset.close();
 			statement.close();
@@ -132,7 +133,7 @@ public class GrandBossManager
 	public void setStatsSet(int bossId, StatsSet info)
 	{
 		_storedInfo.put(bossId, info);			
-		RaidBossInfo.getInstance().setEpicRespawnDate(bossId,info.getLong("respawn_time"));
+		RaidBossInfoSystem.getInstance().setEpicRespawnDate(bossId,info.getLong("respawn_time"));
 		updateDb(bossId, false);
 	}
 	

@@ -14,7 +14,7 @@
  */
 package net.sf.l2j.gameserver.scripting.scripts.ai.individual;
 
-import com.l2je.extensions.L2System;
+import com.l2je.extensions.systems.TimeSystem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -2032,7 +2032,7 @@ public class Frintezza extends AbstractNpcAI
 		}
 		else if (event.equalsIgnoreCase("frintezza_despawn"))
 		{
-			temp = (L2System.milliTime() - _LastAction);
+			temp = (TimeSystem.milliTime() - _LastAction);
 			if (temp > Config.DESPAWN_TIME_FRINTEZZA)
 			{
 				for (L2Character cha : _Zone.getCharactersInside())
@@ -2155,7 +2155,7 @@ public class Frintezza extends AbstractNpcAI
 					startQuestTimer("room_final", Config.FRINTEZZA_TIME_CHALLENGE, null, null, false);
 					startQuestTimer("frintezza_despawn", 60000, null, null, true);
 					
-					_LastAction = L2System.milliTime();
+					_LastAction = TimeSystem.milliTime();
 					
 					if (Config.BYPASS_FRINTEZZA_PARTIES_CHECK)
 					{
@@ -2306,7 +2306,7 @@ public class Frintezza extends AbstractNpcAI
 	@Override
 	public String onAttack(L2Npc npc, L2PcInstance attacker, int damage, boolean isPet, L2Skill l2Skill)
 	{
-		_LastAction = L2System.milliTime();
+		_LastAction = TimeSystem.milliTime();
 		if (npc.getNpcId() == FRINTEZZA)
 		{
 			npc.setCurrentHpMp(npc.getMaxHp(), 0);

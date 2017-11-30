@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.l2je.extensions;
+package com.l2je.extensions.systems;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -24,21 +24,18 @@ import java.util.HashSet;
 import net.sf.l2j.Config;
 import net.sf.l2j.L2DatabaseFactory;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
-import net.sf.l2j.gameserver.model.item.instance.ItemInstance;
-import net.sf.l2j.gameserver.network.SystemMessageId;
-import net.sf.l2j.gameserver.network.serverpackets.SystemMessage;
 
 /**
  * @author HandOfGod
  */
-public class ColorManager
+public class ColorSystem extends BuyableSystem
 {
-	private static class SingletonHolder
+	private static class SingletonHolder 
 	{
-		protected static final ColorManager _instance = new ColorManager();
+		protected static final ColorSystem _instance = new ColorSystem();
 	}
 	
-	public static ColorManager getInstance()
+	public static ColorSystem getInstance()
 	{
 		return SingletonHolder._instance;
 	}
@@ -65,7 +62,6 @@ public class ColorManager
 		}
 		catch (SQLException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -104,19 +100,9 @@ public class ColorManager
 		}
 	}
 	
-	private static boolean payDyeing(L2PcInstance player)
+	private boolean payDyeing(L2PcInstance player)
 	{
-		ItemInstance item = player.getInventory().getItemByItemId(Config.COLOR_CHANGE_ITEM);
-		if (item == null || item.getCount() < Config.COLOR_CHANGE_PRICE)
-		{
-			player.sendPacket(SystemMessage.getSystemMessage(SystemMessageId.INCORRECT_ITEM_COUNT));
-			return false;
-		}
-		if (!player.destroyItem("Color Manager", item, Config.COLOR_CHANGE_PRICE, player, true))
-		{
-			return false;
-		}
-		return true;
+		 return buy(player, Config.COLOR_CHANGE_ITEM, Config.COLOR_CHANGE_PRICE, "Color Sytems");
 	}
 	
 	

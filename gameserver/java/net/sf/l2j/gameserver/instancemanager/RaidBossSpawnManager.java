@@ -14,7 +14,7 @@
  */
 package net.sf.l2j.gameserver.instancemanager;
 
-import com.l2je.extensions.RaidBossInfo;
+import com.l2je.extensions.systems.RaidBossInfoSystem;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -142,8 +142,8 @@ public class RaidBossSpawnManager
 				_log.info("RaidBoss: " + raidboss.getName() + " has spawned.");
 				
 				_bosses.put(bossId, raidboss);
-				RaidBossInfo.getInstance().announce(raidboss.getName() + " жив!");
-				RaidBossInfo.getInstance().setRespawnTime(bossId, 0L);
+				RaidBossInfoSystem.getInstance().announce(raidboss.getName() + " жив!");
+				RaidBossInfoSystem.getInstance().setRespawnTime(bossId, 0L);
 			}
 			
 			_schedules.remove(bossId);
@@ -172,7 +172,7 @@ public class RaidBossSpawnManager
 			if (!_schedules.containsKey(boss.getNpcId()))
 			{
 				_log.info("RaidBoss: " + boss.getName() + " - " + new SimpleDateFormat("dd-MM-yyyy HH:mm").format(respawnTime) + " (" + respawnDelay + "h).");
-				RaidBossInfo.getInstance().setRespawnTime(boss.getNpcId(), respawnTime);
+				RaidBossInfoSystem.getInstance().setRespawnTime(boss.getNpcId(), respawnTime);
 							
 				_schedules.put(boss.getNpcId(), ThreadPool.schedule(new spawnSchedule(boss.getNpcId()), respawnDelay * 3600000));
 				updateDb();
@@ -181,7 +181,7 @@ public class RaidBossSpawnManager
 		else
 		{
 			boss.setRaidStatus(StatusEnum.ALIVE);
-			RaidBossInfo.getInstance().setRespawnTime(boss.getNpcId(), 0L);
+			RaidBossInfoSystem.getInstance().setRespawnTime(boss.getNpcId(), 0L);
 			info.set("currentHP", boss.getCurrentHp());
 			info.set("currentMP", boss.getCurrentMp());
 			info.set("respawnTime", 0L);
@@ -229,7 +229,7 @@ public class RaidBossSpawnManager
 				info.set("respawnTime", 0L);
 				
 				_storedInfo.put(bossId, info);
-				RaidBossInfo.getInstance().setRespawnTime(bossId, 0L);
+				RaidBossInfoSystem.getInstance().setRespawnTime(bossId, 0L);
 			}
 		}
 		else
@@ -237,7 +237,7 @@ public class RaidBossSpawnManager
 			long spawnTime = respawnTime - Calendar.getInstance().getTimeInMillis();
 			_schedules.put(bossId, ThreadPool.schedule(new spawnSchedule(bossId), spawnTime));
 			
-          RaidBossInfo.getInstance().setRespawnTime(bossId, respawnTime);
+          RaidBossInfoSystem.getInstance().setRespawnTime(bossId, respawnTime);
 		}
 		
 		_spawns.put(bossId, spawnDat);
@@ -290,7 +290,7 @@ public class RaidBossSpawnManager
 		if (_storedInfo.containsKey(bossId))
 			_storedInfo.remove(bossId);
 			
-		RaidBossInfo.getInstance().removeBossInfo(bossId);
+		RaidBossInfoSystem.getInstance().removeBossInfo(bossId);
 		
 		if (updateDb)
 		{
@@ -422,7 +422,7 @@ public class RaidBossSpawnManager
 		
 		_storedInfo.clear();
 		_spawns.clear();
-		RaidBossInfo.getInstance().cleanUp();
+		RaidBossInfoSystem.getInstance().cleanUp();
 	}
 	
 	private static class SingletonHolder

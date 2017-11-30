@@ -14,9 +14,9 @@
  */
 package net.sf.l2j.gameserver.network.clientpackets;
 
-import com.l2je.extensions.Menu;
-import com.l2je.extensions.PremiumManager;
 import com.l2je.extensions.events.EventManager;
+import com.l2je.extensions.systems.MenuSystem;
+import com.l2je.extensions.systems.PremiumSystem;
 
 import java.util.StringTokenizer;
 import java.util.logging.Level;
@@ -135,7 +135,7 @@ public final class RequestBypassToServer extends L2GameClientPacket
 			else if (_command.startsWith("menu_"))
 			{
 				String command =_command.substring(5).trim();
-				Menu.getInstance().onBypassFeedback(activeChar,command);
+				MenuSystem.getInstance().onBypassFeedback(activeChar,command);
 			}
 			else if (_command.startsWith("player_help "))
 			{
@@ -149,7 +149,7 @@ public final class RequestBypassToServer extends L2GameClientPacket
 			else if (_command.startsWith("premium"))
 			{
 				String command =_command.substring(7).trim();
-				PremiumManager.onBypassFeedback(activeChar,command);
+				PremiumSystem.getInstance().onBypassFeedback(activeChar, command);
 			}
 			// Navigate throught Manor windows
 			else if (_command.startsWith("manor_menu_select?"))

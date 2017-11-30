@@ -14,7 +14,7 @@
  */
 package net.sf.l2j.gameserver.model.actor.instance;
 
-import com.l2je.extensions.RaidBossInfo;
+import com.l2je.extensions.systems.RaidBossInfoSystem;
 
 /**
  * @author user
@@ -92,7 +92,7 @@ public class CustomRaidBossInfoInstance extends L2NpcInstance
 		for (int rboss : RBOSSES)
 		{
 			
-			long delay = RaidBossInfo.getInstance().getRespawnTime(rboss)- Calendar.getInstance().getTimeInMillis();
+			long delay = RaidBossInfoSystem.getInstance().getRespawnTime(rboss)- Calendar.getInstance().getTimeInMillis();
 			String name = NpcTable.getInstance().getTemplate(rboss).getName();
 			String level =Byte.toString(NpcTable.getInstance().getTemplate(rboss).getLevel());			
 			if (delay <= 0)
@@ -113,7 +113,7 @@ public class CustomRaidBossInfoInstance extends L2NpcInstance
 		for (int rboss : EBOSSES)
 		{
 			
-			long delay = RaidBossInfo.getInstance().getEpicRespawnDate(rboss)- Calendar.getInstance().getTimeInMillis();
+			long delay = RaidBossInfoSystem.getInstance().getEpicRespawnDate(rboss)- Calendar.getInstance().getTimeInMillis();
 			String name = NpcTable.getInstance().getTemplate(rboss).getName().toUpperCase();
 			String level =Byte.toString(NpcTable.getInstance().getTemplate(rboss).getLevel());			
 			if (delay <= 0)

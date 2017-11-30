@@ -1,4 +1,4 @@
-package com.l2je.extensions;
+package com.l2je.extensions.systems;
 
 import com.l2je.extensions.acp.AcpManager;
 import com.l2je.extensions.events.EventManager;
@@ -13,14 +13,14 @@ import net.sf.l2j.gameserver.network.serverpackets.NpcHtmlMessage;
  * @author dbg Official Website: http://l2je.com
  * @date 14 февр. 2017 г. 10:57:13
  */
-public class Menu
+public class MenuSystem
 {
 	private static class SingletonHolder
 	{
-		protected static final Menu _instance = new Menu();
+		protected static final MenuSystem _instance = new MenuSystem();
 	}
 	
-	public static final Menu getInstance()
+	public static final MenuSystem getInstance()
 	{
 		return SingletonHolder._instance;
 	}
@@ -42,7 +42,7 @@ public class Menu
 		if (activeChar.isPremium())
 		{
 			StringBuilder sb = new StringBuilder();
-			StringUtil.append(sb, "<td><font color=\"LEVEL\"> ", PremiumManager.getPremiumEndDate(activeChar), "</font></td>");
+			StringUtil.append(sb, "<td><font color=\"LEVEL\"> ", PremiumSystem.getPremiumEndDate(activeChar), "</font></td>");
 			premiumInfo = sb.toString();
 		}
 		html.basicReplace("%premium%", premiumInfo);
@@ -159,7 +159,7 @@ public class Menu
 		}
 		else if (command.equals("premium"))
 		{
-			PremiumManager.showChatWindow(activeChar);
+			PremiumSystem.showChatWindow(activeChar);
 			return;
 		}
 		showChatWindow(activeChar);

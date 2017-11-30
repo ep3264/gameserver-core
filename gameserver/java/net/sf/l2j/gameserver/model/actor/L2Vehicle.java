@@ -14,7 +14,7 @@
  */
 package net.sf.l2j.gameserver.model.actor;
 
-import com.l2je.extensions.L2System;
+import com.l2je.extensions.systems.TimeSystem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -142,7 +142,7 @@ public class L2Vehicle extends L2Character
 						if (distance > 1) // vertical movement heading check
 							setHeading(Util.calculateHeadingFrom(getX(), getY(), point.x, point.y));
 						
-						m._moveStartTime = L2System.milliTime();
+						m._moveStartTime = TimeSystem.milliTime();
 						_move = m;
 						
 						MovementTaskManager.getInstance().add(this);

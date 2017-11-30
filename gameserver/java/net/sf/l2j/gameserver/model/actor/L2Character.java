@@ -14,8 +14,8 @@
  */
 package net.sf.l2j.gameserver.model.actor;
 
-import com.l2je.extensions.L2System;
 import com.l2je.extensions.events.EventManager;
+import com.l2je.extensions.systems.TimeSystem;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -610,7 +610,7 @@ public abstract class L2Character extends L2Object
 				}
 				
 				// Verify if the bow can be use
-				final long timeToNextBowAttack = _disableBowAttackEndTime - L2System.milliTime();
+				final long timeToNextBowAttack = _disableBowAttackEndTime - TimeSystem.milliTime();
 				if (timeToNextBowAttack > 0)
 				{
 					// Cancel the action because the bow can't be re-use at this moment
@@ -636,7 +636,7 @@ public abstract class L2Character extends L2Object
 			}
 			else if (this instanceof L2Npc)
 			{
-				if (_disableBowAttackEndTime > L2System.milliTime()) 
+				if (_disableBowAttackEndTime > TimeSystem.milliTime()) 
 				{
 					return;					
 				}
@@ -651,7 +651,7 @@ public abstract class L2Character extends L2Object
 		
 		// Get the Attack Speed of the L2Character (delay (in milliseconds) before next attack)
 		int timeAtk = calculateTimeBetweenAttacks(target, weaponItemType);
-		_attackEndTime = L2System.milliTime()+ timeAtk;
+		_attackEndTime = TimeSystem.milliTime()+ timeAtk;
 		
 		// Create Attack
 		Attack attack = new Attack(this, isChargedShot(ShotType.SOULSHOT), (weaponItem != null) ? weaponItem.getCrystalType().getId() : 0);
@@ -824,7 +824,7 @@ public abstract class L2Character extends L2Object
 		ThreadPool.schedule(new HitTask(target, damage1, crit1, miss1, attack.soulshot, shld1), sAtk);
 		
 		// Calculate and set the disable delay of the bow in function of the Attack Speed
-		_disableBowAttackEndTime = L2System.milliTime() + (sAtk + reuse);
+		_disableBowAttackEndTime = TimeSystem.milliTime() + (sAtk + reuse);
 		
 		// Add this hit to the Server-Client packet Attack
 		attack.hit(attack.createHit(target, damage1, miss1, crit1, shld1));
@@ -1209,7 +1209,7 @@ public abstract class L2Character extends L2Object
 		else
 		{
 			setIsCastingNow(true);
-			_castInterruptTime = L2System.milliTime() + hitTime / 2;
+			_castInterruptTime = TimeSystem.milliTime() + hitTime / 2;
 			setLastSkillCast(skill);
 		}
 		
@@ -1755,7 +1755,7 @@ public abstract class L2Character extends L2Object
 	 */
 	public boolean isAttackingDisabled()
 	{
-		return isFlying() || isStunned() || isImmobileUntilAttacked() || isSleeping() || _attackEndTime > L2System.milliTime() || isParalyzed() || isAlikeDead() || isCoreAIDisabled();
+		return isFlying() || isStunned() || isImmobileUntilAttacked() || isSleeping() || _attackEndTime > TimeSystem.milliTime() || isParalyzed() || isAlikeDead() || isCoreAIDisabled();
 	}
 	
 	public final Calculator[] getCalculators()
@@ -3022,7 +3022,7 @@ public abstract class L2Character extends L2Object
 	 */
 	public final boolean canAbortCast()
 	{
-		return _castInterruptTime > L2System.milliTime();
+		return _castInterruptTime > TimeSystem.milliTime();
 		
 	}
 	
@@ -3031,7 +3031,7 @@ public abstract class L2Character extends L2Object
 	 */
 	public boolean isAttackingNow()
 	{
-		return _attackEndTime > L2System.milliTime();
+		return _attackEndTime > TimeSystem.milliTime();
 	}
 	
 	/**
@@ -3130,7 +3130,7 @@ public abstract class L2Character extends L2Object
 		}
 		
 		// get current time
-		final long time = L2System.milliTime();
+		final long time = TimeSystem.milliTime();
 		
 		// Check if the position has already been calculated
 		if (m._moveTimestamp > time)
@@ -3581,7 +3581,7 @@ public abstract class L2Character extends L2Object
 		// Calculate and set the heading of the L2Character
 		newMd._heading = 0;
 		
-		newMd._moveStartTime = L2System.milliTime();
+		newMd._moveStartTime = TimeSystem.milliTime();
 		
 		// set new MoveData as character MoveData
 		_move = newMd;
@@ -3638,7 +3638,7 @@ public abstract class L2Character extends L2Object
 		}
 		
 		newMd._heading = 0;
-		newMd._moveStartTime = L2System.milliTime();
+		newMd._moveStartTime = TimeSystem.milliTime();
 		
 		// set new MoveData as character MoveData
 		_move = newMd;

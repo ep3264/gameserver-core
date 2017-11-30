@@ -14,7 +14,7 @@
  */
 package net.sf.l2j.gameserver.model.actor.instance;
 
-import com.l2je.extensions.Buffer;
+import com.l2je.extensions.systems.BufferSystem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +78,7 @@ public class CustomL2BufferInstance extends L2NpcInstance
 		else if (currentCommand.startsWith("Buff"))
 		{
 			String choice = st.nextToken();
-			Buffer.getInstance().getBuff(player, choice, false);
+			BufferSystem.getInstance().getBuff(player, choice, false);
 			int val = 0;
 			try
 			{
@@ -206,7 +206,7 @@ public class CustomL2BufferInstance extends L2NpcInstance
 		L2Effect l2Effects[] = player.getAllEffects();
 		for (L2Effect l2Effect : l2Effects)
 		{
-			if (Buffer.ALLOWED_PLAYER_BUFFS.contains(Integer.valueOf(l2Effect.getSkill().getId())))
+			if (BufferSystem.ALLOWED_PLAYER_BUFFS.contains(Integer.valueOf(l2Effect.getSkill().getId())))
 			{
 				if (skills.size() < Config.BUFFER_MAX_SKILLS)
 					skills.add(l2Effect.getSkill().getId());

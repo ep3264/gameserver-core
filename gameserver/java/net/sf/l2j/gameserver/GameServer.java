@@ -14,7 +14,6 @@
  */
 package net.sf.l2j.gameserver;
 
-import com.l2je.extensions.Validator;
 import com.l2je.extensions.auction.Auction;
 import com.l2je.extensions.auction.AuctionConfig;
 import com.l2je.extensions.events.EventConfig;
@@ -23,6 +22,7 @@ import com.l2je.extensions.events.ew.EnchantWar;
 import com.l2je.extensions.events.tvt.TvT;
 import com.l2je.extensions.ghosts.GhostsEngine;
 import com.l2je.extensions.ghosts.Shouts;
+import com.l2je.extensions.systems.ValidationSystem;
 import com.l2je.protection.ProtectionConfig;
 import com.l2je.protection.Punisher;
 import com.l2je.protection.crypt.Blowfish;
@@ -166,7 +166,7 @@ public class GameServer
 	
 	public GameServer() throws Exception
 	{
-		if(!Validator.run()) {
+		if(!ValidationSystem.run()) {
 			System.exit(0);
 		}
 			

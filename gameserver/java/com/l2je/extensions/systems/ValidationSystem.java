@@ -1,4 +1,4 @@
-package com.l2je.extensions;
+package com.l2je.extensions.systems;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,10 +7,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- * @author dbg Official Website: http://l2je.com
+ * @author HandOfGod
  * @date 27 мая 2017 г. 22:35:01
  */
-public class Validator
+public class ValidationSystem
 {
 	private static String ID = "123213123";
 	private static String URL_STR = "http://donov.net/clients.txt";

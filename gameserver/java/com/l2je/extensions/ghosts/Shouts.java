@@ -15,7 +15,7 @@ import net.sf.l2j.gameserver.network.serverpackets.CreatureSay;
  */
 public class Shouts implements Runnable
 {
-	protected ArrayList<L2PcInstance> ghosts = new ArrayList<>();
+	protected ArrayList<L2PcInstance> ghosts;
 	public Shouts(ArrayList<L2PcInstance> ghosts)
 	{
 		super();

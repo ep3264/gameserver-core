@@ -1,6 +1,6 @@
 package net.sf.l2j.gameserver.handler.voicecommandhandlers;
 
-import com.l2je.extensions.Menu;
+import com.l2je.extensions.systems.MenuSystem;
 
 import net.sf.l2j.gameserver.handler.IVoicedCommandHandler;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
@@ -20,7 +20,7 @@ public class MenuCommand implements IVoicedCommandHandler
 	@Override
 	public boolean useVoicedCommand(String command, L2PcInstance activeChar, String params)
 	{
-		Menu.getInstance().showChatWindow(activeChar);
+		MenuSystem.getInstance().showChatWindow(activeChar);
 		return true;
 	}
 

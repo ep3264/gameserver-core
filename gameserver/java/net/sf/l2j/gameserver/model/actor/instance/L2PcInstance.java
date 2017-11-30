@@ -14,10 +14,10 @@
  */
 package net.sf.l2j.gameserver.model.actor.instance;
 
-import com.l2je.extensions.ColorManager;
 import com.l2je.extensions.events.Event;
 import com.l2je.extensions.events.EventManager;
 import com.l2je.extensions.ghosts.GhostsEngine;
+import com.l2je.extensions.systems.ColorSystem;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -5581,7 +5581,7 @@ public final class L2PcInstance extends L2Playable
 		// Retrieve from the database all recom data of this L2PcInstance and add to _recomChars.
 		restoreRecom();
 		// colors Fix Redist
-		ColorManager.getInstance().restoreColors(this);
+		ColorSystem.getInstance().restoreColors(this);
 		// Retrieve from the database the recipe book of this L2PcInstance.
 		if (!isSubClassActive())
 			restoreRecipeBook();

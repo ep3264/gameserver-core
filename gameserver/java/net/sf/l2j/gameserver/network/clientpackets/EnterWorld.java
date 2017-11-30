@@ -14,10 +14,10 @@
  */
 package net.sf.l2j.gameserver.network.clientpackets;
 
-import com.l2je.extensions.PremiumManager;
 import com.l2je.extensions.auction.Auction;
 import com.l2je.extensions.auction.AuctionConfig;
 import com.l2je.extensions.events.EventManager;
+import com.l2je.extensions.systems.PremiumSystem;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -327,7 +327,7 @@ public class EnterWorld extends L2GameClientPacket
 		{
 			if (Config.SHOW_PREMIUM_STATE_ON_ENTER)
 			{
-				activeChar.sendMessage("Премиум до: " + PremiumManager.getPremiumEndDate(activeChar));
+				activeChar.sendMessage("Премиум до: " + PremiumSystem.getPremiumEndDate(activeChar));
 			}
 		}	
 		// Check auction

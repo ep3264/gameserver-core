@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.l2je.extensions;
+package com.l2je.extensions.systems;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,17 +22,17 @@ import net.sf.l2j.gameserver.network.serverpackets.CreatureSay;
 import net.sf.l2j.gameserver.util.Broadcast;
 
 /**
- * @author Redist
+ * @author HandOfGod
  */
-public class RaidBossInfo
+public class RaidBossInfoSystem
 {
 	
 	private static class SingletonHolder
 	{
-		protected static final RaidBossInfo _instance = new RaidBossInfo();
+		protected static final RaidBossInfoSystem _instance = new RaidBossInfoSystem();
 	}
 	
-	public static RaidBossInfo getInstance()
+	public static RaidBossInfoSystem getInstance()
 	{
 		return SingletonHolder._instance;
 	}

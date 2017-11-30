@@ -1,4 +1,4 @@
-package com.l2je.extensions;
+package com.l2je.extensions.systems;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,23 +12,27 @@ import net.sf.l2j.commons.lang.Language;
 import net.sf.l2j.gameserver.datatables.ItemTable;
 import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
-import net.sf.l2j.gameserver.model.item.instance.ItemInstance;
-import net.sf.l2j.gameserver.network.SystemMessageId;
 import net.sf.l2j.gameserver.network.serverpackets.NpcHtmlMessage;
-import net.sf.l2j.gameserver.network.serverpackets.SystemMessage;
 
 /**
  * @author user
  */
-public class PremiumManager
+public class PremiumSystem extends BuyableSystem
 {
+	private static class SingletonHolder
+	{
+		protected static final PremiumSystem _instance = new PremiumSystem();
+	}
+	
+	public static final PremiumSystem getInstance()
+	{
+		return SingletonHolder._instance;
+	}
+	
 	private static final String HTML_PATH = "data/html/mods/Premium.htm";
 	private static final String HTML_RU_PATH = "data/html-ru/mods/Premium.htm";
 	
-	/**
-	 * @param activeChar игрок
-	 * @return информация о состоянии премиум аккаунта
-	 */
+
 	public static String getPremiumEndDate(L2PcInstance activeChar)
 	{
 		long date = activeChar.getPremiumService();
@@ -40,28 +44,12 @@ public class PremiumManager
 		return "n/a";
 	}
 	
-	/**
-	 * Купить премиум
-	 * @param player
-	 * @param countDays количество дней
-	 * @return успешна ли покупка
-	 */
-	public static boolean buy(L2PcInstance player, int countDays)
+	public boolean buyPremium(L2PcInstance player, int countDays)
 	{
-		ItemInstance item = player.getInventory().getItemByItemId(Config.PREMIUM_ITEM);
-		if (item == null || item.getCount() < Config.PREMIUM_PRICE * countDays)
-		{
-			player.sendPacket(SystemMessage.getSystemMessage(SystemMessageId.INCORRECT_ITEM_COUNT));
-			return false;
-		}
-		if (!player.destroyItem("Premium Manager", item, Config.PREMIUM_PRICE * countDays, player, true))
-		{
-			return false;
-		}
-		return true;
+		return buy(player, Config.PREMIUM_ITEM, Config.PREMIUM_PRICE * countDays, "Premium Manager");
 	}
 	
-	public static void onBypassFeedback(L2PcInstance player, String command)
+	public void onBypassFeedback(L2PcInstance player, String command)
 	{
 		int countDays = 1;
 		try
@@ -72,11 +60,11 @@ public class PremiumManager
 		{
 			e.printStackTrace();
 		}
-		if (buy(player, countDays))
+		if (buyPremium(player, countDays))
 		{
 			addPremiumServices(player, player.getAccountName(), countDays);
 			player.sendMessage("Премиум активирован");
-			Menu.getInstance().showChatWindow(player);
+			MenuSystem.getInstance().showChatWindow(player);
 		}
 		else
 		{
@@ -98,12 +86,6 @@ public class PremiumManager
 		player.sendPacket(html);
 	}
 	
-	/**
-	 * Добавляет премиум на аккаунт выбранного игрока
-	 * @param player
-	 * @param AccName
-	 * @param days
-	 */
 	public static void addPremiumServices(L2PcInstance player, String AccName, int days)
 	{
 		if (player == null)

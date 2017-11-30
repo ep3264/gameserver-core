@@ -14,8 +14,8 @@
  */
 package net.sf.l2j.gameserver.model.actor.instance;
 
-import com.l2je.extensions.ColorManager;
-import com.l2je.extensions.PremiumManager;
+import com.l2je.extensions.systems.ColorSystem;
+import com.l2je.extensions.systems.PremiumSystem;
 
 import java.util.StringTokenizer;
 
@@ -87,20 +87,20 @@ public class CustomL2DonateShopInstance extends L2NpcInstance
 			if (player.isPremium())
 			{
 				StringBuilder sb = new StringBuilder();
-				StringUtil.append(sb, "Премиум уже активирован до: ", PremiumManager.getPremiumEndDate(player));
+				StringUtil.append(sb, "Премиум уже активирован до: ", PremiumSystem.getPremiumEndDate(player));
 				player.sendMessage(sb.toString());
 				return;
 			}
-			PremiumManager.showChatWindow(player);
+			PremiumSystem.showChatWindow(player);
 		}
 		else if (command.startsWith("SetNameColor"))
 		{
-			ColorManager.getInstance().setNameColor(player, command);
+			ColorSystem.getInstance().setNameColor(player, command);
 			showChatWindow(player, 2);
 		}
 		else if (command.startsWith("SetTitleColor"))
 		{
-			ColorManager.getInstance().setTitleColor(player, command);
+			ColorSystem.getInstance().setTitleColor(player, command);
 			showChatWindow(player, 3);
 		}
 		else if (command.startsWith("SetName"))
