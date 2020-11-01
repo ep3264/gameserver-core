@@ -4,12 +4,12 @@ import com.l2je.extensions.ghosts.ai.GhostAITask;
 import com.l2je.extensions.ghosts.generators.GhostGenarator;
 
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.concurrent.ScheduledFuture;
 import java.util.logging.Logger;
 
 import net.sf.l2j.Config;
 import net.sf.l2j.commons.concurrent.ThreadPool;
+import net.sf.l2j.gameserver.model.Location;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 
 /**
@@ -59,8 +59,14 @@ public class GhostsEngine
 		{
 //			ThreadPool.scheduleAtFixedRate(new GhostsResurrector(), 60000, 12000);
 		} 
+		int x =147700;
+		int y = -55510;
+		int z = -2736;
+		Location loc = new Location(x, y, z);
+		long startTime = 60000;
 		for (L2PcInstance player : ghosts) {
-			ThreadPool.scheduleAtFixedRate(new GhostAITask(player), 60000, 10000);
+			ThreadPool.scheduleAtFixedRate(new GhostAITask(player, new Location(loc)), startTime, 10000);
+			startTime += 1000;
 		}
 		
 		if(Config.ENABLE_GHOSTS_SHOUTS){

@@ -12,8 +12,8 @@ import java.net.URL;
  */
 public class ValidationSystem
 {
-	private static String ID = "123213123";
-	private static String URL_STR = "http://donov.net/clients.txt";
+	private static String ID = "server.lin2.pro";
+	private static String URL_STR = "https://l2newday.com/clients.txt";
 	
 	public static boolean run()
 	{

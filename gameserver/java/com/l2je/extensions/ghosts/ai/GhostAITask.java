@@ -14,12 +14,14 @@ import net.sf.l2j.gameserver.network.serverpackets.MoveToLocation;
 public class GhostAITask implements Runnable
 {
 	protected static final Logger _log = Logger.getLogger(GhostAITask.class.getName());
-	public L2PcInstance ghost;
+	private L2PcInstance ghost;
+	private Location startLoc;
 	
-	public GhostAITask(L2PcInstance ghost)
+	public GhostAITask(L2PcInstance ghost, Location startLoc)
 	{
 		super();
 		this.ghost = ghost;
+		this.startLoc = startLoc;
 	}
 	
 	@Override
@@ -30,9 +32,14 @@ public class GhostAITask implements Runnable
 	
 	public void randomMove(int min_range, int max_range)
 	{
-		L2PcInstance l2PcInstance = ghost;
-		Location loc = new Location(l2PcInstance.getX() + (Rnd.get(100) > 50 ? 1 : -1) * Rnd.get(min_range, max_range), l2PcInstance.getY() + (Rnd.get(100) > 50 ? 1 : -1) * Rnd.get(min_range, max_range), l2PcInstance.getZ());
-		l2PcInstance.moveToLocation(loc.getX(), loc.getY(), loc.getZ(), 0);
-		l2PcInstance.broadcastPacket(new MoveToLocation(l2PcInstance));
+		int x = ghost.getX() + (Rnd.get(100) > 50 ? 1 : -1) * Rnd.get(min_range, max_range);
+		int y = ghost.getY() + (Rnd.get(100) > 50 ? 1 : -1) * Rnd.get(min_range, max_range);
+		final int z = ghost.getZ();
+		if (x > startLoc.getX() + 500 || y > startLoc.getY() + 500) {
+			x = startLoc.getX();
+			y = startLoc.getY();
+		}
+		ghost.moveToLocation(x, y, z, 0);
+		ghost.broadcastPacket(new MoveToLocation(ghost));
 	}
 }

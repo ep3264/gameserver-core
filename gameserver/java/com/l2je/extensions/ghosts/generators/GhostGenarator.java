@@ -34,6 +34,16 @@ public class GhostGenarator
 		items.add(6379);
 		
 	}
+	private static final ArrayList<String> names = new ArrayList<>();
+	static {
+		names.add("destr");
+		names.add("Lagau");
+		names.add("nagibator");
+		names.add("DONNN");
+		
+	}
+	
+	private static int counter = 0;
 	
 	public int x =147700;
 	public int y = -55510;
@@ -44,7 +54,7 @@ public class GhostGenarator
 		final PcTemplate template = CharTemplateTable.getInstance().getTemplate(ClassId.GHOST_SENTINEL.getId());
 		final int id = IdFactory.getInstance().getNextId();
 		final byte sex = (byte) random.nextInt(2);
-		final L2PcInstance newChar = L2PcInstance.create(IdFactory.getInstance().getNextId(), template, "bot"+id, "bot"+id, sex, sex, sex, Sex.values()[sex]);
+		final L2PcInstance newChar = L2PcInstance.create(IdFactory.getInstance().getNextId(), template, "bot"+id, names.get(counter++), sex, sex, sex, Sex.values()[sex]);
 		newChar.setIsGhost(true);
 		newChar.setCurrentCp(0);
 		newChar.setCurrentHp(newChar.getMaxHp());

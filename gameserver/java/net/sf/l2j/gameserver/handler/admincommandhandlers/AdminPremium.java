@@ -31,9 +31,6 @@ public class AdminPremium implements IAdminCommandHandler
 		"admin_unset_premium"
 	};
 
-	/* (non-Javadoc)
-	 * @see net.sf.l2j.gameserver.handler.IAdminCommandHandler#useAdminCommand(java.lang.String, net.sf.l2j.gameserver.model.actor.instance.L2PcInstance)
-	 */
 	@Override
 	public boolean useAdminCommand(String command, L2PcInstance activeChar)
 	{
@@ -55,9 +52,6 @@ public class AdminPremium implements IAdminCommandHandler
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sf.l2j.gameserver.handler.IAdminCommandHandler#getAdminCommandList()
-	 */
 	@Override
 	public String[] getAdminCommandList()
 	{		

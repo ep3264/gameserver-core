@@ -3,3 +3,5 @@ gameserver/build/
 gameserver/bin/
 gameserver/dist/
 gameserver/.gradle/*
+gameserver/.idea/
+gameserver/gameserver.iml

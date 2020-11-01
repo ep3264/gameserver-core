@@ -46,6 +46,9 @@ public class PremiumSystem extends BuyableSystem
 	
 	public boolean buyPremium(L2PcInstance player, int countDays)
 	{
+		if (countDays <= 0 || countDays > 65535) {
+			return false;
+		}
 		return buy(player, Config.PREMIUM_ITEM, Config.PREMIUM_PRICE * countDays, "Premium Manager");
 	}
 	

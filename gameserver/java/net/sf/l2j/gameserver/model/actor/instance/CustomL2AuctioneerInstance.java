@@ -177,6 +177,7 @@ public class CustomL2AuctioneerInstance extends L2NpcInstance
 					{
 						player.sendMessage("Цена должна быть больше нуля.");
 						showWindow(player, Auction.getInstance().getCreateProductPage(player, 1));
+						return;
 					}
 					Auction.getInstance().choseAccept(player, itemInstance, priceItem, price);
 					showWindow(player, Auction.getInstance().getMainPage(player, page, type));

@@ -17,8 +17,6 @@
  */
 package net.sf.l2j.commons.mmocore;
 
-import com.l2je.extensions.systems.TimeSystem;
-import com.l2je.protection.ProtectionConfig;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -33,9 +31,6 @@ import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.logging.Logger;
-
-import net.sf.l2j.gameserver.network.L2GamePacketHandler;
-import net.sf.l2j.gameserver.network.clientpackets.RequestMagicSkillUse;
 
 /**
  * Parts of design based on networkcore from WoodenGil

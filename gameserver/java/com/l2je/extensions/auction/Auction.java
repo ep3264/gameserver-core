@@ -705,7 +705,7 @@ public class Auction
 	 */
 	private void sendPayment(L2PcInstance player, AuctionItem item)
 	{
-		ItemInstance itemInstance =player.addItem("Auction payment.", item.id_price, item.price, (L2Object) null, true);
+		ItemInstance itemInstance = player.addItem("Auction payment.", item.id_price, item.price, (L2Object) null, true);
 		if(itemInstance==null)
 		{
 			_log.info("Auction Item sold error: Item objId: "+item.getObjectId() +" Trader objId:"+ item.trader_objId);
